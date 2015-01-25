@@ -103,12 +103,12 @@ endif()
  
 set(HDRS
 	./BaseApplication.h
-	./TutorialApplication.h
+	./Game.h
 )
  
 set(SRCS
 	./BaseApplication.cpp
-	./TutorialApplication.cpp
+	./Game.cpp
 )
  
 include_directories( ${OIS_INCLUDE_DIRS}
@@ -126,13 +126,6 @@ target_link_libraries(OgreApp ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/media)
  
-## post-build copy for win32
-#if(WIN32 AND NOT MINGW)
-#	add_custom_command( TARGET OgreApp PRE_BUILD
-#		COMMAND if not exist .\\dist\\bin mkdir .\\dist\\bin )
-#	add_custom_command( TARGET OgreApp POST_BUILD
-#		COMMAND copy \"$(TargetPath)\" .\\dist\\bin )
-#endif(WIN32 AND NOT MINGW)
 
 if(MINGW OR UNIX)
 	set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/dist/bin)
@@ -180,20 +173,6 @@ if(WIN32)
 		DESTINATION bin
 		CONFIGURATIONS Debug
 	)
- 
-   # as of sdk 1.7.2 we need to copy the boost dll's as well
-   # because they're not linked statically (it worked with 1.7.1 though)
-   install(FILES ${Boost_DATE_TIME_LIBRARY_RELEASE}
-      ${Boost_THREAD_LIBRARY_RELEASE}
-      DESTINATION bin
-      CONFIGURATIONS Release RelWithDebInfo
-   )
- 
-   install(FILES ${Boost_DATE_TIME_LIBRARY_DEBUG}
-      ${Boost_THREAD_LIBRARY_DEBUG}
-      DESTINATION bin
-      CONFIGURATIONS Debug
-   )
 endif(WIN32)
 
 if(UNIX)

@@ -1,18 +1,18 @@
-#include "TutorialApplication.h"
+#include "Game.h"
  
-TutorialApplication::TutorialApplication(void)
+Game::Game(void)
 {
 }
  
-TutorialApplication::~TutorialApplication(void)
+Game::~Game(void)
 {
 }
  
 //-------------------------------------------------------------------------------------
-void TutorialApplication::createScene(void)
+void Game::createScene(void)
 {
     // Set the scene's ambient light
-    mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
+   // mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
  
     // Create an Entity
     Ogre::Entity* ogreHead = mSceneMgr->createEntity("Head", "ogrehead.mesh");
@@ -44,7 +44,7 @@ extern "C" {
 #endif
     {
         // Create application object
-        TutorialApplication app;
+        Game app;
  
         try 
         {

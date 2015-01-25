@@ -19,11 +19,11 @@ This source file is part of the
 
 #include "BaseApplication.h"
 
-class TutorialApplication : public BaseApplication
+class Game : public BaseApplication
 {
 public:
-    TutorialApplication(void);
-    virtual ~TutorialApplication(void);
+    Game(void);
+    virtual ~Game(void);
 
 protected:
     virtual void createScene(void);
