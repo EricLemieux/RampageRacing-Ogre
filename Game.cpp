@@ -12,7 +12,7 @@ Game::~Game(void)
 void Game::createScene(void)
 {
     // Set the scene's ambient light
-   // mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
+    mSceneMgr->setAmbientLight(Ogre::ColourValue(0.1f, 0.1f, 0.1f));
  
     // Create an Entity
     Ogre::Entity* ogreHead = mSceneMgr->createEntity("Head", "ogrehead.mesh");
@@ -20,10 +20,21 @@ void Game::createScene(void)
     // Create a SceneNode and attach the Entity to it
     Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("HeadNode");
     headNode->attachObject(ogreHead);
+	ogreHead->setCastShadows(true);
+
+	Ogre::Entity* Box = mSceneMgr->createEntity("Box", "cube.mesh");
+    Ogre::SceneNode* boxNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Box");
+    boxNode->attachObject(Box);
+	Box->setCastShadows(true);
  
     // Create a Light and set its position
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
-    light->setPosition(20.0f, 80.0f, 50.0f);
+    light->setPosition(0.0f, 80.0f, 0.0f);
+	light->setDiffuseColour(Ogre::ColourValue(1.0f,0.0f,0.0f));
+	light->setDirection(0.0f, -1.0f, 0.0f);
+	light->setCastShadows(true);
+
+	boxNode->setPosition(0.0f, -100.0f, 0.0f);
 }
  
  
