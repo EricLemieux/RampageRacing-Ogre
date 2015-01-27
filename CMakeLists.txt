@@ -116,6 +116,13 @@ include_directories( ${OIS_INCLUDE_DIRS}
 	${OGRE_SAMPLES_INCLUDEPATH}
 	${OGRE_Overlay_INCLUDE_DIRS}
 )
+
+#find the tinyXML stuff
+find_file(XML_DLL_DEBUG REQUIRED)
+find_file(XML_DLL_RELEASE REQUIRED)
+find_path(XML_INCLUDE_PATH REQUIRED)
+
+include_directories(${XML_INCLUDE_PATH})
  
 add_executable(OgreApp WIN32 ${HDRS} ${SRCS})
  
@@ -161,6 +168,7 @@ if(WIN32)
 		${OGRE_PLUGIN_DIR_REL}/RenderSystem_Direct3D9.dll
 		${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.dll
 		${OGRE_PLUGIN_DIR_REL}/OIS.dll
+		${XML_DLL_RELEASE}
 		DESTINATION bin
 		CONFIGURATIONS Release RelWithDebInfo
 	)
@@ -170,6 +178,7 @@ if(WIN32)
 		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_Direct3D9_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
+		${XML_DLL_DEBUG}
 		DESTINATION bin
 		CONFIGURATIONS Debug
 	)
