@@ -7,7 +7,7 @@
     </environment>
     <nodes>
         <node name="pPyramid1">
-            <position x="-0.522108" y="0" z="-0.212392"/>
+            <position x="0" y="0" z="0"/>
             <scale x="1" y="1" z="1"/>
             <rotation qx="0" qy="0" qz="0" qw="1"/>
             <entity name="pPyramid1" castShadows="true" receiveShadows="true" meshFile="ogreHead.mesh">

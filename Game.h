@@ -18,6 +18,7 @@ This source file is part of the
 #define __TutorialApplication_h_
 
 #include "BaseApplication.h"
+#include "DotScene.h"
 
 class Game : public BaseApplication
 {

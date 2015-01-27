@@ -23,8 +23,6 @@ public:
 };
 
 Ogre::Light* LoadLight( tinyxml2::XMLElement *XMLLight, Ogre::SceneManager *mSceneMgr );
-
-std::vector<nodeProperty> nodeProperties;
  
 void parseDotScene( const Ogre::String &SceneName, const Ogre::String& groupName, Ogre::SceneManager *mSceneMgr);
 

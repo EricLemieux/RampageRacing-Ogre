@@ -1,5 +1,7 @@
 #include "DotScene.h"
 
+std::vector<nodeProperty> nodeProperties;
+
 Ogre::Light* LoadLight( tinyxml2::XMLElement *XMLLight, Ogre::SceneManager *mSceneMgr )
 {
 	tinyxml2::XMLElement *XMLDiffuse, *XMLSpecular, *XMLAttentuation, *XMLPosition;
