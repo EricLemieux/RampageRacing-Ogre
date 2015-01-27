@@ -104,11 +104,13 @@ endif()
 set(HDRS
 	./BaseApplication.h
 	./Game.h
+	./DotScene.h
 )
  
 set(SRCS
 	./BaseApplication.cpp
 	./Game.cpp
+	./DotScene.cpp
 )
  
 include_directories( ${OIS_INCLUDE_DIRS}
@@ -118,8 +120,8 @@ include_directories( ${OIS_INCLUDE_DIRS}
 )
 
 #find the tinyXML stuff
-find_file(XML_DLL_DEBUG REQUIRED)
-find_file(XML_DLL_RELEASE REQUIRED)
+find_path(XML_DLL_DEBUG_PATH REQUIRED)
+find_path(XML_DLL_RELEASE_PATH REQUIRED)
 find_path(XML_INCLUDE_PATH REQUIRED)
 
 include_directories(${XML_INCLUDE_PATH})
@@ -129,6 +131,9 @@ add_executable(OgreApp WIN32 ${HDRS} ${SRCS})
 set_target_properties(OgreApp PROPERTIES DEBUG_POSTFIX _d)
  
 target_link_libraries(OgreApp ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES})
+
+target_link_libraries(OgreApp ${XML_DLL_DEBUG_PATH}/tinyxml2.lib)
+#target_link_libraries(OgreApp OPTIMIZED ${XML_DLL_RELEASE_PATH}/tinyxml2.lib)
  
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/media)
@@ -168,7 +173,7 @@ if(WIN32)
 		${OGRE_PLUGIN_DIR_REL}/RenderSystem_Direct3D9.dll
 		${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.dll
 		${OGRE_PLUGIN_DIR_REL}/OIS.dll
-		${XML_DLL_RELEASE}
+		${XML_DLL_RELEASE_PATH}/tinyxml2.dll
 		DESTINATION bin
 		CONFIGURATIONS Release RelWithDebInfo
 	)
@@ -178,7 +183,7 @@ if(WIN32)
 		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_Direct3D9_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
-		${XML_DLL_DEBUG}
+		${XML_DLL_DEBUG_PATH}/tinyxml2.dll
 		DESTINATION bin
 		CONFIGURATIONS Debug
 	)
