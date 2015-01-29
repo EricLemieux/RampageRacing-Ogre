@@ -1,20 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scene formatVersion="1.0" upAxis="y" unitsPerMeter="100" unitType="centimeters" minOgreVersion="1.9" ogreMaxVersion="2.6.4" author="OgreMax Scene Exporter (www.ogremax.com)" application="Maya">
     <environment>
-        <colourAmbient r="0.33" g="0.33" b="0.33"/>
+        <colourAmbient r="1" g="1" b="1"/>
         <colourBackground r="0" g="0" b="0"/>
         <clipping near="0" far="100000"/>
     </environment>
     <nodes>
-        <node name="pPyramid1">
+        <node name="Car">
             <position x="0" y="0" z="0"/>
-            <scale x="1" y="1" z="1"/>
+            <scale x="10" y="10" z="10"/>
             <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <entity name="pPyramid1" castShadows="true" receiveShadows="true" meshFile="ogreHead.mesh">
+            <entity name="Car" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
+            </entity>
+        </node>
+		<node name="Car2">
+            <position x="0" y="0" z="20"/>
+            <scale x="10" y="10" z="10"/>
+            <rotation qx="0" qy="0" qz="0" qw="1"/>
+            <entity name="Car2" castShadows="true" receiveShadows="true" meshFile="CitoCar.mesh">
                 <subentities>
                     <subentity index="0" materialName="lambert1"/>
                 </subentities>
             </entity>
+        </node>
+		<node name="Car3">
+            <position x="0" y="0" z="40"/>
+            <scale x="10" y="10" z="10"/>
+            <rotation qx="0" qy="0" qz="0" qw="1"/>
+            <entity name="Car3" castShadows="true" receiveShadows="true" meshFile="NeonCar.mesh">
+                <subentities>
+                    <subentity index="0" materialName="lambert1"/>
+                </subentities>
+            </entity>
+        </node>
+		<node name="Car4">
+            <position x="0" y="0" z="60"/>
+            <scale x="10" y="10" z="10"/>
+            <rotation qx="0" qy="0" qz="0" qw="1"/>
+            <entity name="Car4" castShadows="true" receiveShadows="true" meshFile="ViperCar.mesh">
+                <subentities>
+                    <subentity index="0" materialName="lambert1"/>
+                </subentities>
+            </entity>
+        </node>
+		<node name="Building">
+            <position x="50" y="0" z="0"/>
+            <scale x="10" y="10" z="10"/>
+            <rotation qx="0" qy="0" qz="0" qw="1"/>
+            <entity name="Building" castShadows="true" receiveShadows="true" meshFile="Building.mesh">
+                <subentities>
+                    <subentity index="0" materialName="lambert1"/>
+                </subentities>
+            </entity>
+        </node>
+		<node name="Omni01" id="5">
+            <position x="-23" y="49" z="18" />
+            <rotation qx="0" qy="0" qz="0" qw="1" />
+            <scale x="1" y="1" z="1" />
+            <light name="Omni01" type="point" intensity="1.0" contrast="0">
+                <colourDiffuse r="0.5" g="0.5" b="0.5" />
+                <colourSpecular r="0.5" g="0.5" b="0.5" />
+            </light>
         </node>
     </nodes>
 </scene>
