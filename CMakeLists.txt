@@ -102,15 +102,19 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
 endif()
  
 set(HDRS
-	./BaseApplication.h
-	./Game.h
-	./DotScene.h
+	./src/headers/BaseApplication.h
+	./src/headers/Game.h
+	./src/headers/DotScene.h
+	./src/headers/GameObject.h
+	./src/headers/Car.h
 )
  
 set(SRCS
-	./BaseApplication.cpp
-	./Game.cpp
-	./DotScene.cpp
+	./src/source/BaseApplication.cpp
+	./src/source/Game.cpp
+	./src/source/DotScene.cpp
+	./src/source/GameObject.cpp
+	./src/source/Car.cpp
 )
  
 include_directories( ${OIS_INCLUDE_DIRS}
