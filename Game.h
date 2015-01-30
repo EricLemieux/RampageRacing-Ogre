@@ -28,6 +28,11 @@ public:
 
 protected:
     virtual void createScene(void);
+
+	bool keyPressed( const OIS::KeyEvent &arg );
+
+public:
+	Ogre::SceneNode* shipNode;
 };
 
 #endif // #ifndef __TutorialApplication_h_

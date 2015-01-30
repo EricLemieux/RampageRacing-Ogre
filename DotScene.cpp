@@ -86,7 +86,7 @@ Ogre::Light* LoadLight( tinyxml2::XMLElement *XMLLight, Ogre::SceneManager *mSce
    return l;
 }
 
-void parseDotScene( const Ogre::String &SceneName, const Ogre::String& groupName, Ogre::SceneManager *mSceneMgr )
+bool parseDotScene( const Ogre::String &SceneName, const Ogre::String& groupName, Ogre::SceneManager *mSceneMgr )
 {
 	tinyxml2::XMLDocument   *XMLDoc;
    tinyxml2::XMLElement   *XMLRoot, *XMLNodes;
@@ -108,7 +108,9 @@ void parseDotScene( const Ogre::String &SceneName, const Ogre::String& groupName
          //We'll just log, and continue on gracefully
          Ogre::LogManager::getSingleton().logMessage("[dotSceneLoader] The TiXmlDocument reported an error");
          delete XMLDoc;
-         return;
+
+		 //Return false to say that there was an error and that we should try to use a backup method for creating a scene.
+         return false;
       }
    }
    catch(...)
@@ -116,15 +118,19 @@ void parseDotScene( const Ogre::String &SceneName, const Ogre::String& groupName
       //We'll just log, and continue on gracefully
       Ogre::LogManager::getSingleton().logMessage("[dotSceneLoader] Error creating TiXmlDocument");
       delete XMLDoc;
-      return;
+
+	  //Return false to say that there was an error and that we should try to use a backup method for creating a scene.
+      return false;
    }
  
    // Validate the File
    XMLRoot = XMLDoc->RootElement();
    if( Ogre::String( XMLRoot->Value()) != "scene"  ) {
       Ogre::LogManager::getSingleton().logMessage( "[dotSceneLoader]Error: Invalid .scene File. Missing <scene>" );
-      delete XMLDoc;      
-      return;
+      delete XMLDoc;  
+
+	  //Return false to say that there was an error and that we should try to use a backup method for creating a scene.
+      return false;
    }
  
    XMLNodes = XMLRoot->FirstChildElement( "nodes" );
@@ -318,6 +324,9 @@ void parseDotScene( const Ogre::String &SceneName, const Ogre::String& groupName
  
    // Close the XML File
    delete XMLDoc;
+
+   //Return with true to say that the file was loaded sucsessfully and the scene is now loaded.
+   return true;
 }
 
 Ogre::String getProperty(Ogre::String ndNm, Ogre::String prop)

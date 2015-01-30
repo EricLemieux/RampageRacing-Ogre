@@ -24,6 +24,6 @@ public:
 
 Ogre::Light* LoadLight( tinyxml2::XMLElement *XMLLight, Ogre::SceneManager *mSceneMgr );
  
-void parseDotScene( const Ogre::String &SceneName, const Ogre::String& groupName, Ogre::SceneManager *mSceneMgr);
+bool parseDotScene( const Ogre::String &SceneName, const Ogre::String& groupName, Ogre::SceneManager *mSceneMgr);
 
 Ogre::String getProperty(Ogre::String ndNm, Ogre::String prop);
