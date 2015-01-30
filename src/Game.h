@@ -20,6 +20,8 @@ This source file is part of the
 #include "BaseApplication.h"
 #include "DotScene.h"
 
+//#include "GameObject.h"
+
 class Game : public BaseApplication
 {
 public:
