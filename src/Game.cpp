@@ -2,6 +2,7 @@
  
 Game::Game(void)
 {
+	myShip = Car();
 }
  
 Game::~Game(void)
@@ -33,6 +34,13 @@ void Game::createScene(void)
 		camNode->attachObject(mainCam);
 	
 		camNode->translate(Ogre::Vector3(0.0f, 300.0f, 100.0f));
+
+		//Create a game object thing
+		myShip = Car("myShip", mSceneMgr->getRootSceneNode());
+		myShip.GetSceneNode()->setPosition(0,50,0);
+		myShip.GetSceneNode()->setScale(20,20,20);
+		Ogre::Entity* myShipEnt = mSceneMgr->createEntity("shipEnt", "BoltCar.mesh");
+		myShip.GetSceneNode()->attachObject(myShipEnt);
 	}
 }
 
@@ -45,7 +53,7 @@ bool Game::keyPressed( const OIS::KeyEvent &arg )
 	if(arg.key == OIS::KC_P)
 	{
 		//Replace this with actual physics and move somewhere else so that we can have continoius updates
-		shipNode->translate(1.0f, 0.0f, 0.0f);
+		myShip.MoveForward(1.0f);
 	}
 
 	return true;

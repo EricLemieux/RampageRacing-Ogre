@@ -20,6 +20,9 @@ This source file is part of the
 #include "BaseApplication.h"
 #include "DotScene.h"
 
+#include "Car.h"
+#include "GameObject.h"
+
 //#include "GameObject.h"
 
 class Game : public BaseApplication
@@ -35,6 +38,8 @@ protected:
 
 public:
 	Ogre::SceneNode* shipNode;
+
+	Car myShip;
 };
 
 #endif // #ifndef __TutorialApplication_h_
