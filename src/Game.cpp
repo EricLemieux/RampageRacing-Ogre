@@ -3,6 +3,8 @@
 Game::Game(void)
 {
 	myShip = Car();
+
+	world = new PhysicsWorld();
 }
  
 Game::~Game(void)
@@ -15,6 +17,8 @@ void Game::createScene(void)
 	//Try to load the test scene file, if it doesnt load properly load the backup scene
 	parseDotScene("test.scene","General",mSceneMgr);
 
+	//Set up the physics world
+	world->initWorld();
 
 	//Setting a ambient light
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f, 1.0f));
@@ -26,9 +30,11 @@ void Game::createScene(void)
 
 	//Create a game object thing
 	myShip = Car("myShip", controllerNode);
-	myShip.GetSceneNode()->setPosition(0,0,0);
 	Ogre::Entity* myShipEnt = mSceneMgr->createEntity("shipEnt", "BoltCar.mesh");
 	myShip.GetSceneNode()->attachObject(myShipEnt);
+
+	//Add the car's rigid body to the world
+	world->addBodyToWorld(myShip.GetRigidBody());
 
 	Ogre::SceneNode* camNode = controllerNode->createChildSceneNode("camNode");
 	camNode->attachObject(mCamera);
@@ -47,7 +53,7 @@ bool Game::keyPressed( const OIS::KeyEvent &arg )
 	if(arg.key == OIS::KC_P)
 	{
 		//Replace this with actual physics and move somewhere else so that we can have continoius updates
-		myShip.MoveForward(1.0f);
+		myShip.MoveForward(999.0f);
 	}
 
 	return true;
@@ -55,6 +61,10 @@ bool Game::keyPressed( const OIS::KeyEvent &arg )
 
 bool Game::Update()
 {
+	myShip.GetRigidBody()->applyCentralForce(btVector3(0.0f, 0.0f, 2.0f));
+
+	world->updateWorld();
+
 	myShip.UpdateSceneNodeFromRigidBody();
 
 	return true;

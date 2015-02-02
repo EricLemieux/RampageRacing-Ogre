@@ -15,8 +15,7 @@ Car::~Car()
 
 void Car::MoveForward(float distance)
 {
-	//GetSceneNode()->getParentSceneNode()->translate(distance,0,0);
-	GetRigidBody()->translate(btVector3(distance, 0, 0));
+	GetRigidBody()->applyCentralForce(btVector3(0,distance,0));
 }
 
 void Car::UpdateSceneNodeFromRigidBody(void)

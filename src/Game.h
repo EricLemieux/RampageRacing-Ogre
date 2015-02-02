@@ -23,6 +23,8 @@ This source file is part of the
 #include "Car.h"
 #include "GameObject.h"
 
+#include "Physics.h"
+
 //#include "GameObject.h"
 
 class Game : public BaseApplication
@@ -40,6 +42,7 @@ protected:
 
 public:
 	Car myShip;
+	PhysicsWorld* world;
 };
 
 #endif // #ifndef __TutorialApplication_h_
