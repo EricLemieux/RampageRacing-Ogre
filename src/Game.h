@@ -37,8 +37,6 @@ protected:
 	bool keyPressed( const OIS::KeyEvent &arg );
 
 public:
-	Ogre::SceneNode* shipNode;
-
 	Car myShip;
 };
 

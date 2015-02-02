@@ -1,0 +1,11 @@
+material Minelambert33SG
+{
+	technique
+	{
+		pass
+		{
+		}
+
+	}
+
+}

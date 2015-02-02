@@ -1,0 +1,18 @@
+material CamBot2blinn11SG1
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			specular 0.5 0.5 0.5 1 2.6368
+
+			texture_unit
+			{
+				texture camBotTex.png
+			}
+		}
+
+	}
+
+}

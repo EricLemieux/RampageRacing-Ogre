@@ -1,0 +1,11 @@
+material Missilelambert34SG
+{
+	technique
+	{
+		pass
+		{
+		}
+
+	}
+
+}

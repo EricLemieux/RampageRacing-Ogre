@@ -1,4 +1,4 @@
-material blinn17
+material CurveLong
 {
 	technique
 	{
@@ -6,10 +6,11 @@ material blinn17
 		{
 			ambient 0 0 0 1
 			specular 0.5 0.5 0.5 1 89.6
+			scene_blend alpha_blend
 
 			texture_unit
 			{
-				texture THE_BOLT_TEX.png
+				texture trackCurvetLong.png
 			}
 		}
 

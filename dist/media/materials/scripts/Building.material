@@ -1,0 +1,11 @@
+material Buildinglambert30SG
+{
+	technique
+	{
+		pass
+		{
+		}
+
+	}
+
+}

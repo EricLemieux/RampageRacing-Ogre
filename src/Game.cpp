@@ -23,24 +23,19 @@ void Game::createScene(void)
 
 		Ogre::SceneNode* controllerNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("controllerNode");
 
-		shipNode = controllerNode->createChildSceneNode("shipNode");
-		Ogre::SceneNode* camNode = controllerNode->createChildSceneNode("camNode");
-
-		Ogre::Entity* ship = mSceneMgr->createEntity("ship", "BoltCar.mesh");
-		shipNode->setScale(20.0f, 20.0f, 20.0f);
-		shipNode->attachObject(ship);
-
-		Ogre::Camera* mainCam = mSceneMgr->createCamera("mainCam");
-		camNode->attachObject(mainCam);
-	
-		camNode->translate(Ogre::Vector3(0.0f, 300.0f, 100.0f));
-
 		//Create a game object thing
-		myShip = Car("myShip", mSceneMgr->getRootSceneNode());
-		myShip.GetSceneNode()->setPosition(0,50,0);
-		myShip.GetSceneNode()->setScale(20,20,20);
+		myShip = Car("myShip", controllerNode);
+		myShip.GetSceneNode()->setPosition(0,0,0);
+		//myShip.GetSceneNode()->setScale(20,20,20);
 		Ogre::Entity* myShipEnt = mSceneMgr->createEntity("shipEnt", "BoltCar.mesh");
 		myShip.GetSceneNode()->attachObject(myShipEnt);
+
+		Ogre::SceneNode* camNode = controllerNode->createChildSceneNode("camNode");
+		camNode->attachObject(mCamera);
+
+		mCamera->lookAt(myShip.GetSceneNode()->getPosition());
+	
+		camNode->translate(Ogre::Vector3(0.0f, 0.0f, 15.0f));
 	}
 }
 

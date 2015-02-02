@@ -14,5 +14,5 @@ Car::~Car()
 
 void Car::MoveForward(float distance)
 {
-	GetSceneNode()->translate(distance,0,0);
+	GetSceneNode()->getParentSceneNode()->translate(distance,0,0);
 }

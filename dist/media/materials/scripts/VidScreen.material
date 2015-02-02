@@ -1,4 +1,4 @@
-material blinn17
+material blinn10
 {
 	technique
 	{
@@ -9,7 +9,7 @@ material blinn17
 
 			texture_unit
 			{
-				texture THE_BOLT_TEX.png
+				texture vidscreenTex.png
 			}
 		}
 
