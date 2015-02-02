@@ -61,7 +61,17 @@ find_package(OGRE REQUIRED)
 #if(NOT "${OGRE_VERSION_NAME}" STREQUAL "Cthugha")
 #  message(SEND_ERROR "You need Ogre 1.7 Cthugha to build this.")
 #endif()
- 
+
+#find the package for the physics
+find_package(BULLET REQUIRED)
+find_path(BULET_LIB_PATH BULLET_LIB_PATH)
+
+set(BULLET_DEBUG_LIB_PATH ${BULET_LIB_PATH}/Debug)
+set(BULLET_RELEASE_LIB_PATH ${BULET_LIB_PATH}/Release)
+
+set(BULLET_DEBUG_LIBRARIES ${BULLET_DEBUG_LIB_PATH}/LinearMath_Debug.lib ${BULLET_DEBUG_LIB_PATH}/BulletSoftBody_Debug.lib ${BULLET_DEBUG_LIB_PATH}/BulletDynamics_Debug.lib ${BULLET_DEBUG_LIB_PATH}/BulletCollision_Debug.lib)
+set(BULLET_RELEASE_LIBRARIES ${BULLET_RELEASE_LIB_PATH}/LinearMath.lib ${BULLET_RELEASE_LIB_PATH}/BulletSoftBody.lib ${BULLET_RELEASE_LIB_PATH}/BulletDynamics.lib ${BULLET_RELEASE_LIB_PATH}/BulletCollision.lib)
+  
 find_package(OIS REQUIRED)
  
 if(NOT OIS_FOUND)
@@ -97,7 +107,6 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
 	# Set up referencing of Boost
 	include_directories(${Boost_INCLUDE_DIR})
 	add_definitions(-DBOOST_ALL_NO_LIB)
-	message(WARNING ${Boost_LIBRARIES})
 	set(OGRE_LIBRARIES ${OGRE_LIBRARIES} ${Boost_LIBRARIES})
 endif()
  
@@ -121,6 +130,7 @@ include_directories( ${OIS_INCLUDE_DIRS}
 	${OGRE_INCLUDE_DIRS}
 	${OGRE_SAMPLES_INCLUDEPATH}
 	${OGRE_Overlay_INCLUDE_DIRS}
+	${BULLET_INCLUDE_DIRS}
 )
 
 #find the tinyXML stuff
@@ -136,8 +146,11 @@ set_target_properties(OgreApp PROPERTIES DEBUG_POSTFIX _d)
  
 target_link_libraries(OgreApp ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES})
 
-target_link_libraries(OgreApp ${XML_DLL_DEBUG_PATH}/tinyxml2.lib)
-#target_link_libraries(OgreApp OPTIMIZED ${XML_DLL_RELEASE_PATH}/tinyxml2.lib)
+target_link_libraries(OgreApp debug ${BULLET_DEBUG_LIBRARIES})
+target_link_libraries(OgreApp optimized ${BULLET_RELEASE_LIBRARIES})
+
+target_link_libraries(OgreApp debug ${XML_DLL_DEBUG_PATH}/tinyxml2.lib)
+target_link_libraries(OgreApp optimized  ${XML_DLL_RELEASE_PATH}/tinyxml2.lib)
  
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/media)
