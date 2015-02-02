@@ -1,6 +1,10 @@
 #pragma once
 
 #include <Ogre.h>
+#include <btBulletCollisionCommon.h>
+#include <btBulletDynamicsCommon.h>
+
+#include "System.h"
 
 class GameObject
 {
@@ -14,4 +18,5 @@ public:
 private:
 	Ogre::String name;
 	Ogre::SceneNode* mSceneNode;
+	btRigidBody* mRigidBody;
 };

@@ -117,6 +117,7 @@ set(HDRS
 	./src/GameObject.h
 	./src/Car.h
 	./src/Physics.h
+	./src/System.h
 )
  
 set(SRCS

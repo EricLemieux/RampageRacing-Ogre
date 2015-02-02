@@ -203,7 +203,12 @@ void BaseApplication::go(void)
     if (!setup())
         return;
 
-    mRoot->startRendering();
+	while(!mShutDown)
+	{
+		Update();
+
+		Render();
+	}
 
     // clean up
     destroyScene();
@@ -412,4 +417,16 @@ void BaseApplication::windowClosed(Ogre::RenderWindow* rw)
             mInputManager = 0;
         }
     }
+}
+
+bool BaseApplication::Update()
+{
+	return true;
+}
+
+bool BaseApplication::Render()
+{
+	mRoot->renderOneFrame();
+
+	return true;
 }

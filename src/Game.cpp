@@ -33,9 +33,9 @@ void Game::createScene(void)
 	Ogre::SceneNode* camNode = controllerNode->createChildSceneNode("camNode");
 	camNode->attachObject(mCamera);
 
+	camNode->translate(Ogre::Vector3(0.0f, 35.0f, 7.0f));
+
 	mCamera->lookAt(myShip.GetSceneNode()->getPosition());
-	
-	camNode->translate(Ogre::Vector3(0.0f, 5.0f, 7.0f));
 }
 
 bool Game::keyPressed( const OIS::KeyEvent &arg )
