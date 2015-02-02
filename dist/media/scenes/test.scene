@@ -6,46 +6,8 @@
         <clipping near="0" far="100000"/>
     </environment>
     <nodes>
-        <node name="Car">
-            <position x="0" y="0" z="0"/>
-            <scale x="10" y="10" z="10"/>
-            <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <entity name="Car" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
-            </entity>
-        </node>
-		<node name="Car2">
-            <position x="0" y="0" z="20"/>
-            <scale x="10" y="10" z="10"/>
-            <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <entity name="Car2" castShadows="true" receiveShadows="true" meshFile="CitoCar.mesh">
-                <subentities>
-                    <subentity index="0" materialName="lambert1"/>
-                </subentities>
-            </entity>
-        </node>
-		<node name="Car3">
-            <position x="0" y="0" z="40"/>
-            <scale x="10" y="10" z="10"/>
-            <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <entity name="Car3" castShadows="true" receiveShadows="true" meshFile="NeonCar.mesh">
-                <subentities>
-                    <subentity index="0" materialName="lambert1"/>
-                </subentities>
-            </entity>
-        </node>
-		<node name="Car4">
-            <position x="0" y="0" z="60"/>
-            <scale x="10" y="10" z="10"/>
-            <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <entity name="Car4" castShadows="true" receiveShadows="true" meshFile="ViperCar.mesh">
-                <subentities>
-                    <subentity index="0" materialName="lambert1"/>
-                </subentities>
-            </entity>
-        </node>
 		<node name="Building">
-            <position x="50" y="0" z="0"/>
-            <scale x="10" y="10" z="10"/>
+            <position x="0" y="30" z="-40"/>
             <rotation qx="0" qy="0" qz="0" qw="1"/>
             <entity name="Building" castShadows="true" receiveShadows="true" meshFile="Building.mesh">
                 <subentities>

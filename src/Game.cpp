@@ -13,30 +13,29 @@ Game::~Game(void)
 void Game::createScene(void)
 {
 	//Try to load the test scene file, if it doesnt load properly load the backup scene
-	//if(!parseDotScene("test.scene","General",mSceneMgr))
-	{
-		//Setting a ambient light
-		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f, 1.0f));
+	parseDotScene("test.scene","General",mSceneMgr);
 
-		Ogre::Light* light = mSceneMgr->createLight("MainLight");
-		light->setPosition(Ogre::Vector3(0.0f, 10.0f, 0.0f));
 
-		Ogre::SceneNode* controllerNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("controllerNode");
+	//Setting a ambient light
+	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f, 1.0f));
 
-		//Create a game object thing
-		myShip = Car("myShip", controllerNode);
-		myShip.GetSceneNode()->setPosition(0,0,0);
-		//myShip.GetSceneNode()->setScale(20,20,20);
-		Ogre::Entity* myShipEnt = mSceneMgr->createEntity("shipEnt", "BoltCar.mesh");
-		myShip.GetSceneNode()->attachObject(myShipEnt);
+	Ogre::Light* light = mSceneMgr->createLight("MainLight");
+	light->setPosition(Ogre::Vector3(0.0f, 10.0f, 0.0f));
 
-		Ogre::SceneNode* camNode = controllerNode->createChildSceneNode("camNode");
-		camNode->attachObject(mCamera);
+	Ogre::SceneNode* controllerNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("controllerNode");
 
-		mCamera->lookAt(myShip.GetSceneNode()->getPosition());
+	//Create a game object thing
+	myShip = Car("myShip", controllerNode);
+	myShip.GetSceneNode()->setPosition(0,0,0);
+	Ogre::Entity* myShipEnt = mSceneMgr->createEntity("shipEnt", "BoltCar.mesh");
+	myShip.GetSceneNode()->attachObject(myShipEnt);
+
+	Ogre::SceneNode* camNode = controllerNode->createChildSceneNode("camNode");
+	camNode->attachObject(mCamera);
+
+	mCamera->lookAt(myShip.GetSceneNode()->getPosition());
 	
-		camNode->translate(Ogre::Vector3(0.0f, 0.0f, 15.0f));
-	}
+	camNode->translate(Ogre::Vector3(0.0f, 5.0f, 7.0f));
 }
 
 bool Game::keyPressed( const OIS::KeyEvent &arg )
