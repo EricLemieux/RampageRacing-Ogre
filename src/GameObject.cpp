@@ -5,6 +5,23 @@ GameObject::GameObject()
 	name = "temp";
 	mSceneNode = &Ogre::SceneNode(NULL);
 
+	InitRigidBody();
+}
+
+GameObject::GameObject(Ogre::String name, Ogre::SceneNode* root)
+{
+	mSceneNode = root->createChildSceneNode(name);
+
+	InitRigidBody();
+}
+
+GameObject::~GameObject()
+{
+
+}
+
+void GameObject::InitRigidBody()
+{
 	//if mass is zero it counts as infinite
 	float mass = 1.0f;
 
@@ -18,15 +35,12 @@ GameObject::GameObject()
 	btVector3 boxInertia(0,0,0);
 	boxShape->calculateLocalInertia(mass, boxInertia);
 	btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(mass,boxMotionState,boxShape,boxInertia);
-	btRigidBody* boxRigidBody = new btRigidBody(boxRigidBodyCI);
+	mRigidBody = new btRigidBody(boxRigidBodyCI);
 }
 
-GameObject::GameObject(Ogre::String name, Ogre::SceneNode* root)
+void GameObject::UpdateSceneNodeFromRigidBody()
 {
-	mSceneNode = root->createChildSceneNode(name);
-}
-
-GameObject::~GameObject()
-{
-
+	btTransform trans = mRigidBody->getWorldTransform();
+	mSceneNode->setOrientation(BtToOgreQuaternion(&trans.getRotation()));
+	mSceneNode->setPosition(BtToOgreVector3(&trans.getOrigin()));
 }

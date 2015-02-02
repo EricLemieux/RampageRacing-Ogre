@@ -52,6 +52,13 @@ bool Game::keyPressed( const OIS::KeyEvent &arg )
 
 	return true;
 }
+
+bool Game::Update()
+{
+	myShip.UpdateSceneNodeFromRigidBody();
+
+	return true;
+}
  
  
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32

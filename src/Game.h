@@ -34,6 +34,8 @@ public:
 protected:
     virtual void createScene(void);
 
+	virtual bool Update();
+
 	bool keyPressed( const OIS::KeyEvent &arg );
 
 public:
