@@ -116,6 +116,7 @@ set(HDRS
 	./src/DotScene.h
 	./src/GameObject.h
 	./src/Car.h
+	./src/Physics.h
 )
  
 set(SRCS
@@ -124,6 +125,7 @@ set(SRCS
 	./src/DotScene.cpp
 	./src/GameObject.cpp
 	./src/Car.cpp
+	./src/Physics.cpp
 )
  
 include_directories( ${OIS_INCLUDE_DIRS}
