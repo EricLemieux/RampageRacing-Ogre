@@ -40,8 +40,9 @@ void GameObject::InitRigidBody()
 	mRigidBody = new btRigidBody(boxRigidBodyCI);
 }
 
-void GameObject::UpdateSceneNodeFromRigidBody()
+void GameObject::Update()
 {
+	//Mode the scene node to match the rigidbody position
 	btTransform trans = mRigidBody->getWorldTransform();
 	mSceneNode->setOrientation(BtToOgreQuaternion(&trans.getRotation()));
 	mSceneNode->setPosition(BtToOgreVector3(&trans.getOrigin()));

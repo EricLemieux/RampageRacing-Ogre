@@ -16,7 +16,7 @@ public:
 public:
 	inline Ogre::SceneNode* GetSceneNode(void){return mSceneNode;}
 	inline btRigidBody* GetRigidBody(void){return mRigidBody;}
-	virtual void UpdateSceneNodeFromRigidBody(void);
+	virtual void Update(void);
 
 private:
 	void InitRigidBody();

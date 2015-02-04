@@ -12,7 +12,7 @@ public:
 public:
 	void MoveForward(float distance);
 
-	virtual void UpdateSceneNodeFromRigidBody(void);
+	virtual void Update(void);
 
-private:
+	bool move;
 };

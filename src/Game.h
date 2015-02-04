@@ -38,7 +38,8 @@ protected:
 
 	virtual bool Update();
 
-	bool keyPressed( const OIS::KeyEvent &arg );
+	virtual bool keyPressed( const OIS::KeyEvent &arg );
+	virtual bool keyReleased( const OIS::KeyEvent &arg );
 
 public:
 	Car myShip;

@@ -16,7 +16,7 @@ void Game::createScene(void)
 {
 	//Try to load the test scene file, if it doesnt load properly load the backup scene
 	parseDotScene("test.scene","General",mSceneMgr);
-
+	
 	//Set up the physics world
 	world->initWorld();
 
@@ -52,8 +52,25 @@ bool Game::keyPressed( const OIS::KeyEvent &arg )
 	//Slightly move the ship when you press the button
 	if(arg.key == OIS::KC_P)
 	{
-		//Replace this with actual physics and move somewhere else so that we can have continoius updates
-		myShip.MoveForward(999.0f);
+		myShip.move = true;
+	}
+	if(arg.key == OIS::KC_O)
+	{
+		myShip.GetRigidBody()->translate(btVector3(0,10,0));
+	}
+
+	return true;
+}
+
+bool Game::keyReleased( const OIS::KeyEvent &arg )
+{
+	//Call the base class
+	BaseApplication::keyReleased(arg);
+
+	//Slightly move the ship when you press the button
+	if(arg.key == OIS::KC_P)
+	{
+		myShip.move = false;
 	}
 
 	return true;
@@ -61,11 +78,11 @@ bool Game::keyPressed( const OIS::KeyEvent &arg )
 
 bool Game::Update()
 {
-	myShip.GetRigidBody()->applyCentralForce(btVector3(0.0f, 0.0f, 2.0f));
+	//myShip.GetRigidBody()->applyCentralForce(btVector3(0.0f, 0.0f, 2.0f));
 
 	world->updateWorld();
 
-	myShip.UpdateSceneNodeFromRigidBody();
+	myShip.Update();
 
 	return true;
 }
