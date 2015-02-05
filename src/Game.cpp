@@ -15,7 +15,7 @@ Game::~Game(void)
 void Game::createScene(void)
 {
 	//Try to load the test scene file, if it doesnt load properly load the backup scene
-	parseDotScene("test.scene","General",mSceneMgr);
+	//parseDotScene("test.scene","General",mSceneMgr);
 	
 	//Set up the physics world
 	world->initWorld();

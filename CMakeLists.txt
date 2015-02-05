@@ -190,7 +190,6 @@ if(WIN32)
         # so you'll have to change that to make it work with 1.7.1
 	install(FILES ${OGRE_PLUGIN_DIR_REL}/OgreMain.dll
 		${OGRE_PLUGIN_DIR_REL}/OgreOverlay.dll
-		${OGRE_PLUGIN_DIR_REL}/RenderSystem_Direct3D9.dll
 		${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.dll
 		${OGRE_PLUGIN_DIR_REL}/OIS.dll
 		${XML_DLL_RELEASE_PATH}/tinyxml2.dll
@@ -200,7 +199,6 @@ if(WIN32)
  
 	install(FILES ${OGRE_PLUGIN_DIR_DBG}/OgreOverlay_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
-		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_Direct3D9_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
 		${XML_DLL_DEBUG_PATH}/tinyxml2.dll
