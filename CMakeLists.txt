@@ -192,7 +192,6 @@ if(WIN32)
 		${OGRE_PLUGIN_DIR_REL}/OgreOverlay.dll
 		${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.dll
 		${OGRE_PLUGIN_DIR_REL}/OIS.dll
-		${XML_DLL_RELEASE_PATH}/tinyxml2.dll
 		DESTINATION bin
 		CONFIGURATIONS Release RelWithDebInfo
 	)
@@ -201,7 +200,6 @@ if(WIN32)
 		${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
-		${XML_DLL_DEBUG_PATH}/tinyxml2.dll
 		DESTINATION bin
 		CONFIGURATIONS Debug
 	)
