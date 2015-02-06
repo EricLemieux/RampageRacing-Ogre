@@ -1,3 +1,5 @@
+#pragma once
+
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
 

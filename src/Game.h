@@ -25,7 +25,7 @@ This source file is part of the
 
 #include "Physics.h"
 
-//#include "GameObject.h"
+#include "Scene.h"
 
 class Game : public BaseApplication
 {
@@ -42,8 +42,7 @@ protected:
 	virtual bool keyReleased( const OIS::KeyEvent &arg );
 
 public:
-	Car myShip;
-	PhysicsWorld* world;
+	std::shared_ptr<Scene> mCurrentScene;
 };
 
 #endif // #ifndef __TutorialApplication_h_

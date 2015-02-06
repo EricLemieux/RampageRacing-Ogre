@@ -16,7 +16,7 @@
             </entity>
         </node>
 		<node name="Omni01" id="5">
-            <position x="-23" y="49" z="18" />
+            <position x="0" y="10" z="10" />
             <rotation qx="0" qy="0" qz="0" qw="1" />
             <scale x="1" y="1" z="1" />
             <light name="Omni01" type="point" intensity="1.0" contrast="0">

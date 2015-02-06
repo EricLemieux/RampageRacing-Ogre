@@ -1,10 +1,7 @@
 #include "Game.h"
  
-Game::Game(void)
+Game::Game(void) : BaseApplication()
 {
-	myShip = Car();
-
-	world = new PhysicsWorld();
 }
  
 Game::~Game(void)
@@ -14,34 +11,14 @@ Game::~Game(void)
 //-------------------------------------------------------------------------------------
 void Game::createScene(void)
 {
-	//Try to load the test scene file, if it doesnt load properly load the backup scene
-	parseDotScene("test.scene","General",mSceneMgr);
-	
-	//Set up the physics world
-	world->initWorld();
+	//Set up the current scene
+	std::shared_ptr<Ogre::SceneManager> p1(mSceneMgr);
+	std::shared_ptr<Ogre::Camera> c1(mCamera);
+	mCurrentScene = std::unique_ptr<GameplayScene>(new GameplayScene(p1,c1));
 
-	//Setting a ambient light
-	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5f, 0.5f, 0.5f, 1.0f));
+	mCurrentScene->LoadSceneFile("test.scene");
 
-	Ogre::Light* light = mSceneMgr->createLight("MainLight");
-	light->setPosition(Ogre::Vector3(0.0f, 10.0f, 0.0f));
-
-	Ogre::SceneNode* controllerNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("controllerNode");
-
-	//Create a game object thing
-	myShip = Car("myShip", controllerNode);
-	Ogre::Entity* myShipEnt = mSceneMgr->createEntity("shipEnt", "BoltCar.mesh");
-	myShip.GetSceneNode()->attachObject(myShipEnt);
-
-	//Add the car's rigid body to the world
-	world->addBodyToWorld(myShip.GetRigidBody());
-
-	Ogre::SceneNode* camNode = controllerNode->createChildSceneNode("camNode");
-	camNode->attachObject(mCamera);
-
-	camNode->translate(Ogre::Vector3(0.0f, 35.0f, 7.0f));
-
-	mCamera->lookAt(myShip.GetSceneNode()->getPosition());
+	mCurrentScene->AddCarToScene("myCar");
 }
 
 bool Game::keyPressed( const OIS::KeyEvent &arg )
@@ -49,15 +26,8 @@ bool Game::keyPressed( const OIS::KeyEvent &arg )
 	//Call the base class
 	BaseApplication::keyPressed(arg);
 
-	//Slightly move the ship when you press the button
-	if(arg.key == OIS::KC_P)
-	{
-		myShip.move = true;
-	}
-	if(arg.key == OIS::KC_O)
-	{
-		myShip.GetRigidBody()->translate(btVector3(0,10,0));
-	}
+	mCurrentScene->KeyPressed(arg);
+
 
 	return true;
 }
@@ -67,22 +37,14 @@ bool Game::keyReleased( const OIS::KeyEvent &arg )
 	//Call the base class
 	BaseApplication::keyReleased(arg);
 
-	//Slightly move the ship when you press the button
-	if(arg.key == OIS::KC_P)
-	{
-		myShip.move = false;
-	}
+	mCurrentScene->KeyReleased(arg);
 
 	return true;
 }
 
 bool Game::Update()
 {
-	//myShip.GetRigidBody()->applyCentralForce(btVector3(0.0f, 0.0f, 2.0f));
-
-	world->updateWorld();
-
-	myShip.Update();
+	mCurrentScene->Update();
 
 	return true;
 }
