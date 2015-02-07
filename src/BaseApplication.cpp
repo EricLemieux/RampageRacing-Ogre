@@ -40,9 +40,8 @@ BaseApplication::~BaseApplication(void)
     if (mTrayMgr) delete mTrayMgr;
 
     //Remove ourself as a Window listener
-    Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
-    windowClosed(mWindow);
-    delete mRoot;
+    Ogre::WindowEventUtilities::removeWindowEventListener(mWindow.get(), this);
+    windowClosed(mWindow.get());
 }
 
 //-------------------------------------------------------------------------------------
@@ -55,7 +54,7 @@ bool BaseApplication::configure(void)
     {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'
-        mWindow = mRoot->initialise(true, "TutorialApplication Render Window");
+        mWindow = std::shared_ptr<Ogre::RenderWindow>(mRoot->initialise(true, "TutorialApplication Render Window"));
 
         return true;
     }
@@ -68,7 +67,7 @@ bool BaseApplication::configure(void)
 void BaseApplication::chooseSceneManager(void)
 {
     // Get the SceneManager, in this case a generic one
-    mSceneMgr = mRoot->createSceneManager(Ogre::ST_GENERIC);
+    mSceneMgr = std::shared_ptr<Ogre::SceneManager>(mRoot->createSceneManager(Ogre::ST_GENERIC));
 	mOverlaySystem = new Ogre::OverlaySystem();
 	mSceneMgr->addRenderQueueListener(mOverlaySystem);
 }
@@ -76,7 +75,7 @@ void BaseApplication::chooseSceneManager(void)
 void BaseApplication::createCamera(void)
 {
     // Create the camera
-    mCamera = mSceneMgr->createCamera("PlayerCam");
+    mCamera = std::shared_ptr<Ogre::Camera>(mSceneMgr->createCamera("PlayerCam"));
 
     // Position it at 500 in Z direction
     mCamera->setPosition(Ogre::Vector3(0,0,80));
@@ -105,15 +104,15 @@ void BaseApplication::createFrameListener(void)
     mKeyboard->setEventCallback(this);
 
     //Set initial mouse clipping size
-    windowResized(mWindow);
+    windowResized(mWindow.get());
 
     //Register as a Window listener
-    Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
+    Ogre::WindowEventUtilities::addWindowEventListener(mWindow.get(), this);
 
 	OgreBites::InputContext inputContext;
 	inputContext.mMouse = mMouse; 
 	inputContext.mKeyboard = mKeyboard;
-    mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, inputContext, this);
+    mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow.get(), inputContext, this);
     mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
     mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     mTrayMgr->hideCursor();
@@ -147,7 +146,7 @@ void BaseApplication::destroyScene(void)
 void BaseApplication::createViewports(void)
 {
     // Create one viewport, entire window
-    Ogre::Viewport* vp = mWindow->addViewport(mCamera);
+    Ogre::Viewport* vp = mWindow->addViewport(mCamera.get());
     vp->setBackgroundColour(Ogre::ColourValue(0,0,0));
 
     // Alter the camera aspect ratio to match the viewport
@@ -216,7 +215,7 @@ void BaseApplication::go(void)
 //-------------------------------------------------------------------------------------
 bool BaseApplication::setup(void)
 {
-    mRoot = new Ogre::Root(mPluginsCfg);
+	mRoot = std::shared_ptr<Ogre::Root>(new Ogre::Root(mPluginsCfg));
 
     setupResources();
 
@@ -406,7 +405,7 @@ void BaseApplication::windowResized(Ogre::RenderWindow* rw)
 void BaseApplication::windowClosed(Ogre::RenderWindow* rw)
 {
     //Only close for window that created OIS (the main window in these demos)
-    if( rw == mWindow )
+    if( rw == mWindow.get())
     {
         if( mInputManager )
         {

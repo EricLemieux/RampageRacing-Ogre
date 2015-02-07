@@ -75,13 +75,13 @@ protected:
 	virtual bool Update();
 	virtual bool Render();
 
-    Ogre::Root *mRoot;
-    Ogre::Camera* mCamera;
-    Ogre::SceneManager* mSceneMgr;
-    Ogre::RenderWindow* mWindow;
-    Ogre::String mResourcesCfg;
-    Ogre::String mPluginsCfg;
-	Ogre::OverlaySystem *mOverlaySystem;
+	std::shared_ptr<Ogre::Root> mRoot;
+    std::shared_ptr<Ogre::Camera> mCamera;
+    std::shared_ptr<Ogre::SceneManager> mSceneMgr;
+	std::shared_ptr<Ogre::RenderWindow> mWindow;
+	Ogre::String mResourcesCfg;
+	Ogre::String mPluginsCfg;
+	Ogre::OverlaySystem* mOverlaySystem;
 
     // OgreBites
     OgreBites::SdkTrayManager* mTrayMgr;

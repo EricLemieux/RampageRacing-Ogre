@@ -12,9 +12,7 @@ Game::~Game(void)
 void Game::createScene(void)
 {
 	//Set up the current scene
-	std::shared_ptr<Ogre::SceneManager> p1(mSceneMgr);
-	std::shared_ptr<Ogre::Camera> c1(mCamera);
-	mCurrentScene = std::unique_ptr<GameplayScene>(new GameplayScene(p1,c1));
+	mCurrentScene = std::unique_ptr<GameplayScene>(new GameplayScene(mSceneMgr, mCamera));
 
 	mCurrentScene->LoadSceneFile("test.scene");
 
