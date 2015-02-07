@@ -12,17 +12,15 @@ Game::~Game(void)
 void Game::createScene(void)
 {
 	//Set up the current scene
-	mCurrentScene = std::unique_ptr<GameplayScene>(new GameplayScene(mSceneMgr, mCamera));
+	mCurrentScene = std::unique_ptr<MenuScene>(new MenuScene(mSceneMgr, mCamera));
 
-	mCurrentScene->LoadSceneFile("test.scene");
-
-	mCurrentScene->AddCarToScene("myCar");
+	mCurrentScene->LoadSceneFile("MainMenu.scene");
 }
 
 bool Game::keyPressed( const OIS::KeyEvent &arg )
 {
 	//Call the base class
-	BaseApplication::keyPressed(arg);
+	//BaseApplication::keyPressed(arg);
 
 	mCurrentScene->KeyPressed(arg);
 

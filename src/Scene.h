@@ -60,6 +60,8 @@ private:
 	std::shared_ptr<PhysicsWorld> mPhysicsWorld;
 
 	std::vector<GameObject*> mObjects;
+
+	void ResetCamera(void);
 };
 
 class GameplayScene : public Scene
@@ -76,4 +78,17 @@ public:
 	virtual void AddCarToScene(Ogre::String name);
 private:
 	Car* mCar;
+};
+
+class MenuScene : public Scene
+{
+public:
+	MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera);
+	~MenuScene();
+
+	virtual bool Update();
+
+	virtual void KeyPressed(const OIS::KeyEvent &arg);
+	virtual void KeyReleased(const OIS::KeyEvent &arg);
+private:
 };

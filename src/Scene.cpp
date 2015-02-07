@@ -6,6 +6,8 @@ Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre:
 
 	mCamera = camera;
 
+	ResetCamera();
+
 	//Set up the physics world
 	mPhysicsWorld = std::shared_ptr<PhysicsWorld>(new PhysicsWorld);
 	mPhysicsWorld->initWorld();
@@ -52,8 +54,14 @@ void Scene::AddCarToScene(Ogre::String name)
 
 }
 
+void Scene::ResetCamera()
+{
+	mCamera->setPosition(0.0f, 0.0f, 0.0f);
+	mCamera->lookAt(0.0f, 0.0f, -1.0f);
+}
 
 
+//Gameplay scenes
 GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera) : Scene(sceneMgr, camera)
 {
 
@@ -69,12 +77,11 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 		mCar->GetRigidBody()->translate(btVector3(0, 10, 0));
 	}
 
-	if (arg.key == OIS::KC_SPACE)
+	if (arg.key == OIS::KC_ESCAPE)
 	{
 		GetSceneManager()->clearScene();
-		newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera()));
-		newScene->LoadSceneFile("test.scene");
-		newScene->AddCarToScene("myCar");
+		newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), GetCamera()));
+		newScene->LoadSceneFile("MainMenu.scene");
 		swapToTheNewScene = true;
 	}
 }
@@ -98,14 +105,57 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 	Ogre::SceneNode* camNode = controllerNode->createChildSceneNode("camNode");
 	camNode->attachObject(GetCamera().get());
 
-	camNode->translate(Ogre::Vector3(0.0f, 35.0f, 7.0f));
+	camNode->translate(Ogre::Vector3(0.0f, 10.0f, 30.0f));
 
 	GetCamera()->lookAt(mCar->GetSceneNode()->getPosition());
 }
 
 bool GameplayScene::Update()
 {
+	GetPhysicsWorld()->updateWorld();
+
 	mCar->Update();
 
+	return true;
+}
+
+
+//Menu Scene
+MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera) : Scene(sceneMgr, camera)
+{
+
+}
+MenuScene::~MenuScene()
+{
+}
+
+void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
+{
+	if (arg.key == OIS::KC_SPACE)
+	{
+		GetSceneManager()->clearScene();
+		newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera()));
+		newScene->LoadSceneFile("test.scene");
+		newScene->AddCarToScene("myCar");
+		swapToTheNewScene = true;
+	}
+
+	if (arg.key == OIS::KC_ESCAPE)
+	{
+		//TODO Replace with an actual way to stop the program
+		exit(1);
+	}
+}
+void MenuScene::KeyReleased(const OIS::KeyEvent &arg)
+{
+
+}
+
+bool MenuScene::Update()
+{
+	GetPhysicsWorld()->updateWorld();
+
+	GetSceneManager()->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
+	
 	return true;
 }

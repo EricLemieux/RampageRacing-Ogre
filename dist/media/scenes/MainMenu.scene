@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene formatVersion="1.0" upAxis="y" unitsPerMeter="100" unitType="centimeters" minOgreVersion="1.9" ogreMaxVersion="2.6.4" author="OgreMax Scene Exporter (www.ogremax.com)" application="Maya">
+    <environment>
+        <colourAmbient r="1" g="1" b="1"/>
+        <colourBackground r="0.4" g="0.4" b="0.4"/>
+        <clipping near="0" far="100000"/>
+    </environment>
+    <nodes>
+		<node name="Car" id="99">
+            <position x="0" y="0" z="-30"/>
+            <rotation qx="0" qy="0" qz="0" qw="1"/>
+            <entity name="Car" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
+                <subentities>
+                    <subentity index="0" materialName="lambert1"/>
+                </subentities>
+            </entity>
+        </node>
+		<node name="Omni01" id="5">
+            <position x="0" y="10" z="10" />
+            <rotation qx="0" qy="0" qz="0" qw="1" />
+            <scale x="1" y="1" z="1" />
+            <light name="Omni01" type="point" intensity="1.0" contrast="0">
+                <colourDiffuse r="0.5" g="0.5" b="0.5" />
+                <colourSpecular r="0.5" g="0.5" b="0.5" />
+            </light>
+        </node>
+    </nodes>
+</scene>
