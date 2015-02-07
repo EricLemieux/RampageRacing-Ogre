@@ -68,9 +68,6 @@ find_path(BULET_LIB_PATH BULLET_LIB_PATH)
 
 set(BULLET_DEBUG_LIB_PATH ${BULET_LIB_PATH}/Debug)
 set(BULLET_RELEASE_LIB_PATH ${BULET_LIB_PATH}/Release)
-
-set(BULLET_DEBUG_LIBRARIES ${BULLET_DEBUG_LIB_PATH}/LinearMath_Debug.lib ${BULLET_DEBUG_LIB_PATH}/BulletSoftBody_Debug.lib ${BULLET_DEBUG_LIB_PATH}/BulletDynamics_Debug.lib ${BULLET_DEBUG_LIB_PATH}/BulletCollision_Debug.lib)
-set(BULLET_RELEASE_LIBRARIES ${BULLET_RELEASE_LIB_PATH}/LinearMath.lib ${BULLET_RELEASE_LIB_PATH}/BulletSoftBody.lib ${BULLET_RELEASE_LIB_PATH}/BulletDynamics.lib ${BULLET_RELEASE_LIB_PATH}/BulletCollision.lib)
   
 find_package(OIS REQUIRED)
  
@@ -151,11 +148,18 @@ set_target_properties(OgreApp PROPERTIES DEBUG_POSTFIX _d)
  
 target_link_libraries(OgreApp ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES})
 
-target_link_libraries(OgreApp debug ${BULLET_DEBUG_LIBRARIES})
-target_link_libraries(OgreApp optimized ${BULLET_RELEASE_LIBRARIES})
+#link the bullet libs
+target_link_libraries(OgreApp 	debug ${BULLET_DEBUG_LIB_PATH}/LinearMath_Debug.lib 
+												debug ${BULLET_DEBUG_LIB_PATH}/BulletSoftBody_Debug.lib 
+												debug ${BULLET_DEBUG_LIB_PATH}/BulletDynamics_Debug.lib 
+												debug ${BULLET_DEBUG_LIB_PATH}/BulletCollision_Debug.lib
+												
+												optimized ${BULLET_RELEASE_LIB_PATH}/LinearMath.lib 
+												optimized ${BULLET_RELEASE_LIB_PATH}/BulletSoftBody.lib 
+												optimized ${BULLET_RELEASE_LIB_PATH}/BulletDynamics.lib 
+												optimized ${BULLET_RELEASE_LIB_PATH}/BulletCollision.lib)
 
-target_link_libraries(OgreApp debug ${XML_DLL_DEBUG_PATH}/tinyxml2.lib)
-target_link_libraries(OgreApp optimized  ${XML_DLL_RELEASE_PATH}/tinyxml2.lib)
+target_link_libraries(OgreApp debug ${XML_DLL_DEBUG_PATH}/tinyxml2.lib optimized  ${XML_DLL_RELEASE_PATH}/tinyxml2.lib)
  
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/media)
