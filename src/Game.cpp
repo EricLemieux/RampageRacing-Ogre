@@ -42,6 +42,12 @@ bool Game::keyReleased( const OIS::KeyEvent &arg )
 
 bool Game::Update()
 {
+	//Check to see if the current scene needs to be swapped
+	if (mCurrentScene->GetIfShouldSwapScenes())
+	{
+		mCurrentScene = std::move(mCurrentScene->GetNewScene());
+	}
+
 	mCurrentScene->Update();
 
 	return true;

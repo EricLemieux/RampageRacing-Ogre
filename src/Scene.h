@@ -45,6 +45,14 @@ public:
 	inline std::shared_ptr<Ogre::Camera> GetCamera(){ return mCamera; }
 	inline std::shared_ptr<PhysicsWorld> GetPhysicsWorld(){ return mPhysicsWorld; }
 
+	inline bool GetIfShouldSwapScenes(){ return swapToTheNewScene; }
+	//Don't fucking call this unless you know what you are doing... yeah, you...
+	inline std::shared_ptr<Scene> GetNewScene(){ swapToTheNewScene = false; return newScene; }
+
+protected:
+	bool swapToTheNewScene = false;
+	std::shared_ptr<Scene> newScene;
+
 private:
 	std::shared_ptr<Ogre::SceneManager> mSceneMgr;
 	std::shared_ptr<Ogre::Camera> mCamera;

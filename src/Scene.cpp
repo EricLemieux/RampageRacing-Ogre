@@ -68,6 +68,15 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 	{
 		mCar->GetRigidBody()->translate(btVector3(0, 10, 0));
 	}
+
+	if (arg.key == OIS::KC_SPACE)
+	{
+		GetSceneManager()->clearScene();
+		newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera()));
+		newScene->LoadSceneFile("test.scene");
+		newScene->AddCarToScene("myCar");
+		swapToTheNewScene = true;
+	}
 }
 void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
 {
