@@ -1,0 +1,18 @@
+material button_lambert
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			specular 0.5 0.5 0.5 1 100
+
+			texture_unit
+			{
+				texture buttonStartTex.png
+			}
+		}
+
+	}
+
+}
