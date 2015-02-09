@@ -1,0 +1,17 @@
+material sky
+{
+   technique
+   {
+      pass
+      {
+         lighting off
+         depth_write off
+
+         texture_unit
+         {
+            cubic_texture cubemap_fr.png cubemap_bk.png cubemap_lf.png cubemap_rt.png cubemap_up.png cubemap_dn.png separateUV
+            tex_address_mode clamp
+         }
+      }
+   }
+}

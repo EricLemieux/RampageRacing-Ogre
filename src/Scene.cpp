@@ -11,6 +11,8 @@ Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre:
 	//Set up the physics world
 	mPhysicsWorld = std::shared_ptr<PhysicsWorld>(new PhysicsWorld);
 	mPhysicsWorld->initWorld();
+
+	mSceneMgr->setSkyBox(true, "sky");
 }
 
 Scene::~Scene()
@@ -184,7 +186,7 @@ bool MenuScene::Update()
 {
 	GetPhysicsWorld()->updateWorld();
 
-	//GetSceneManager()->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
+	GetSceneManager()->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 	
 	return true;
 }
