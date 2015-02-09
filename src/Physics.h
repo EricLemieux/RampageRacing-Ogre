@@ -16,6 +16,16 @@ public:
 
 private:
 	btDiscreteDynamicsWorld* world;
+
+	btBroadphaseInterface* broadphase;
+	btDefaultCollisionConfiguration* collisionConfiguration;
+	btCollisionDispatcher* dispatcher;
+
+	btSequentialImpulseConstraintSolver* solver;
+
+	btCollisionShape* groundShape;
+	btDefaultMotionState* groundMotionState;
+	btRigidBody* groundRigidBody;
 };
 
 class PhysicsBody {
@@ -26,4 +36,9 @@ class PhysicsBody {
 
 	btVector3 getPos();
 	btQuaternion getQuatRot();
+
+private:
+	btCollisionShape* boxShape;
+	btDefaultMotionState* boxMotionState;
+	btRigidBody* boxRigidBody;
 };

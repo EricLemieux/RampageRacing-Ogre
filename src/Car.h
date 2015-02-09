@@ -11,8 +11,17 @@ public:
 
 public:
 	void MoveForward(float distance);
+	void MoveBackward(float distance);
+
+	void TurnRight(float value=0.3f);
+	void TurnLeft(float value=0.3f);
 
 	virtual void Update(void);
 
-	bool move;
+	bool mCanMoveForward	= false;
+	bool mCanMoveBackward	= false;
+
+private:
+	float speed = 99.0f;
+	float turnSpeed = 0.3f;
 };

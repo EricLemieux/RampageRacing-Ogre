@@ -74,7 +74,20 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 {
 	if (arg.key == OIS::KC_W)
 	{
-		mCar->GetRigidBody()->translate(btVector3(0, 10, 0));
+		mCar->mCanMoveForward = true;
+	}
+	else if (arg.key == OIS::KC_S)
+	{
+		mCar->mCanMoveBackward = true;
+	}
+
+	if (arg.key == OIS::KC_D)
+	{
+		mCar->TurnRight();
+	}
+	else if (arg.key == OIS::KC_A)
+	{
+		mCar->TurnLeft();
 	}
 
 	if (arg.key == OIS::KC_ESCAPE)
@@ -87,7 +100,23 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 }
 void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
 {
+	if (arg.key == OIS::KC_W)
+	{
+		mCar->mCanMoveForward = false;
+	}
+	if (arg.key == OIS::KC_S)
+	{
+		mCar->mCanMoveBackward = false;
+	}
 
+	if (arg.key == OIS::KC_D)
+	{
+		mCar->TurnRight(0.0f);
+	}
+	if (arg.key == OIS::KC_A)
+	{
+		mCar->TurnLeft(0.0f);
+	}
 }
 
 void GameplayScene::AddCarToScene(Ogre::String name)
@@ -105,7 +134,7 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 	Ogre::SceneNode* camNode = controllerNode->createChildSceneNode("camNode");
 	camNode->attachObject(GetCamera().get());
 
-	camNode->translate(Ogre::Vector3(0.0f, 10.0f, 30.0f));
+	camNode->translate(Ogre::Vector3(0.0f, 10.0f, 40.0f));
 
 	GetCamera()->lookAt(mCar->GetSceneNode()->getPosition());
 }
@@ -155,7 +184,7 @@ bool MenuScene::Update()
 {
 	GetPhysicsWorld()->updateWorld();
 
-	GetSceneManager()->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
+	//GetSceneManager()->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 	
 	return true;
 }
