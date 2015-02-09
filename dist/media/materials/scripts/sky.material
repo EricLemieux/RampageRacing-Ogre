@@ -9,7 +9,7 @@ material sky
 
          texture_unit
          {
-            cubic_texture cubemap_fr.png cubemap_bk.png cubemap_lf.png cubemap_rt.png cubemap_up.png cubemap_dn.png separateUV
+            cubic_texture skybox1.bmp skybox2.bmp skybox3.bmp skybox4.bmp skybox5.bmp skybox6.bmp separateUV
             tex_address_mode clamp
          }
       }
