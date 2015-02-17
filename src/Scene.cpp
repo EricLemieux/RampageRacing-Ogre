@@ -51,6 +51,19 @@ void Scene::KeyReleased(const OIS::KeyEvent &arg)
 
 }
 
+void Scene::mouseMoved(const OIS::MouseEvent &arg)
+{
+
+}
+void Scene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+
+}
+void Scene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+
+}
+
 void Scene::AddCarToScene(Ogre::String name)
 {
 
@@ -121,6 +134,19 @@ void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
 	}
 }
 
+void GameplayScene::mouseMoved(const OIS::MouseEvent &arg)
+{
+
+}
+void GameplayScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+
+}
+void GameplayScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+
+}
+
 void GameplayScene::AddCarToScene(Ogre::String name)
 {
 	Ogre::SceneNode* controllerNode = GetSceneManager()->getRootSceneNode()->createChildSceneNode("controllerNode");
@@ -178,6 +204,56 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 	}
 }
 void MenuScene::KeyReleased(const OIS::KeyEvent &arg)
+{
+
+}
+
+void MenuScene::mouseMoved(const OIS::MouseEvent &arg)
+{
+
+}
+void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+	Ogre::RaySceneQuery *q = GetSceneManager()->createRayQuery(Ogre::Ray());
+
+	float x = arg.state.X.abs/1280.0f, y = arg.state.Y.abs/720.0f;
+
+	Ogre::Ray ray = GetCamera()->getCameraToViewportRay(x,y);
+
+	q->setRay(ray);
+	q->setSortByDistance(true);
+
+	Ogre::RaySceneQueryResult res = q->execute();
+	Ogre::RaySceneQueryResult::iterator itr = res.begin();
+
+	//Loop to select the object
+	for (itr; itr != res.end(); itr++)
+	{
+		if (itr->movable && itr->movable->getName()[0] == 'b')
+		{
+			//We found the object
+			if (itr->movable->getName() == "bStartEnt")
+			{
+				//Start the game
+
+				GetSceneManager()->clearScene();
+				newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera()));
+				newScene->LoadSceneFile("test.scene");
+				newScene->AddCarToScene("myCar");
+				swapToTheNewScene = true;
+			}
+			else if (itr->movable->getName() == "bExitEnt")
+			{
+				//exit the game
+
+				exit(1);
+			}
+
+			break;
+		}
+	}
+}
+void MenuScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
 
 }

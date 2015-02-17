@@ -39,6 +39,10 @@ public:
 	virtual void KeyPressed(const OIS::KeyEvent &arg);
 	virtual void KeyReleased(const OIS::KeyEvent &arg);
 
+	virtual void mouseMoved(const OIS::MouseEvent &arg);
+	virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+
 	virtual void AddCarToScene(Ogre::String name);
 
 	inline std::shared_ptr<Ogre::SceneManager> GetSceneManager(){ return mSceneMgr; }
@@ -75,6 +79,10 @@ public:
 	virtual void KeyPressed(const OIS::KeyEvent &arg);
 	virtual void KeyReleased(const OIS::KeyEvent &arg);
 
+	virtual void mouseMoved(const OIS::MouseEvent &arg);
+	virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+
 	virtual void AddCarToScene(Ogre::String name);
 private:
 	Car* mCar;
@@ -90,5 +98,9 @@ public:
 
 	virtual void KeyPressed(const OIS::KeyEvent &arg);
 	virtual void KeyReleased(const OIS::KeyEvent &arg);
+
+	virtual void mouseMoved(const OIS::MouseEvent &arg);
+	virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 private:
 };

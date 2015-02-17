@@ -38,6 +38,31 @@ bool Game::keyReleased( const OIS::KeyEvent &arg )
 	return true;
 }
 
+bool Game::mouseMoved(const OIS::MouseEvent &arg)
+{
+	BaseApplication::mouseMoved(arg);
+
+	mCurrentScene->mouseMoved(arg);
+
+	return true;
+}
+bool Game::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+	BaseApplication::mousePressed(arg, id);
+
+	mCurrentScene->mousePressed(arg, id);
+
+	return true;
+}
+bool Game::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+	BaseApplication::mouseReleased(arg, id);
+
+	mCurrentScene->mouseReleased(arg, id);
+
+	return true;
+}
+
 bool Game::Update()
 {
 	//Check to see if the current scene needs to be swapped
