@@ -39,7 +39,8 @@ void Scene::ClearScene()
 
 void Scene::LoadSceneFile(Ogre::String fileName)
 {
-	parseDotScene(fileName, "General", mSceneMgr.get());
+	Ogre::DotSceneLoader a;
+	a.parseDotScene(fileName, "General", mSceneMgr.get());
 }
 
 void Scene::KeyPressed(const OIS::KeyEvent &arg)
@@ -149,19 +150,15 @@ void GameplayScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID
 
 void GameplayScene::AddCarToScene(Ogre::String name)
 {
-	Ogre::SceneNode* controllerNode = GetSceneManager()->getRootSceneNode()->createChildSceneNode("controllerNode");
-
 	//Create a game object thing
-	mCar = new Car("myShip", controllerNode);
-	Ogre::Entity* myShipEnt = GetSceneManager()->createEntity("shipEnt", "BoltCar.mesh");
-	mCar->GetSceneNode()->attachObject(myShipEnt);
+	mCar = new Car("myShip", GetSceneManager()->getSceneNode("mCar"));
 
 	//Add the car's rigid body to the world
 	GetPhysicsWorld()->addBodyToWorld(mCar->GetRigidBody());
 
-	Ogre::SceneNode* camNode = controllerNode->createChildSceneNode("camNode");
+	Ogre::SceneNode* camNode = GetSceneManager()->getSceneNode("mCar")->createChildSceneNode();
 	camNode->attachObject(GetCamera().get());
-
+	
 	camNode->translate(Ogre::Vector3(0.0f, 10.0f, 40.0f));
 
 	GetCamera()->lookAt(mCar->GetSceneNode()->getPosition());

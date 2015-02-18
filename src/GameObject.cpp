@@ -2,15 +2,16 @@
 
 GameObject::GameObject()
 {
-	name = "temp";
+	mName = "temp";
 	mSceneNode = &Ogre::SceneNode(NULL);
 
 	InitRigidBody();
 }
 
-GameObject::GameObject(Ogre::String name, Ogre::SceneNode* root)
+GameObject::GameObject(Ogre::String name, Ogre::SceneNode* node)
 {
-	mSceneNode = root->createChildSceneNode(name);
+	mName = name;
+	mSceneNode = node;
 
 	InitRigidBody();
 }

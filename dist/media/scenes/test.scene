@@ -15,14 +15,33 @@
                 </subentities>
             </entity>
         </node>
-		<node name="Omni01" id="5">
-            <position x="0" y="10" z="10" />
-            <rotation qx="0" qy="0" qz="0" qw="1" />
-            <scale x="1" y="1" z="1" />
-            <light name="Omni01" type="point" intensity="1.0" contrast="0">
-                <colourDiffuse r="0.5" g="0.5" b="0.5" />
-                <colourSpecular r="0.5" g="0.5" b="0.5" />
-            </light>
-        </node>
+		<node name="mCar">
+			<position x="0" y="0" z="0"/>
+			<rotation qx="0" qy="0" qz="0" qw="1"/>
+			<entity name="mCarEnt" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
+			<subentities>
+				<subentity index="0" materialName="lambert1"/>
+			</subentities>
+			</entity>
+		</node>
+		<node name="mCar2">
+			<position x="10" y="0" z="0"/>
+			<rotation qx="0" qy="0" qz="0" qw="1"/>
+			<entity name="mCar2Ent" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
+			<subentities>
+				<subentity index="0" materialName="lambert1"/>
+			</subentities>
+			</entity>
+		</node>
+		
+		<!--Lights-->
+		<node name="sun">
+				<position x="0" y="50" z="0"/>
+				<rotation qx="0" qy="0" qz="0" qw="1"/>
+				<light name="sunLight" type="point" intensity="1.0" contrast="0">
+					<colourDiffuse r="0.0" g="0.5" b="0.5" />
+					<colourSpecular r="0.0" g="0.5" b="0.5" />
+				</light>
+			</node>
     </nodes>
 </scene>

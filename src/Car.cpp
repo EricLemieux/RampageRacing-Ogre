@@ -50,8 +50,5 @@ void Car::Update(void)
 		MoveBackward(speed);
 	}
 
-	//Update the position of the scene node to match the new position of the rigid body
-	btTransform trans = GetRigidBody()->getWorldTransform();
-	GetSceneNode()->getParentSceneNode()->setOrientation(BtToOgreQuaternion(&trans.getRotation()));
-	GetSceneNode()->getParentSceneNode()->setPosition(BtToOgreVector3(&trans.getOrigin()));
+	GameObject::Update();
 }

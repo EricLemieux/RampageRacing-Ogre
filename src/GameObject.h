@@ -10,7 +10,7 @@ class GameObject
 {
 public:
 	GameObject();
-	GameObject(Ogre::String name, Ogre::SceneNode* root);
+	GameObject(Ogre::String name, Ogre::SceneNode* node);
 	~GameObject();
 
 public:
@@ -22,7 +22,7 @@ private:
 	void InitRigidBody();
 
 private:
-	Ogre::String name;
+	Ogre::String mName;
 	Ogre::SceneNode* mSceneNode;
 	btRigidBody* mRigidBody;
 };
