@@ -34,7 +34,7 @@ public:
 
 	void ClearScene();
 
-	void LoadSceneFile(Ogre::String fileName);
+	virtual void LoadSceneFile(Ogre::String fileName);
 
 	virtual void KeyPressed(const OIS::KeyEvent &arg);
 	virtual void KeyReleased(const OIS::KeyEvent &arg);
@@ -102,5 +102,20 @@ public:
 	virtual void mouseMoved(const OIS::MouseEvent &arg);
 	virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+
+	virtual void LoadSceneFile(Ogre::String fileName);
 private:
+	enum subMenus
+	{
+		sm_Main = 0,
+		sm_LevelSelect
+	};
+
+	subMenus currentSubMenu;
+	subMenus nextSubMenu;
+
+	float deltaT;
+
+	Ogre::Vector3 GetCamPosFromSubMenu(int subMenu);
+	Ogre::Vector3 GetCamTargetFromSubMenu(int subMenu);
 };

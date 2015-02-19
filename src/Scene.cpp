@@ -177,7 +177,9 @@ bool GameplayScene::Update()
 //Menu Scene
 MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera) : Scene(sceneMgr, camera)
 {
+	currentSubMenu = nextSubMenu = sm_Main;
 
+	deltaT = 0.0f;
 }
 MenuScene::~MenuScene()
 {
@@ -198,6 +200,14 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 	{
 		//TODO Replace with an actual way to stop the program
 		exit(1);
+	}
+
+	if (arg.key == OIS::KC_P)
+	{
+		if (currentSubMenu == sm_Main)
+			nextSubMenu = sm_LevelSelect;
+		else
+			nextSubMenu = sm_Main;
 	}
 }
 void MenuScene::KeyReleased(const OIS::KeyEvent &arg)
@@ -261,5 +271,57 @@ bool MenuScene::Update()
 
 	GetSceneManager()->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 	
+	if (currentSubMenu != nextSubMenu)
+	{
+		if (deltaT < 1.0f)
+		{
+			GetCamera()->setPosition(Ogre::Math::lerp(GetCamPosFromSubMenu(currentSubMenu), GetCamTargetFromSubMenu(nextSubMenu), deltaT));
+			GetCamera()->lookAt(Ogre::Math::lerp(GetCamTargetFromSubMenu(currentSubMenu), GetCamTargetFromSubMenu(nextSubMenu), deltaT));
+
+			deltaT += 0.01f;
+		}
+		else
+		{
+			//Make sure its lined up properly
+			GetCamera()->setPosition(GetCamPosFromSubMenu(nextSubMenu));
+			GetCamera()->lookAt(GetCamTargetFromSubMenu(nextSubMenu));
+
+			//Reset the variables so we can use them again
+			currentSubMenu = nextSubMenu;
+			deltaT = 0.0f;
+		}
+	}
+
 	return true;
+}
+
+void MenuScene::LoadSceneFile(Ogre::String fileName)
+{
+	//Do the base scene stuff
+	Scene::LoadSceneFile(fileName);
+
+	//Set the position of the camera based on the starting camera node
+	GetCamera()->setPosition(GetCamPosFromSubMenu(currentSubMenu));
+	GetCamera()->lookAt(GetCamTargetFromSubMenu(currentSubMenu));
+}
+
+Ogre::Vector3 MenuScene::GetCamPosFromSubMenu(int subMenu)
+{
+	Ogre::String str = "camPos";
+	char buf[50];
+	sprintf_s(buf, "%i", subMenu);
+
+	str += buf;
+
+	return GetSceneManager()->getSceneNode(str)->getPosition();
+}
+Ogre::Vector3 MenuScene::GetCamTargetFromSubMenu(int subMenu)
+{
+	Ogre::String str = "camTar";
+	char buf[50];
+	sprintf_s(buf, "%i", subMenu);
+
+	str += buf;
+
+	return GetSceneManager()->getSceneNode(str)->getPosition();
 }

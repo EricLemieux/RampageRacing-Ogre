@@ -6,6 +6,16 @@
         <clipping near="0" far="100000"/>
     </environment>
     <nodes>
+
+        <!--Main Menu-->
+        <node name="camPos0" id="10">
+            <position x="0" y="0" z="0"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+        </node>
+        <node name="camTar0" id="10">
+            <position x="0" y="0" z="-1"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+        </node>
 		<node name="Car" id="99">
             <position x="10" y="0" z="-40"/>
             <rotation qx="0" qy="0" qz="0" qw="1"/>
@@ -30,6 +40,35 @@
             <rotation qx="0" qy="0" qz="0" qw="1" />
             <scale x="1" y="1" z="1" />
             <light name="Omni01" type="point" intensity="10.0" contrast="0">
+                <colourDiffuse r="0.5" g="0.5" b="0.5" />
+                <colourSpecular r="0.5" g="0.5" b="0.5" />
+            </light>
+        </node>
+
+        <!--Level Select-->
+        <node name="camPos1" id="10">
+            <position x="20" y="0" z="0"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+        </node>
+        <node name="camTar1" id="10">
+            <position x="20" y="0" z="-1"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+        </node>
+        <node name="bStart1" id="10">
+            <position x="22" y="0.75" z="-5"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+            <entity name="bStartEnt1" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+        </node>
+        <node name="bExit1" id="10">
+            <position x="22" y="-0.75" z="-5"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+            <entity name="bExitEnt1" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+        </node>
+        <node name="Omni" id="5">
+            <position x="20" y="0" z="0" />
+            <rotation qx="0" qy="0" qz="0" qw="1" />
+            <scale x="1" y="1" z="1" />
+            <light name="Omni" type="point" intensity="10.0" contrast="0">
                 <colourDiffuse r="0.5" g="0.5" b="0.5" />
                 <colourSpecular r="0.5" g="0.5" b="0.5" />
             </light>
