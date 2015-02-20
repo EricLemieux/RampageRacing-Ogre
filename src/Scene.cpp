@@ -189,25 +189,30 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 {
 	if (arg.key == OIS::KC_SPACE)
 	{
-		GetSceneManager()->clearScene();
-		newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera()));
-		newScene->LoadSceneFile("test.scene");
-		newScene->AddCarToScene("myCar");
-		swapToTheNewScene = true;
+		if (currentSubMenu == sm_Main)
+		{
+			nextSubMenu = sm_LevelSelect;
+		}
+		else if (currentSubMenu == sm_LevelSelect)
+		{
+			GetSceneManager()->clearScene();
+			newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera()));
+			newScene->LoadSceneFile("test.scene");
+			newScene->AddCarToScene("myCar");
+			swapToTheNewScene = true;
+		}
 	}
 
 	if (arg.key == OIS::KC_ESCAPE)
 	{
-		//TODO Replace with an actual way to stop the program
-		exit(1);
-	}
-
-	if (arg.key == OIS::KC_P)
-	{
 		if (currentSubMenu == sm_Main)
-			nextSubMenu = sm_LevelSelect;
-		else
+		{
+			exit(1);
+		}
+		else if (currentSubMenu == sm_LevelSelect)
+		{
 			nextSubMenu = sm_Main;
+		}
 	}
 }
 void MenuScene::KeyReleased(const OIS::KeyEvent &arg)
@@ -238,22 +243,33 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 	{
 		if (itr->movable && itr->movable->getName()[0] == 'b')
 		{
-			//We found the object
-			if (itr->movable->getName() == "bStartEnt")
+			if (currentSubMenu == sm_Main)
 			{
-				//Start the game
+				if (itr->movable->getName() == "bStartEnt0")
+				{
+					nextSubMenu = sm_LevelSelect;
+				}
+				else if (itr->movable->getName() == "bExitEnt0")
+				{
+					//exit the game
 
-				GetSceneManager()->clearScene();
-				newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera()));
-				newScene->LoadSceneFile("test.scene");
-				newScene->AddCarToScene("myCar");
-				swapToTheNewScene = true;
+					exit(1);
+				}
 			}
-			else if (itr->movable->getName() == "bExitEnt")
+			else if (currentSubMenu == sm_LevelSelect)
 			{
-				//exit the game
-
-				exit(1);
+				if (itr->movable->getName() == "bStartEnt1")
+				{
+					GetSceneManager()->clearScene();
+					newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera()));
+					newScene->LoadSceneFile("test.scene");
+					newScene->AddCarToScene("myCar");
+					swapToTheNewScene = true;
+				}
+				else if (itr->movable->getName() == "bExitEnt1")
+				{
+					nextSubMenu = sm_Main;
+				}
 			}
 
 			break;

@@ -28,12 +28,12 @@
 		<node name="bStart" id="10">
             <position x="-2" y="0.75" z="-5"/>
             <rotation qx="0" qy="0.3" qz="0" qw="1"/>
-            <entity name="bStartEnt" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <entity name="bStartEnt0" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
         </node>
 		<node name="bExit" id="10">
             <position x="-2" y="-0.75" z="-5"/>
             <rotation qx="0" qy="0.3" qz="0" qw="1"/>
-            <entity name="bExitEnt" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <entity name="bExitEnt0" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
         </node>
 		<node name="Omni01" id="5">
             <position x="0" y="0" z="0" />
