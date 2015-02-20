@@ -135,6 +135,13 @@ include_directories( ${OIS_INCLUDE_DIRS}
 	${BULLET_INCLUDE_DIRS}
 )
 
+#find the raknet stuff
+find_path(RakNet_INCLUDE_PATH REQUIRED)
+find_path(RakNet_DLL_DEBUG_PATH REQUIRED)
+find_path(RakNet_DLL_RELEASE_PATH REQUIRED)
+
+include_directories(${RakNet_INCLUDE_PATH})
+
 #find the tinyXML stuff
 find_path(XML_DLL_DEBUG_PATH REQUIRED)
 find_path(XML_DLL_RELEASE_PATH REQUIRED)
@@ -159,7 +166,11 @@ target_link_libraries(OgreApp 	debug ${BULLET_DEBUG_LIB_PATH}/LinearMath_Debug.l
 												optimized ${BULLET_RELEASE_LIB_PATH}/BulletDynamics.lib 
 												optimized ${BULLET_RELEASE_LIB_PATH}/BulletCollision.lib)
 
-target_link_libraries(OgreApp debug ${XML_DLL_DEBUG_PATH}/tinyxml2.lib optimized  ${XML_DLL_RELEASE_PATH}/tinyxml2.lib)
+target_link_libraries(OgreApp 	debug ${XML_DLL_DEBUG_PATH}/tinyxml2.lib 
+								optimized  ${XML_DLL_RELEASE_PATH}/tinyxml2.lib)
+
+target_link_libraries(OgreApp 	debug ${RakNet_DLL_DEBUG_PATH}/RakNetDLL.lib
+								optimized ${RakNet_DLL_RELEASE_PATH}/RakNetDLL.lib)
  
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/media)
@@ -198,6 +209,7 @@ if(WIN32)
 		${OGRE_PLUGIN_DIR_REL}/OgreOverlay.dll
 		${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.dll
 		${OGRE_PLUGIN_DIR_REL}/OIS.dll
+		${RakNet_DLL_RELEASE_PATH}/RakNetDLL.dll
 		DESTINATION bin
 		CONFIGURATIONS Release RelWithDebInfo
 	)
@@ -206,6 +218,7 @@ if(WIN32)
 		${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
+		${RakNet_DLL_DEBUG_PATH}/RakNetDLL.dll
 		DESTINATION bin
 		CONFIGURATIONS Debug
 	)
