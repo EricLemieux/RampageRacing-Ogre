@@ -135,6 +135,15 @@ include_directories( ${OIS_INCLUDE_DIRS}
 	${BULLET_INCLUDE_DIRS}
 )
 
+#set the files for the server
+set(SVR_HDRS
+	./src/Server.h
+)
+set(SVR_SRCS 
+	./src/ServerMain.cpp
+	./src/Server.cpp
+)
+
 #find the raknet stuff
 find_path(RakNet_INCLUDE_PATH REQUIRED)
 find_path(RakNet_DLL_DEBUG_PATH REQUIRED)
@@ -150,6 +159,7 @@ find_path(XML_INCLUDE_PATH REQUIRED)
 include_directories(${XML_INCLUDE_PATH})
  
 add_executable(OgreApp WIN32 ${HDRS} ${SRCS})
+add_executable(Server ${SVR_HDRS} ${SVR_SRCS})
  
 set_target_properties(OgreApp PROPERTIES DEBUG_POSTFIX _d)
  
@@ -170,6 +180,9 @@ target_link_libraries(OgreApp 	debug ${XML_DLL_DEBUG_PATH}/tinyxml2.lib
 								optimized  ${XML_DLL_RELEASE_PATH}/tinyxml2.lib)
 
 target_link_libraries(OgreApp 	debug ${RakNet_DLL_DEBUG_PATH}/RakNetDLL.lib
+								optimized ${RakNet_DLL_RELEASE_PATH}/RakNetDLL.lib)
+
+target_link_libraries(Server 	debug ${RakNet_DLL_DEBUG_PATH}/RakNetDLL.lib
 								optimized ${RakNet_DLL_RELEASE_PATH}/RakNetDLL.lib)
  
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/bin)
