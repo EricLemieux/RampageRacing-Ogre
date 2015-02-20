@@ -5,20 +5,21 @@
 
 #include <iostream>
 
-class Server
+class Client
 {
 public:
-	Server();
-	~Server();
+	Client();
+	~Client();
 
-	void Activate(const char* password, const unsigned int& port, const unsigned int& maxConnections);
+	void Connect(const char* address, const unsigned int& serverPort, const unsigned int clientPort, const char* password);
 	void SendString(const std::string &data);
 	void RecieveString();
 
 private:
-	RakNet::RakPeerInterface* mServer;
-	RakNet::SocketDescriptor* mSocketDesc;
+	RakNet::RakPeerInterface* mClient;
+	RakNet::SocketDescriptor* mSockDesc;
 	DataStructures::List<RakNet::RakNetSmartPtr<RakNet::RakNetSocket2>> mSockets;
+
 	RakNet::Packet* mPacket;
-	char mPacketID;
+	unsigned char mPacketID;
 };
