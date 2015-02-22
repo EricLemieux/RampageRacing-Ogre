@@ -21,6 +21,7 @@ void Car::MoveForward(float distance)
 
 	forward *= -distance;
 
+	GetRigidBody()->activate();
 	GetRigidBody()->setLinearVelocity(forward);
 }
 
@@ -31,6 +32,7 @@ void Car::MoveBackward(float distance)
 
 void Car::TurnRight(float value)
 {
+	GetRigidBody()->activate();
 	GetRigidBody()->setAngularVelocity(btVector3(0.0f, -value, 0.0f));
 }
 void Car::TurnLeft(float value)

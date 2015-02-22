@@ -3,15 +3,24 @@
 PhysicsWorld::PhysicsWorld(){
 	 
 }
-PhysicsWorld::~PhysicsWorld(){}
+PhysicsWorld::~PhysicsWorld()
+{
+	delete solver;
+	delete groundShape;
+	delete groundMotionState;
+	delete groundRigidBody;
+	delete broadphase;
+	delete dispatcher;
+	delete collisionConfiguration;
+}
 
 void PhysicsWorld::initWorld(){
 	broadphase = new btDbvtBroadphase();
 
-    collisionConfiguration = new btDefaultCollisionConfiguration();
-    dispatcher = new btCollisionDispatcher(collisionConfiguration);
+	collisionConfiguration = new btDefaultCollisionConfiguration();
+	dispatcher = new btCollisionDispatcher(collisionConfiguration);
 
-    solver = new btSequentialImpulseConstraintSolver;
+	solver = new btSequentialImpulseConstraintSolver;
 
 	world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 
@@ -22,7 +31,7 @@ void PhysicsWorld::initWorld(){
 	groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
 	groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
     btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
-    groundRigidBody = new btRigidBody(groundRigidBodyCI);
+	groundRigidBody = new btRigidBody(groundRigidBodyCI);
     world->addRigidBody(groundRigidBody);
 }
 
@@ -42,8 +51,8 @@ void PhysicsBody::initCar(){}//TODO
 void PhysicsBody::initTrackSegment(){}//TODO
 btRigidBody* PhysicsBody::initBox(btScalar mass, btVector3& pos, btQuaternion& rot){
 	//if mass is zero it counts as infinite
-	boxShape = new btBoxShape(btVector3(1,1,1));
-	boxMotionState = new btDefaultMotionState(btTransform(rot,pos));
+	boxShape = new btBoxShape(btVector3(1, 1, 1));
+	boxMotionState = new btDefaultMotionState(btTransform(rot, pos));
 	btVector3 boxInertia(0,0,0);
 	//boxShape->calculateLocalInertia(mass, boxInertia);
 	btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(mass,boxMotionState,boxShape,boxInertia);

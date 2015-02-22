@@ -61,7 +61,6 @@ protected:
 
 	std::shared_ptr<Client> mGameClient;
 
-private:
 	std::shared_ptr<Ogre::SceneManager> mSceneMgr;
 	std::shared_ptr<Ogre::Camera> mCamera;
 
