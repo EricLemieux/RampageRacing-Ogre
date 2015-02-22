@@ -32,6 +32,20 @@ void Server::SendString(const std::string &data)
 	mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 }
 
+void Server::SendPosUpdates()
+{
+	for (unsigned int i = 0; i < mConnectedPlayers.size(); ++i)
+	{
+		if (i != currentlyConnectedID)
+		{
+			SendString(mConnectedPlayers[i].pos);
+			//SendString(mConnectedPlayers[i].rot);
+			int a = 0;
+			a++;
+		}
+	}
+}
+
 void Server::RecieveString()
 {
 	while ((mPacket = mServer->Receive()) != NULL)
@@ -42,6 +56,13 @@ void Server::RecieveString()
 
 			Object newPlayer;
 			mConnectedPlayers.push_back(newPlayer);
+
+			//TEMP secondary player
+			//this is just for testing right now
+			//Delete it later
+			//Seriously kill it with fire...
+			Object newPlayer2;
+			mConnectedPlayers.push_back(newPlayer2);
 		}
 		else if (mPacket->data[0] == ID_DISCONNECTION_NOTIFICATION)
 		{
@@ -64,6 +85,8 @@ void Server::RecieveString()
 				sscanf_s(str.c_str(), "%*[^0-9]%d", &id);
 
 				mConnectedPlayers[id].pos = str;
+
+				currentlyConnectedID = id;
 			}
 			else if (phrase == "rot")
 			{
@@ -71,6 +94,8 @@ void Server::RecieveString()
 				sscanf_s(str.c_str(), "%*[^0-9]%d", &id);
 
 				mConnectedPlayers[id].rot = str;
+
+				currentlyConnectedID = id;
 			}
 			else if (phrase == "something")
 			{

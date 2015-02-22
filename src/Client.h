@@ -4,8 +4,17 @@
 #include <MessageIdentifiers.h>
 
 #include <iostream>
+#include <vector>
 
 #include <Ogre.h>
+
+class Object
+{
+public:
+	Ogre::Vector3 pos;
+	Ogre::Quaternion rot;
+};
+
 
 class Client
 {
@@ -19,6 +28,8 @@ public:
 
 	inline int GetID(){ return id; }
 
+	inline Ogre::Vector3 GetPos(int id){ return mConnectedPlayers[id].pos; }
+
 private:
 	RakNet::RakPeerInterface* mClient;
 	RakNet::SocketDescriptor* mSockDesc;
@@ -28,4 +39,7 @@ private:
 	unsigned char mPacketID;
 	
 	int id=0;
+
+	std::vector<Object> mConnectedPlayers;
+	const unsigned int MAX_CONNECTIONS = 10;
 };

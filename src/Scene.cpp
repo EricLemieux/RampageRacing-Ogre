@@ -173,13 +173,25 @@ bool GameplayScene::Update()
 	mCar->Update();
 
 	//Send the position of the players car to the server
-	char str[256];
-	auto pos = mCar->GetSceneNode()->getPosition();
-	sprintf_s(str, 256, "%s %d %f %f %f","pos", mGameClient->GetID(), pos.x, pos.y, pos.z);
-	mGameClient->SendString(std::string(str));
+	{
+		char str[256];
+		auto pos = mCar->GetSceneNode()->getPosition();
+		sprintf_s(str, 256, "%s %d %f %f %f", "pos", mGameClient->GetID(), pos.x, pos.y, pos.z);
+		mGameClient->SendString(std::string(str));
+	}
+
+	//Send the rotation of the car to the server
+	{
+		char str[256];
+		auto rot = mCar->GetSceneNode()->getOrientation();
+		sprintf_s(str, 256, "%s %d %f %f %f", "rot", mGameClient->GetID(), rot.x, rot.y, rot.z);
+		mGameClient->SendString(std::string(str));
+	}
 	
 	//Get the positions from the server for the other cars
 	mGameClient->Recieve();
+
+	GetSceneManager()->getSceneNode("mCar2")->setPosition(mGameClient->GetPos(1));
 
 	return true;
 }

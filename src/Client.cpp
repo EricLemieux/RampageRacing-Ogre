@@ -4,6 +4,11 @@ Client::Client()
 {
 	//For now have the id = 0, later will get the id from the server
 	id = 0;
+
+	for (unsigned int i = 0; i < MAX_CONNECTIONS; ++i)
+	{
+		mConnectedPlayers.push_back(Object());
+	}
 }
 Client::~Client()
 {
@@ -32,12 +37,31 @@ void Client::SendString(const std::string &data)
 
 void Client::Recieve()
 {
-	while ((mPacket == mClient->Receive()) != NULL)
+	while ((mPacket = mClient->Receive()) != NULL)
 	{
 		std::string str = std::string((char*)mPacket->data).substr(0, mPacket->length);
 
-		//TODO:
-		//Store the information and have it be used by the game
+		auto p = str.find(" ");
+		std::string phrase = str.substr(0, p);
+
+		if (phrase == "pos")
+		{
+			int id = 0;
+			float pos[3];
+
+			sscanf_s(str.c_str(), "%*[^0-9]%d %f %f %f", &id, &pos[0], &pos[1], &pos[2]);
+
+			mConnectedPlayers[id].pos = Ogre::Vector3(pos);
+		}
+		else if (phrase == "rot")
+		{
+			int id = 0;
+			float rot[3];
+
+			sscanf_s(str.c_str(), "%*[^0-9]%d %f %f %f", &id, &rot[0], &rot[1], &rot[2]);
+
+			mConnectedPlayers[id].rot = Ogre::Quaternion(1.0f, rot[0], rot[1], rot[2]);
+		}
 
 		mClient->DeallocatePacket(mPacket);
 	}
