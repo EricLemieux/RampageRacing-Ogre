@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+#include <Ogre.h>
+
 class Client
 {
 public:
@@ -13,7 +15,9 @@ public:
 
 	void Connect(const char* address, const unsigned int& serverPort, const unsigned int clientPort, const char* password);
 	void SendString(const std::string &data);
-	void RecieveString();
+	void Recieve();
+
+	inline int GetID(){ return id; }
 
 private:
 	RakNet::RakPeerInterface* mClient;
@@ -22,4 +26,6 @@ private:
 
 	RakNet::Packet* mPacket;
 	unsigned char mPacketID;
+	
+	int id=0;
 };

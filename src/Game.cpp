@@ -2,6 +2,10 @@
  
 Game::Game(void) : BaseApplication()
 {
+	mGameClient = std::shared_ptr<Client>(new Client());
+
+	mGameClient->Connect("localhost", 8080, 8081, "password");
+	mGameClient->SendString("connect");
 }
  
 Game::~Game(void)
@@ -12,7 +16,7 @@ Game::~Game(void)
 void Game::createScene(void)
 {
 	//Set up the current scene
-	mCurrentScene = std::unique_ptr<MenuScene>(new MenuScene(mSceneMgr, mCamera));
+	mCurrentScene = std::unique_ptr<MenuScene>(new MenuScene(mSceneMgr, mCamera, mGameClient));
 
 	mCurrentScene->LoadSceneFile("MainMenu.scene");
 }

@@ -2,11 +2,12 @@
 
 Client::Client()
 {
-
+	//For now have the id = 0, later will get the id from the server
+	id = 0;
 }
 Client::~Client()
 {
-
+	RakNet::RakPeerInterface::DestroyInstance(mClient);
 }
 
 void Client::Connect(const char* address, const unsigned int& serverPort, const unsigned int clientPort, const char* password)
@@ -29,7 +30,7 @@ void Client::SendString(const std::string &data)
 	mClient->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 }
 
-void Client::RecieveString()
+void Client::Recieve()
 {
 	while ((mPacket == mClient->Receive()) != NULL)
 	{

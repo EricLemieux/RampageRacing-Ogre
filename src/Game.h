@@ -10,6 +10,8 @@
 
 #include "Scene.h"
 
+#include "Client.h"
+
 class Game : public BaseApplication
 {
 public:
@@ -27,6 +29,9 @@ protected:
 	virtual bool mouseMoved(const OIS::MouseEvent &arg);
 	virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 	virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+
+private:
+	std::shared_ptr<Client> mGameClient;
 
 public:
 	std::shared_ptr<Scene> mCurrentScene;

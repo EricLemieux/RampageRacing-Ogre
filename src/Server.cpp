@@ -22,6 +22,8 @@ void Server::Activate(const char* password, const unsigned int& port, const unsi
 
 	assert(res == RakNet::RAKNET_STARTED && "Server Could Not Start.\n");
 
+	std::cout << "Server Started.\n";
+
 	mServer->SetIncomingPassword(password, strlen(password));
 }
 
@@ -32,12 +34,56 @@ void Server::SendString(const std::string &data)
 
 void Server::RecieveString()
 {
-	while ((mPacket == mServer->Receive()) != NULL)
+	while ((mPacket = mServer->Receive()) != NULL)
 	{
-		std::string str = std::string((char*)mPacket->data).substr(0, mPacket->length);
+		if (mPacket->data[0] == ID_NEW_INCOMING_CONNECTION)
+		{
+			std::cout << "A remote system has connected.\n";
 
-		//TODO:
-		//Store the data or something for later use.
+			Object newPlayer;
+			mConnectedPlayers.push_back(newPlayer);
+		}
+		else if (mPacket->data[0] == ID_DISCONNECTION_NOTIFICATION)
+		{
+			std::cout << "A remote system has been disconnected.\n";
+		}
+		else if (mPacket->data[0] == ID_CONNECTION_LOST)
+		{
+			std::cout << "A remote system has lost it's connected.\n";
+		}
+		else
+		{
+			std::string str = std::string((char*)mPacket->data).substr(0, mPacket->length);
+
+			auto p = str.find(" ");
+			std::string phrase = str.substr(0, p);
+
+			if (phrase == "pos")
+			{
+				int id = 0;
+				sscanf_s(str.c_str(), "%*[^0-9]%d", &id);
+
+				mConnectedPlayers[id].pos = str;
+			}
+			else if (phrase == "rot")
+			{
+				int id = 0;
+				sscanf_s(str.c_str(), "%*[^0-9]%d", &id);
+
+				mConnectedPlayers[id].rot = str;
+			}
+			else if (phrase == "something")
+			{
+			}
+			else if (phrase == "reset")
+			{
+				mConnectedPlayers.clear();
+			}
+			else
+			{
+				std::cout << str.c_str();
+			}
+		}
 
 		mServer->DeallocatePacket(mPacket);
 	}

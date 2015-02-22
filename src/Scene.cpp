@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera)
+Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Client> client)
 {
 	mSceneMgr = sceneMgr;
 
@@ -13,6 +13,8 @@ Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre:
 	mPhysicsWorld->initWorld();
 
 	mSceneMgr->setSkyBox(true, "sky");
+
+	mGameClient = client;
 }
 
 Scene::~Scene()
@@ -78,7 +80,7 @@ void Scene::ResetCamera()
 
 
 //Gameplay scenes
-GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera) : Scene(sceneMgr, camera)
+GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Client> client) : Scene(sceneMgr, camera, client)
 {
 
 }
@@ -109,7 +111,7 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 	if (arg.key == OIS::KC_ESCAPE)
 	{
 		GetSceneManager()->clearScene();
-		newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), GetCamera()));
+		newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), GetCamera(), this->mGameClient));
 		newScene->LoadSceneFile("MainMenu.scene");
 		swapToTheNewScene = true;
 	}
@@ -170,12 +172,21 @@ bool GameplayScene::Update()
 
 	mCar->Update();
 
+	//Send the position of the players car to the server
+	char str[256];
+	auto pos = mCar->GetSceneNode()->getPosition();
+	sprintf_s(str, 256, "%s %d %f %f %f","pos", mGameClient->GetID(), pos.x, pos.y, pos.z);
+	mGameClient->SendString(std::string(str));
+	
+	//Get the positions from the server for the other cars
+	mGameClient->Recieve();
+
 	return true;
 }
 
 
 //Menu Scene
-MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera) : Scene(sceneMgr, camera)
+MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Client> client) : Scene(sceneMgr, camera, client)
 {
 	currentSubMenu = nextSubMenu = sm_Main;
 
@@ -196,7 +207,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		else if (currentSubMenu == sm_LevelSelect)
 		{
 			GetSceneManager()->clearScene();
-			newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera()));
+			newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
 			newScene->LoadSceneFile("test.scene");
 			newScene->AddCarToScene("myCar");
 			swapToTheNewScene = true;
@@ -261,7 +272,7 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				if (itr->movable->getName() == "bStartEnt1")
 				{
 					GetSceneManager()->clearScene();
-					newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera()));
+					newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
 					newScene->LoadSceneFile("test.scene");
 					newScene->AddCarToScene("myCar");
 					swapToTheNewScene = true;

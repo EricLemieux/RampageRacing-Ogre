@@ -24,10 +24,12 @@
 #include "GameObject.h"
 #include "Car.h"
 
+#include "Client.h"
+
 class Scene
 {
 public:
-	Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera);
+	Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Client> client);
 	~Scene();
 
 	virtual bool Update();
@@ -57,6 +59,8 @@ protected:
 	bool swapToTheNewScene = false;
 	std::shared_ptr<Scene> newScene;
 
+	std::shared_ptr<Client> mGameClient;
+
 private:
 	std::shared_ptr<Ogre::SceneManager> mSceneMgr;
 	std::shared_ptr<Ogre::Camera> mCamera;
@@ -71,7 +75,7 @@ private:
 class GameplayScene : public Scene
 {
 public:
-	GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera);
+	GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Client> client);
 	~GameplayScene();
 
 	virtual bool Update();
@@ -91,7 +95,7 @@ private:
 class MenuScene : public Scene
 {
 public:
-	MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera);
+	MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Client> client);
 	~MenuScene();
 
 	virtual bool Update();

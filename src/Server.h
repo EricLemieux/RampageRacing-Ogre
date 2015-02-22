@@ -4,6 +4,14 @@
 #include <MessageIdentifiers.h>
 
 #include <iostream>
+#include <vector>
+
+class Object
+{
+public:
+	std::string pos;
+	std::string rot;
+};
 
 class Server
 {
@@ -21,4 +29,6 @@ private:
 	DataStructures::List<RakNet::RakNetSmartPtr<RakNet::RakNetSocket2>> mSockets;
 	RakNet::Packet* mPacket;
 	char mPacketID;
+
+	std::vector<Object> mConnectedPlayers;
 };

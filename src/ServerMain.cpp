@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 		gameServer.RecieveString();
 
 		//Reply with information about all the other clients
-		gameServer.SendString("test");
+		gameServer.SendString("pos 0.000 0.000 0.000");
 	}
 
 	return 0;
