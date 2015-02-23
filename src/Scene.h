@@ -23,6 +23,7 @@
 
 #include "GameObject.h"
 #include "Car.h"
+#include "TriggerVolume.h"
 
 #include "Client.h"
 
@@ -46,6 +47,7 @@ public:
 	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
 	virtual void AddCarToScene(Ogre::String name);
+	virtual void AddTriggerVolumesToScene();
 
 	inline std::shared_ptr<Ogre::SceneManager> GetSceneManager(){ return mSceneMgr; }
 	inline std::shared_ptr<Ogre::Camera> GetCamera(){ return mCamera; }
@@ -87,8 +89,12 @@ public:
 	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
 	virtual void AddCarToScene(Ogre::String name);
+	virtual void AddTriggerVolumesToScene();
 private:
 	Car* mCar;
+
+	//currently 3 because 2 checkpoints and 1 finish line
+	TriggerVolume* mTriggerVolumes[3];
 };
 
 class MenuScene : public Scene

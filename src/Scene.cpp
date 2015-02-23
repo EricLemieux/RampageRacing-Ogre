@@ -71,6 +71,10 @@ void Scene::AddCarToScene(Ogre::String name)
 {
 
 }
+void Scene::AddTriggerVolumesToScene()
+{
+
+}
 
 void Scene::ResetCamera()
 {
@@ -166,6 +170,13 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 	GetCamera()->lookAt(mCar->GetSceneNode()->getPosition());
 }
 
+void GameplayScene::AddTriggerVolumesToScene()
+{
+	//Temp only one trigger volume
+	mTriggerVolumes[0] = new TriggerVolume("trigger", GetSceneManager());
+	GetPhysicsWorld()->addBodyToWorld(mTriggerVolumes[0]->GetRigidBody());
+}
+
 bool GameplayScene::Update()
 {
 	GetPhysicsWorld()->updateWorld();
@@ -222,6 +233,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 			newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
 			newScene->LoadSceneFile("test.scene");
 			newScene->AddCarToScene("myCar");
+			newScene->AddTriggerVolumesToScene();
 			swapToTheNewScene = true;
 		}
 	}

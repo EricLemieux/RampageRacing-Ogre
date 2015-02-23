@@ -15,6 +15,16 @@
                 </subentities>
             </entity>
         </node>
+        <node name="trigger">
+            <position x="0" y="0" z="-500"/>
+            <rotation qx="0" qy="0" qz="0" qw="1"/>
+            <scale x="50" y="100" z="2"/>
+            <entity name="triggerEnt" castShadows="true" receiveShadows="true" meshFile="triggerVolume.mesh">
+                <subentities>
+                    <subentity index="0" materialName="lambert1"/>
+                </subentities>
+            </entity>
+        </node>
 		<node name="mCar">
 			<position x="0" y="0" z="0"/>
 			<rotation qx="0" qy="0" qz="0" qw="1"/>
@@ -39,8 +49,8 @@
 				<position x="0" y="50" z="0"/>
 				<rotation qx="0" qy="0" qz="0" qw="1"/>
 				<light name="sunLight" type="point" intensity="1.0" contrast="0">
-					<colourDiffuse r="0.0" g="0.5" b="0.5" />
-					<colourSpecular r="0.0" g="0.5" b="0.5" />
+					<colourDiffuse r="0.5" g="0.5" b="0.5" />
+					<colourSpecular r="0.5" g="0.5" b="0.5" />
 				</light>
 			</node>
     </nodes>

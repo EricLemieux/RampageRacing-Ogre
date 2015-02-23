@@ -11,6 +11,7 @@
 class GameObject
 {
 public:
+	GameObject();
 	GameObject(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager);
 	~GameObject();
 
@@ -20,9 +21,9 @@ public:
 	virtual void Update(void);
 
 private:
-	void InitRigidBody();
+	virtual void InitRigidBody();
 
-private:
+protected:
 	Ogre::String mName;
 	Ogre::SceneNode* mSceneNode;
 	btRigidBody* mRigidBody;

@@ -117,6 +117,7 @@ set(HDRS
 	./src/System.h
 	./src/Scene.h
 	./src/Client.h
+	./src/TriggerVolume.h
 )
  
 set(SRCS
@@ -128,6 +129,7 @@ set(SRCS
 	./src/Physics.cpp
 	./src/Scene.cpp
 	./src/Client.cpp
+	./src/TriggerVolume.cpp
 )
  
 include_directories( ${OIS_INCLUDE_DIRS}
