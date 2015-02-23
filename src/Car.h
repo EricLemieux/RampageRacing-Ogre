@@ -19,8 +19,11 @@ public:
 
 	bool mCanMoveForward	= false;
 	bool mCanMoveBackward	= false;
+	bool isColliding		= false;
 
 private:
-	float speed = 99.0f;
+	float speed = 0.0f;
 	float turnSpeed = 0.3f;
+
+	
 };

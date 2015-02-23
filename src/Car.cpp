@@ -41,12 +41,21 @@ void Car::Update(void)
 	//Move the car if the button is down
 	if (mCanMoveForward)
 	{
+		if (speed < 100)
+			++speed;
 		MoveForward(speed);
 	}
 	else if (mCanMoveBackward)
 	{
-		MoveBackward(speed);
+		if (speed > -50)
+			--speed;
+		MoveForward(speed);
 	}
+	else {
+		speed = speed * 0.99f;
+		MoveForward(speed);
+	}
+	
 
 	GameObject::Update();
 }
