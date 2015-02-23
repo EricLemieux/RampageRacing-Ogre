@@ -1,17 +1,10 @@
 #include "GameObject.h"
 
-GameObject::GameObject()
-{
-	mName = "temp";
-	mSceneNode = &Ogre::SceneNode(NULL);
-
-	InitRigidBody();
-}
-
-GameObject::GameObject(Ogre::String name, Ogre::SceneNode* node)
+GameObject::GameObject(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager)
 {
 	mName = name;
-	mSceneNode = node;
+	mSceneManager = manager;
+	mSceneNode = mSceneManager->getSceneNode(name);
 
 	InitRigidBody();
 }

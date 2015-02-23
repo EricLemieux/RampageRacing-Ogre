@@ -1,10 +1,6 @@
 #include "Car.h"
 
-Car::Car() : GameObject()
-{
-}
-
-Car::Car(Ogre::String name, Ogre::SceneNode* root) : GameObject(name, root)
+Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager) : GameObject(name, manager)
 {
 }
 

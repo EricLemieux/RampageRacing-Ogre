@@ -5,8 +5,7 @@
 class Car : public GameObject
 {
 public:
-	Car();
-	Car(Ogre::String name, Ogre::SceneNode* root);
+	Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager);
 	~Car();
 
 public:

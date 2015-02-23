@@ -6,11 +6,12 @@
 
 #include "System.h"
 
+#include <memory>
+
 class GameObject
 {
 public:
-	GameObject();
-	GameObject(Ogre::String name, Ogre::SceneNode* node);
+	GameObject(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager);
 	~GameObject();
 
 public:
@@ -25,4 +26,6 @@ private:
 	Ogre::String mName;
 	Ogre::SceneNode* mSceneNode;
 	btRigidBody* mRigidBody;
+
+	std::shared_ptr<Ogre::SceneManager> mSceneManager;
 };

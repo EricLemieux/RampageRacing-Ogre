@@ -153,7 +153,7 @@ void GameplayScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID
 void GameplayScene::AddCarToScene(Ogre::String name)
 {
 	//Create a game object thing
-	mCar = new Car("myShip", GetSceneManager()->getSceneNode("mCar"));
+	mCar = new Car("mCar", GetSceneManager());
 
 	//Add the car's rigid body to the world
 	GetPhysicsWorld()->addBodyToWorld(mCar->GetRigidBody());
