@@ -210,6 +210,16 @@ bool GameplayScene::Update()
 
 	GetSceneManager()->getSceneNode("mCar2")->setPosition(mGameClient->GetPos(1));
 
+	//TEMP AS FUCK
+	//seriously kill this with fire...
+	if (test)
+	{
+		GetSceneManager()->clearScene();
+		newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), GetCamera(), this->mGameClient));
+		newScene->LoadSceneFile("MainMenu.scene");
+		swapToTheNewScene = true;
+	}
+
 	return true;
 }
 
@@ -305,6 +315,7 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 					newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
 					newScene->LoadSceneFile("test.scene");
 					newScene->AddCarToScene("myCar");
+					newScene->AddTriggerVolumesToScene();
 					swapToTheNewScene = true;
 				}
 				else if (itr->movable->getName() == "bExitEnt1")
