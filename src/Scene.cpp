@@ -182,8 +182,10 @@ void GameplayScene::AddTriggerVolumesToScene()
 bool GameplayScene::Update()
 {
 	GetPhysicsWorld()->updateWorld();
+	bool test = false;
+	test = mCar->isColliding;
 	GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[0]->GetRigidBody(), *callback);
-	bool test = mCar->isColliding;
+    test = mCar->isColliding;
 
 	mCar->Update();
 
