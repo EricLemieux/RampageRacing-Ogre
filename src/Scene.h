@@ -24,6 +24,7 @@
 #include "GameObject.h"
 #include "Car.h"
 #include "TriggerVolume.h"
+#include "CarCollisionTest.h"
 
 #include "Client.h"
 
@@ -93,6 +94,7 @@ public:
 private:
 	Car* mCar;
 
+	ContactSensorCallback* callback;
 	//currently 3 because 2 checkpoints and 1 finish line
 	TriggerVolume* mTriggerVolumes[3];
 };

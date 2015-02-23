@@ -14,6 +14,8 @@ public:
 	void addBodyToWorld(btRigidBody* newBody);
 	void updateWorld();
 
+	btDiscreteDynamicsWorld* getWorld(){ return world; }
+
 	void deleteWorld();
 
 private:

@@ -168,6 +168,8 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 	camNode->translate(Ogre::Vector3(0.0f, 10.0f, 40.0f));
 
 	GetCamera()->lookAt(mCar->GetSceneNode()->getPosition());
+
+	callback = new ContactSensorCallback(*(mCar->GetRigidBody()), *(mCar));
 }
 
 void GameplayScene::AddTriggerVolumesToScene()
@@ -180,6 +182,8 @@ void GameplayScene::AddTriggerVolumesToScene()
 bool GameplayScene::Update()
 {
 	GetPhysicsWorld()->updateWorld();
+	GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[0]->GetRigidBody(), *callback);
+	bool test = mCar->isColliding;
 
 	mCar->Update();
 
