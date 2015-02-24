@@ -39,10 +39,10 @@ void Scene::ClearScene()
 	//mSceneMgr->clearScene();
 }
 
-void Scene::LoadSceneFile(Ogre::String fileName)
+void Scene::LoadLevel(Ogre::String LevelName)
 {
 	Ogre::DotSceneLoader a;
-	a.parseDotScene(fileName, "General", mSceneMgr.get());
+	a.parseDotScene(LevelName + ".scene", "General", mSceneMgr.get());
 }
 
 void Scene::KeyPressed(const OIS::KeyEvent &arg)
@@ -92,6 +92,22 @@ GameplayScene::~GameplayScene()
 {
 }
 
+void GameplayScene::LoadLevel(Ogre::String LevelName)
+{
+	Scene::LoadLevel(LevelName);
+
+	//Load the physics mesh for that level
+	OBJ physMesh(LevelName + ".obj");	
+
+	btCollisionShape* boxShape = new btConvexHullShape(physMesh.mVerts[0], physMesh.mVerts.size(), sizeof(float));
+	btDefaultMotionState* boxMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
+	btVector3 boxInertia(0, 0, 0);
+	boxShape->calculateLocalInertia(0.0f, boxInertia);
+	btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(0.0f, boxMotionState, boxShape, boxInertia);
+	body = new btRigidBody(boxRigidBodyCI);
+	GetPhysicsWorld()->addBodyToWorld(body);
+}
+
 void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 {
 	if (arg.key == OIS::KC_W)
@@ -116,7 +132,7 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 	{
 		GetSceneManager()->clearScene();
 		newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), GetCamera(), this->mGameClient));
-		newScene->LoadSceneFile("MainMenu.scene");
+		newScene->LoadLevel("MainMenu");
 		swapToTheNewScene = true;
 	}
 }
@@ -208,15 +224,15 @@ bool GameplayScene::Update()
 
 	GetSceneManager()->getSceneNode("mCar2")->setPosition(mGameClient->GetPos(1));
 
-	//TEMP AS FUCK
-	//seriously kill this with fire...
-	if (test)
-	{
-		GetSceneManager()->clearScene();
-		newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), GetCamera(), this->mGameClient));
-		newScene->LoadSceneFile("MainMenu.scene");
-		swapToTheNewScene = true;
-	}
+	////TEMP AS FUCK
+	////seriously kill this with fire...
+	//if (test)
+	//{
+	//	GetSceneManager()->clearScene();
+	//	newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), GetCamera(), this->mGameClient));
+	//	newScene->LoadLevel("MainMenu");
+	//	swapToTheNewScene = true;
+	//}
 
 	return true;
 }
@@ -245,7 +261,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		{
 			GetSceneManager()->clearScene();
 			newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
-			newScene->LoadSceneFile("test.scene");
+			newScene->LoadLevel("test");
 			newScene->AddCarToScene("myCar");
 			newScene->AddTriggerVolumesToScene();
 			swapToTheNewScene = true;
@@ -311,7 +327,7 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				{
 					GetSceneManager()->clearScene();
 					newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
-					newScene->LoadSceneFile("test.scene");
+					newScene->LoadLevel("test");
 					newScene->AddCarToScene("myCar");
 					newScene->AddTriggerVolumesToScene();
 					swapToTheNewScene = true;
@@ -361,10 +377,10 @@ bool MenuScene::Update()
 	return true;
 }
 
-void MenuScene::LoadSceneFile(Ogre::String fileName)
+void MenuScene::LoadLevel(Ogre::String levelName)
 {
 	//Do the base scene stuff
-	Scene::LoadSceneFile(fileName);
+	Scene::LoadLevel(levelName);
 
 	//Set the position of the camera based on the starting camera node
 	GetCamera()->setPosition(GetCamPosFromSubMenu(currentSubMenu));
