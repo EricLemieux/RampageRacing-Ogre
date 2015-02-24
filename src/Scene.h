@@ -26,6 +26,8 @@
 #include "TriggerVolume.h"
 #include "CarCollisionTest.h"
 
+#include "OBJ.h"
+
 #include "Client.h"
 
 class Scene
@@ -38,7 +40,7 @@ public:
 
 	void ClearScene();
 
-	virtual void LoadSceneFile(Ogre::String fileName);
+	virtual void LoadLevel(Ogre::String LevelName);
 
 	virtual void KeyPressed(const OIS::KeyEvent &arg);
 	virtual void KeyReleased(const OIS::KeyEvent &arg);
@@ -82,6 +84,8 @@ public:
 
 	virtual bool Update();
 
+	virtual void LoadLevel(Ogre::String LevelName);
+
 	virtual void KeyPressed(const OIS::KeyEvent &arg);
 	virtual void KeyReleased(const OIS::KeyEvent &arg);
 
@@ -93,6 +97,7 @@ public:
 	virtual void AddTriggerVolumesToScene();
 private:
 	Car* mCar;
+	btRigidBody* body;
 
 	ContactSensorCallback* callback;
 	//currently 3 because 2 checkpoints and 1 finish line
@@ -114,7 +119,7 @@ public:
 	virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
-	virtual void LoadSceneFile(Ogre::String fileName);
+	virtual void LoadLevel(Ogre::String levelName);
 private:
 	enum subMenus
 	{

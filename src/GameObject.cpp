@@ -28,12 +28,10 @@ void GameObject::InitRigidBody()
 
 	btQuaternion q = OgreToBtQuaternion(mSceneNode->getOrientation());
 	btVector3 v = OgreToBtVector3(mSceneNode->getPosition());
-
-	//v.setY(30);
-
+	
 	btTransform transform = btTransform(q, v);
 	
-	btCollisionShape* boxShape = new btBoxShape(btVector3(1,1,1));
+	btCollisionShape* boxShape = new btBoxShape(btVector3(20,5,20));
 	btDefaultMotionState* boxMotionState = new btDefaultMotionState(transform);
 	btVector3 boxInertia(0,0,0);
 	boxShape->calculateLocalInertia(mass, boxInertia);
