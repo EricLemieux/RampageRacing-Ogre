@@ -16,28 +16,8 @@
 			</subentities>
             </entity>
         </node>
-        <node name="block">
-            <position x="0" y="0" z="0"/>
-            <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <scale x="1.0" y="1.0" z="1.0"/>
-            <entity name="blockEnt" castShadows="false" receiveShadows="false" meshFile="test.mesh">
-        	<subentities>
-				<subentity index="0" materialName="lambert1"/>
-			</subentities>
-            </entity>
-        </node>
-        <!--<node name="trigger">
-        	<position x="150" y="2" z="-70"/>
-			<rotation qx="0.0" qy="-1.0" qz="0.0" qw="1.0"/>
-            <scale x="20" y="5" z="20"/>
-            <entity name="triggerEnt" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
-        	<subentities>
-				<subentity index="0" materialName="lambert1"/>
-			</subentities>
-            </entity>
-        </node>-->
 		<node name="mCar">
-			<position x="150" y="2" z="-70"/>
+			<position x="0" y="1" z="-100"/>
 			<rotation qx="0.0" qy="-1.0" qz="0.0" qw="1.0"/>
 			<scale x="1.0" y="1.0" z="1.0"/>
 			<entity name="mCarEnt" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
@@ -63,6 +43,13 @@
 				<colourDiffuse r="0.5" g="0.5" b="0.5" />
 				<colourSpecular r="0.5" g="0.5" b="0.5" />
 			</light>
+		</node>
+
+		<!--World-->
+		<node name="world">
+			<position x="0" y="0" z="0"/>
+			<rotation qx="0" qy="0" qz="0" qw="1"/>
+			<entity name="worldEnt" castShadows="true" receiveShadows="true" meshFile="world.mesh"></entity>
 		</node>
     </nodes>
 </scene>

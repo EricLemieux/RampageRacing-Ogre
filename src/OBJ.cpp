@@ -33,7 +33,7 @@ void OBJ::Load(Ogre::String fileName)
 			if (!stricmp(type, "v"))
 			{
 				float x, y, z;
-				sscanf_s(buf, "%*[^0-9]%f %f %f", &x, &y, &z);
+				sscanf_s(buf, "%*[^ ]%f %f %f", &x, &y, &z);
 
 				mVerts.push_back(btVector3(x, y, z));
 			}

@@ -99,7 +99,8 @@ void GameplayScene::LoadLevel(Ogre::String LevelName)
 	//Load the physics mesh for that level
 	OBJ physMesh(LevelName + ".obj");	
 
-	btCollisionShape* boxShape = new btConvexHullShape(physMesh.mVerts[0], physMesh.mVerts.size(), sizeof(float));
+	btCollisionShape* boxShape = new btConvexHullShape(physMesh.mVerts[0], physMesh.mVerts.size());
+
 	btDefaultMotionState* boxMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
 	btVector3 boxInertia(0, 0, 0);
 	boxShape->calculateLocalInertia(0.0f, boxInertia);
@@ -261,7 +262,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		{
 			GetSceneManager()->clearScene();
 			newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
-			newScene->LoadLevel("test");
+			newScene->LoadLevel("level1");
 			newScene->AddCarToScene("myCar");
 			newScene->AddTriggerVolumesToScene();
 			swapToTheNewScene = true;
@@ -327,7 +328,7 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				{
 					GetSceneManager()->clearScene();
 					newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
-					newScene->LoadLevel("test");
+					newScene->LoadLevel("level1");
 					newScene->AddCarToScene("myCar");
 					newScene->AddTriggerVolumesToScene();
 					swapToTheNewScene = true;
