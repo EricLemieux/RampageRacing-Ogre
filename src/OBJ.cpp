@@ -15,6 +15,8 @@ OBJ::~OBJ()
 
 void OBJ::Load(Ogre::String fileName)
 {
+	mTriMesh = new btTriangleMesh();
+
 	Ogre::String basename, path;
 	Ogre::StringUtil::splitFilename(fileName, basename, path);
 
@@ -36,6 +38,13 @@ void OBJ::Load(Ogre::String fileName)
 				sscanf_s(buf, "%*[^ ]%f %f %f", &x, &y, &z);
 
 				mVerts.push_back(btVector3(x, y, z));
+			}
+			else if (!stricmp(type, "f"))
+			{
+				int p0,p1,p2;
+				sscanf_s(buf, "%*[^ ]%i%*[^ ]%i%*[^ ]%i", &p0, &p1, &p2);
+				
+				mTriMesh->addTriangle(mVerts[p0-1], mVerts[p1-1], mVerts[p2-1]);
 			}
 		}
 

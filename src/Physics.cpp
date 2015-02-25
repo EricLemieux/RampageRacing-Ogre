@@ -29,7 +29,7 @@ void PhysicsWorld::initWorld(){
 
 	//set floor as horizontal plane centered at 0,0,0
 	groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
-	groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
+	groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -10, 0)));
     btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
 	groundRigidBody = new btRigidBody(groundRigidBodyCI);
     world->addRigidBody(groundRigidBody);

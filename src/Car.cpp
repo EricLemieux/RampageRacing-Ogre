@@ -1,7 +1,12 @@
 #include "Car.h"
 
-Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager) : GameObject(name, manager)
+Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager)
 {
+	mName = name;
+	mSceneManager = manager;
+	mSceneNode = mSceneManager->getSceneNode(name);
+
+	InitRigidBody();
 }
 
 Car::~Car()
@@ -58,4 +63,22 @@ void Car::Update(void)
 	
 
 	GameObject::Update();
+}
+
+void Car::InitRigidBody()
+{
+	//if mass is zero it counts as infinite
+	float mass = 50.0f;
+
+	btQuaternion q = OgreToBtQuaternion(mSceneNode->getOrientation());
+	btVector3 v = OgreToBtVector3(mSceneNode->getPosition());
+
+	btTransform transform = btTransform(q, v);
+
+	btCollisionShape* boxShape = new btBoxShape(btVector3(20, 5, 20));
+	btDefaultMotionState* boxMotionState = new btDefaultMotionState(transform);
+	btVector3 boxInertia(0, 0, 0);
+	boxShape->calculateLocalInertia(mass, boxInertia);
+	btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(mass, boxMotionState, boxShape, boxInertia);
+	mRigidBody = new btRigidBody(boxRigidBodyCI);
 }

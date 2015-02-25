@@ -99,11 +99,10 @@ void GameplayScene::LoadLevel(Ogre::String LevelName)
 	//Load the physics mesh for that level
 	OBJ physMesh(LevelName + ".obj");	
 
-	btCollisionShape* boxShape = new btConvexHullShape(physMesh.mVerts[0], physMesh.mVerts.size());
+	btCollisionShape* boxShape = new btBvhTriangleMeshShape(physMesh.mTriMesh, false);
 
 	btDefaultMotionState* boxMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
 	btVector3 boxInertia(0, 0, 0);
-	boxShape->calculateLocalInertia(0.0f, boxInertia);
 	btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(0.0f, boxMotionState, boxShape, boxInertia);
 	body = new btRigidBody(boxRigidBodyCI);
 	GetPhysicsWorld()->addBodyToWorld(body);
