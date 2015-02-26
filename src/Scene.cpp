@@ -67,6 +67,19 @@ void Scene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 
 }
 
+void Scene::axisMoved(const OIS::JoyStickEvent &arg, int axis)
+{
+
+}
+void Scene::buttonPressed(const OIS::JoyStickEvent &arg, int button)
+{
+
+}
+void Scene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
+{
+
+}
+
 void Scene::AddCarToScene(Ogre::String name)
 {
 
@@ -170,6 +183,25 @@ void GameplayScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 void GameplayScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
 
+}
+
+void GameplayScene::axisMoved(const OIS::JoyStickEvent &arg, int axis)
+{
+
+}
+void GameplayScene::buttonPressed(const OIS::JoyStickEvent &arg, int button)
+{
+	if (button == 0)
+	{
+		mCar->mCanMoveForward = true;
+	}
+}
+void GameplayScene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
+{
+	if (button == 0)
+	{
+		mCar->mCanMoveForward = false;
+	}
 }
 
 void GameplayScene::AddCarToScene(Ogre::String name)
@@ -345,6 +377,19 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 	}
 }
 void MenuScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+
+}
+
+void MenuScene::axisMoved(const OIS::JoyStickEvent &arg, int axis)
+{
+
+}
+void MenuScene::buttonPressed(const OIS::JoyStickEvent &arg, int button)
+{
+
+}
+void MenuScene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
 {
 
 }

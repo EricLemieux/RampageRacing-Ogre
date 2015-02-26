@@ -16,6 +16,7 @@
 #include <OISInputManager.h>
 #include <OISKeyboard.h>
 #include <OISMouse.h>
+#include <OISJoyStick.h>
 
 #include "Physics.h"
 
@@ -48,6 +49,10 @@ public:
 	virtual void mouseMoved(const OIS::MouseEvent &arg);
 	virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+
+	virtual void axisMoved(const OIS::JoyStickEvent &arg, int axis);
+	virtual void buttonPressed(const OIS::JoyStickEvent &arg, int button);
+	virtual void buttonReleased(const OIS::JoyStickEvent &arg, int button);
 
 	virtual void AddCarToScene(Ogre::String name);
 	virtual void AddTriggerVolumesToScene();
@@ -93,6 +98,10 @@ public:
 	virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
+	virtual void axisMoved(const OIS::JoyStickEvent &arg, int axis);
+	virtual void buttonPressed(const OIS::JoyStickEvent &arg, int button);
+	virtual void buttonReleased(const OIS::JoyStickEvent &arg, int button);
+
 	virtual void AddCarToScene(Ogre::String name);
 	virtual void AddTriggerVolumesToScene();
 private:
@@ -118,6 +127,10 @@ public:
 	virtual void mouseMoved(const OIS::MouseEvent &arg);
 	virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+
+	virtual void axisMoved(const OIS::JoyStickEvent &arg, int axis);
+	virtual void buttonPressed(const OIS::JoyStickEvent &arg, int button);
+	virtual void buttonReleased(const OIS::JoyStickEvent &arg, int button);
 
 	virtual void LoadLevel(Ogre::String levelName);
 private:
