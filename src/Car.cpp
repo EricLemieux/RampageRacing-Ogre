@@ -60,6 +60,15 @@ void Car::Update(void)
 		speed = speed * 0.99f;
 		MoveForward(speed);
 	}
+
+	if (mTurningRight)
+	{
+		TurnRight();
+	}
+	else if (mTurningLeft)
+	{
+		TurnLeft();
+	}
 	
 
 	GameObject::Update();
@@ -68,7 +77,7 @@ void Car::Update(void)
 void Car::InitRigidBody()
 {
 	//if mass is zero it counts as infinite
-	float mass = 50.0f;
+	float mass = 500.0f;
 
 	btQuaternion q = OgreToBtQuaternion(mSceneNode->getOrientation());
 	btVector3 v = OgreToBtVector3(mSceneNode->getPosition());

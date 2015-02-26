@@ -25,7 +25,7 @@ void PhysicsWorld::initWorld(){
 	world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 
 	//gravity set here
-	world->setGravity(btVector3(0,-10,0));
+	world->setGravity(btVector3(0,-100,0));
 
 	//set floor as horizontal plane centered at 0,0,0
 	groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 1);

@@ -121,11 +121,13 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 
 	if (arg.key == OIS::KC_D)
 	{
-		mCar->TurnRight();
+		mCar->mTurningRight = true;
+		//mCar->TurnRight();
 	}
 	else if (arg.key == OIS::KC_A)
 	{
-		mCar->TurnLeft();
+		mCar->mTurningLeft = true;
+		//mCar->TurnLeft();
 	}
 
 	if (arg.key == OIS::KC_ESCAPE)
@@ -149,11 +151,11 @@ void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
 
 	if (arg.key == OIS::KC_D)
 	{
-		mCar->TurnRight(0.0f);
+		mCar->mTurningRight = false;
 	}
 	if (arg.key == OIS::KC_A)
 	{
-		mCar->TurnLeft(0.0f);
+		mCar->mTurningLeft = false;
 	}
 }
 

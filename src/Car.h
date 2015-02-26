@@ -21,6 +21,9 @@ public:
 	bool mCanMoveBackward	= false;
 	bool isColliding		= false;
 
+	bool mTurningRight = false;
+	bool mTurningLeft  = false;
+
 	virtual void InitRigidBody();
 
 private:
