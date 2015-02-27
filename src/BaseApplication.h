@@ -34,7 +34,7 @@ This source file is part of the
 #include <SdkTrays.h>
 #include <SdkCameraMan.h>
 
-class BaseApplication : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener
+class BaseApplication : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener, OgreBites::SdkTrayListener
 {
 public:
     BaseApplication(void);
@@ -65,6 +65,10 @@ protected:
     virtual bool mouseMoved( const OIS::MouseEvent &arg );
     virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
     virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
+	// OIS::JoyStickListener
+	virtual bool axisMoved(const OIS::JoyStickEvent &arg, int axis);
+	virtual bool buttonPressed(const OIS::JoyStickEvent &arg, int button);
+	virtual bool buttonReleased(const OIS::JoyStickEvent &arg, int button);
 
     // Ogre::WindowEventListener
     //Adjust mouse clipping area
@@ -92,6 +96,9 @@ protected:
     OIS::InputManager* mInputManager;
     OIS::Mouse*    mMouse;
     OIS::Keyboard* mKeyboard;
+	std::vector<OIS::JoyStick*> mJoysticks;
+	std::vector<OIS::JoyStick*>::iterator mItJoystick;
+	std::vector<OIS::JoyStick*>::iterator mItJoystickEnd;
 };
 
 #endif // #ifndef __BaseApplication_h_

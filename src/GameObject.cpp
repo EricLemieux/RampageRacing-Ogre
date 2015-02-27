@@ -31,7 +31,7 @@ void GameObject::InitRigidBody()
 	
 	btTransform transform = btTransform(q, v);
 	
-	btCollisionShape* boxShape = new btBoxShape(btVector3(20,5,20));
+	btCollisionShape* boxShape = new btBoxShape(btVector3(1,1,1));
 	btDefaultMotionState* boxMotionState = new btDefaultMotionState(transform);
 	btVector3 boxInertia(0,0,0);
 	boxShape->calculateLocalInertia(mass, boxInertia);

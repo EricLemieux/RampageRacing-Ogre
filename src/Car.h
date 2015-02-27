@@ -21,6 +21,11 @@ public:
 	bool mCanMoveBackward	= false;
 	bool isColliding		= false;
 
+	bool mTurningRight = false;
+	bool mTurningLeft  = false;
+
+	virtual void InitRigidBody();
+
 private:
 	float speed = 0.0f;
 	float turnSpeed = 0.3f;

@@ -67,6 +67,31 @@ bool Game::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 	return true;
 }
 
+bool Game::axisMoved(const OIS::JoyStickEvent &arg, int axis)
+{
+	BaseApplication::axisMoved(arg, axis);
+
+	mCurrentScene->axisMoved(arg, axis);
+
+	return true;
+}
+bool Game::buttonPressed(const OIS::JoyStickEvent &arg, int button)
+{
+	BaseApplication::buttonPressed(arg, button);
+
+	mCurrentScene->buttonPressed(arg, button);
+
+	return true;
+}
+bool Game::buttonReleased(const OIS::JoyStickEvent &arg, int button)
+{
+	BaseApplication::buttonReleased(arg, button);
+
+	mCurrentScene->buttonReleased(arg, button);
+
+	return true;
+}
+
 bool Game::Update()
 {
 	//Check to see if the current scene needs to be swapped

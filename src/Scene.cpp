@@ -67,6 +67,19 @@ void Scene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 
 }
 
+void Scene::axisMoved(const OIS::JoyStickEvent &arg, int axis)
+{
+
+}
+void Scene::buttonPressed(const OIS::JoyStickEvent &arg, int button)
+{
+
+}
+void Scene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
+{
+
+}
+
 void Scene::AddCarToScene(Ogre::String name)
 {
 
@@ -99,10 +112,10 @@ void GameplayScene::LoadLevel(Ogre::String LevelName)
 	//Load the physics mesh for that level
 	OBJ physMesh(LevelName + ".obj");	
 
-	btCollisionShape* boxShape = new btConvexHullShape(physMesh.mVerts[0], physMesh.mVerts.size(), sizeof(float));
+	btCollisionShape* boxShape = new btBvhTriangleMeshShape(physMesh.mTriMesh, false);
+
 	btDefaultMotionState* boxMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
 	btVector3 boxInertia(0, 0, 0);
-	boxShape->calculateLocalInertia(0.0f, boxInertia);
 	btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(0.0f, boxMotionState, boxShape, boxInertia);
 	body = new btRigidBody(boxRigidBodyCI);
 	GetPhysicsWorld()->addBodyToWorld(body);
@@ -121,11 +134,13 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 
 	if (arg.key == OIS::KC_D)
 	{
-		mCar->TurnRight();
+		mCar->mTurningRight = true;
+		//mCar->TurnRight();
 	}
 	else if (arg.key == OIS::KC_A)
 	{
-		mCar->TurnLeft();
+		mCar->mTurningLeft = true;
+		//mCar->TurnLeft();
 	}
 
 	if (arg.key == OIS::KC_ESCAPE)
@@ -149,11 +164,11 @@ void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
 
 	if (arg.key == OIS::KC_D)
 	{
-		mCar->TurnRight(0.0f);
+		mCar->mTurningRight = false;
 	}
 	if (arg.key == OIS::KC_A)
 	{
-		mCar->TurnLeft(0.0f);
+		mCar->mTurningLeft = false;
 	}
 }
 
@@ -168,6 +183,25 @@ void GameplayScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 void GameplayScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
 
+}
+
+void GameplayScene::axisMoved(const OIS::JoyStickEvent &arg, int axis)
+{
+
+}
+void GameplayScene::buttonPressed(const OIS::JoyStickEvent &arg, int button)
+{
+	if (button == 0)
+	{
+		mCar->mCanMoveForward = true;
+	}
+}
+void GameplayScene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
+{
+	if (button == 0)
+	{
+		mCar->mCanMoveForward = false;
+	}
 }
 
 void GameplayScene::AddCarToScene(Ogre::String name)
@@ -263,7 +297,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		{
 			GetSceneManager()->clearScene();
 			newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
-			newScene->LoadLevel("test");
+			newScene->LoadLevel("level1");
 			newScene->AddCarToScene("myCar");
 			newScene->AddTriggerVolumesToScene();
 			swapToTheNewScene = true;
@@ -329,7 +363,7 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				{
 					GetSceneManager()->clearScene();
 					newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
-					newScene->LoadLevel("test");
+					newScene->LoadLevel("level1");
 					newScene->AddCarToScene("myCar");
 					newScene->AddTriggerVolumesToScene();
 					swapToTheNewScene = true;
@@ -345,6 +379,19 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 	}
 }
 void MenuScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+
+}
+
+void MenuScene::axisMoved(const OIS::JoyStickEvent &arg, int axis)
+{
+
+}
+void MenuScene::buttonPressed(const OIS::JoyStickEvent &arg, int button)
+{
+
+}
+void MenuScene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
 {
 
 }

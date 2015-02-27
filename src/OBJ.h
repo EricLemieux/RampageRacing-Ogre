@@ -17,4 +17,5 @@ public:
 
 	//We really only need the vertex data for what we are doing, so fuck it only going to collect that
 	std::vector<btVector3> mVerts;
+	btTriangleMesh* mTriMesh;
 };

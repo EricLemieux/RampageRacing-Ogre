@@ -99,6 +99,19 @@ void BaseApplication::createFrameListener(void)
     mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, true ));
     mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject( OIS::OISMouse, true ));
 
+	if (mInputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
+	{
+		mJoysticks.resize(mInputManager->getNumberOfDevices(OIS::OISJoyStick));
+
+		mItJoystick = mJoysticks.begin();
+		mItJoystickEnd = mJoysticks.end();
+		for (;mItJoystick != mItJoystickEnd; ++mItJoystick)
+		{
+			(*mItJoystick) = static_cast<OIS::JoyStick*>(mInputManager->createInputObject(OIS::OISJoyStick, true));
+			(*mItJoystick)->setEventCallback(this);
+		}
+	}
+
     mMouse->setEventCallback(this);
     mKeyboard->setEventCallback(this);
 
@@ -232,6 +245,16 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
     mKeyboard->capture();
     mMouse->capture();
 
+	if (mInputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
+	{
+		mItJoystick = mJoysticks.begin();
+		mItJoystickEnd = mJoysticks.end();
+		for (; mItJoystick != mItJoystickEnd; ++mItJoystick)
+		{
+			(*mItJoystick)->capture();
+		}
+	}
+
     mTrayMgr->frameRenderingQueued(evt);
 
     if (!mTrayMgr->isDialogVisible())
@@ -340,6 +363,16 @@ void BaseApplication::windowClosed(Ogre::RenderWindow* rw)
         {
             mInputManager->destroyInputObject( mMouse );
             mInputManager->destroyInputObject( mKeyboard );
+			
+			if (mInputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
+			{
+				mItJoystick = mJoysticks.begin();
+				mItJoystickEnd = mJoysticks.end();
+				for (; mItJoystick != mItJoystickEnd; ++mItJoystick)
+				{
+					mInputManager->destroyInputObject(*mItJoystick);
+				}
+			}
 
             OIS::InputManager::destroyInputSystem(mInputManager);
             mInputManager = 0;
@@ -356,5 +389,18 @@ bool BaseApplication::Render()
 {
 	mRoot->renderOneFrame();
 
+	return true;
+}
+
+bool BaseApplication::axisMoved(const OIS::JoyStickEvent &arg, int axis)
+{
+	return true;
+}
+bool BaseApplication::buttonPressed(const OIS::JoyStickEvent &arg, int button)
+{
+	return true;
+}
+bool BaseApplication::buttonReleased(const OIS::JoyStickEvent &arg, int button)
+{
 	return true;
 }
