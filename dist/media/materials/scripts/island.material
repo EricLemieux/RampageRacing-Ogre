@@ -1,0 +1,44 @@
+material lambert1
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.5 0.5 0.5 1
+		}
+
+	}
+
+}
+
+
+material sand
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.837 0.724094 0.400086 1
+		}
+
+	}
+
+}
+
+
+material water
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.156147 0.300047 0.713 1
+			specular 0.5 0.5 0.5 1 25.6
+		}
+
+	}
+
+}

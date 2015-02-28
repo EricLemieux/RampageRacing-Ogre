@@ -95,6 +95,24 @@ void Scene::ResetCamera()
 	mCamera->lookAt(0.0f, 0.0f, -1.0f);
 }
 
+void Scene::SwapToMainMenu()
+{
+	GetSceneManager()->clearScene();
+	newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), GetCamera(), this->mGameClient));
+	newScene->LoadLevel("MainMenu");
+	swapToTheNewScene = true;
+}
+
+void Scene::SwapToGameplayLevel(Ogre::String levelName)
+{
+	GetSceneManager()->clearScene();
+	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
+	newScene->LoadLevel(levelName);
+	newScene->AddCarToScene("myCar");
+	newScene->AddTriggerVolumesToScene();
+	swapToTheNewScene = true;
+}
+
 
 //Gameplay scenes
 GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Client> client) : Scene(sceneMgr, camera, client)
@@ -145,10 +163,7 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 
 	if (arg.key == OIS::KC_ESCAPE)
 	{
-		GetSceneManager()->clearScene();
-		newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), GetCamera(), this->mGameClient));
-		newScene->LoadLevel("MainMenu");
-		swapToTheNewScene = true;
+		SwapToMainMenu();
 	}
 }
 void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
@@ -191,16 +206,24 @@ void GameplayScene::axisMoved(const OIS::JoyStickEvent &arg, int axis)
 }
 void GameplayScene::buttonPressed(const OIS::JoyStickEvent &arg, int button)
 {
-	if (button == 0)
+	if (button == XBOX_A)
 	{
 		mCar->mCanMoveForward = true;
+	}
+	if (button == XBOX_B)
+	{
+		mCar->mCanMoveBackward = true;
 	}
 }
 void GameplayScene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
 {
-	if (button == 0)
+	if (button == XBOX_A)
 	{
 		mCar->mCanMoveForward = false;
+	}
+	if (button == XBOX_B)
+	{
+		mCar->mCanMoveBackward = false;
 	}
 }
 
@@ -258,15 +281,12 @@ bool GameplayScene::Update()
 
 	GetSceneManager()->getSceneNode("mCar2")->setPosition(mGameClient->GetPos(1));
 
-	////TEMP AS FUCK
-	////seriously kill this with fire...
-	//if (test)
-	//{
-	//	GetSceneManager()->clearScene();
-	//	newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), GetCamera(), this->mGameClient));
-	//	newScene->LoadLevel("MainMenu");
-	//	swapToTheNewScene = true;
-	//}
+	//TEMP AS FUCK
+	//seriously kill this with fire...
+	if (test)
+	{
+		SwapToMainMenu();
+	}
 
 	return true;
 }
@@ -293,12 +313,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		}
 		else if (currentSubMenu == sm_LevelSelect)
 		{
-			GetSceneManager()->clearScene();
-			newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
-			newScene->LoadLevel("level1");
-			newScene->AddCarToScene("myCar");
-			newScene->AddTriggerVolumesToScene();
-			swapToTheNewScene = true;
+			SwapToGameplayLevel("level1");
 		}
 	}
 
@@ -359,12 +374,7 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 			{
 				if (itr->movable->getName() == "bStartEnt1")
 				{
-					GetSceneManager()->clearScene();
-					newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), GetCamera(), this->mGameClient));
-					newScene->LoadLevel("level1");
-					newScene->AddCarToScene("myCar");
-					newScene->AddTriggerVolumesToScene();
-					swapToTheNewScene = true;
+					SwapToGameplayLevel("level1");
 				}
 				else if (itr->movable->getName() == "bExitEnt1")
 				{
@@ -383,11 +393,43 @@ void MenuScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 
 void MenuScene::axisMoved(const OIS::JoyStickEvent &arg, int axis)
 {
+	if (arg.state.mAxes[0].rel > 0.5)
+	{
+		int a = 0;
+	}
 
+	//itJoystickListener = mJoystickListeners.begin();
+	//itJoystickListenerEnd = mJoystickListeners.end();
+	//for (; itJoystickListener != itJoystickListenerEnd; ++itJoystickListener) {
+	//	if (!itJoystickListener->second->axisMoved(e, axis))
+	//		break;
+	//}
 }
 void MenuScene::buttonPressed(const OIS::JoyStickEvent &arg, int button)
 {
+	if (button == XBOX_A)
+	{
+		if (currentSubMenu == sm_Main)
+		{
+			nextSubMenu = sm_LevelSelect;
+		}
+		else if (currentSubMenu == sm_LevelSelect)
+		{
+			SwapToGameplayLevel("level1");
+		}
+	}
 
+	if (button == XBOX_B)
+	{
+		if (currentSubMenu == sm_Main)
+		{
+			exit(1);
+		}
+		else if (currentSubMenu == sm_LevelSelect)
+		{
+			nextSubMenu = sm_Main;
+		}
+	}
 }
 void MenuScene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
 {

@@ -79,6 +79,9 @@ protected:
 	std::vector<GameObject*> mObjects;
 
 	void ResetCamera(void);
+
+	void SwapToMainMenu();
+	void SwapToGameplayLevel(Ogre::String levelName);
 };
 
 class GameplayScene : public Scene

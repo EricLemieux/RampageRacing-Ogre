@@ -398,6 +398,23 @@ bool BaseApplication::axisMoved(const OIS::JoyStickEvent &arg, int axis)
 }
 bool BaseApplication::buttonPressed(const OIS::JoyStickEvent &arg, int button)
 {
+	//mItJoystickListener = mJoystickListeners.begin();
+	//mItJoystickListenerEnd = mJoystickListeners.end();
+	//for (; itJoystickListener != itJoystickListenerEnd; ++itJoystickListener) {
+	//	if (!itJoystickListener->second->axisMoved(e, axis))
+	//		break;
+	//}
+
+	//mItJoystick = mJoysticks.begin();
+	//mItJoystickEnd = mJoysticks.end();
+	//for (; mItJoystick != mItJoystickEnd; ++mItJoystick)
+	//{
+	//	if ()
+	//	{
+	//
+	//	}
+	//}
+
 	return true;
 }
 bool BaseApplication::buttonReleased(const OIS::JoyStickEvent &arg, int button)
