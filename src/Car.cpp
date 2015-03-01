@@ -42,14 +42,14 @@ void Car::TurnLeft(float value)
 	TurnRight(-value);
 }
 
-void Car::FireMissle(Ogre::Entity* missleEnt)
+void Car::FireMissile(Ogre::Entity* MissileEnt)
 {
 	if (missileActive)
 	{
 		mSceneManager->getRootSceneNode()->removeAndDestroyChild("missile");
 	}
 
-	mMissile = new Missle("missile", mSceneManager, missleEnt, GetSceneNode());
+	mMissile = new Missile("missile", mSceneManager, MissileEnt, GetSceneNode());
 
 	world->addRigidBody(mMissile->GetRigidBody());
 

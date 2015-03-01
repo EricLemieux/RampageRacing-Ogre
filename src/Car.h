@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
-#include "Missle.h"
+#include "Missile.h"
 
 class Car : public GameObject
 {
@@ -16,7 +16,7 @@ public:
 	void TurnRight(float value=0.3f);
 	void TurnLeft(float value=0.3f);
 
-	void FireMissle(Ogre::Entity* missleEnt);
+	void FireMissile(Ogre::Entity* MissileEnt);
 
 	virtual void Update(void);
 
@@ -43,6 +43,6 @@ private:
 	int engineForce;
 	float steerValue;
 
-	Missle* mMissile;
+	Missile* mMissile;
 	bool missileActive = false;
 };

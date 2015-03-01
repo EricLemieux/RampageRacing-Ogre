@@ -2,11 +2,11 @@
 
 #include "GameObject.h"
 
-class Missle:public GameObject
+class Missile:public GameObject
 {
 public:
-	Missle(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::Entity* missleEnt, Ogre::SceneNode* parent);
-	~Missle();
+	Missile(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::Entity* MissileEnt, Ogre::SceneNode* parent);
+	~Missile();
 
 	virtual void Update();
 

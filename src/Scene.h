@@ -115,7 +115,7 @@ private:
 	//currently 3 because 2 checkpoints and 1 finish line
 	TriggerVolume* mTriggerVolumes[3];
 
-	Ogre::Entity* mCommonMissle;
+	Ogre::Entity* mCommonMissile;
 	Ogre::Entity* mCommonMine;
 };
 

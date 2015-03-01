@@ -1,13 +1,13 @@
-#include "Missle.h"
+#include "Missile.h"
 
-Missle::Missle(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::Entity* missleEnt, Ogre::SceneNode* parent)
+Missile::Missile(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::Entity* MissileEnt, Ogre::SceneNode* parent)
 {
 	mName = name;
 
 	mSceneManager = manager;
 
 	mSceneNode = mSceneManager->getRootSceneNode()->createChildSceneNode("missile");
-	mSceneNode->attachObject(missleEnt);
+	mSceneNode->attachObject(MissileEnt);
 
 	mSceneNode->setPosition(parent->getPosition());
 	mSceneNode->setOrientation(parent->getOrientation());
@@ -15,12 +15,12 @@ Missle::Missle(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, O
 	InitRigidBody();
 }
 
-Missle::~Missle()
+Missile::~Missile()
 {
 
 }
 
-void Missle::InitRigidBody()
+void Missile::InitRigidBody()
 {
 	//if mass is zero it counts as infinite
 	float mass = 1.0f;
@@ -38,7 +38,7 @@ void Missle::InitRigidBody()
 	mRigidBody = new btRigidBody(boxRigidBodyCI);
 }
 
-void Missle::Update()
+void Missile::Update()
 {
 	mRigidBody->setLinearVelocity(mVelocity);
 

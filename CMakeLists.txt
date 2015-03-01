@@ -120,7 +120,7 @@ set(HDRS
 	./src/TriggerVolume.h
 	./src/CarCollisionTest.h
 	./src/OBJ.h
-	./src/Missle.h
+	./src/Missile.h
 )
  
 set(SRCS
@@ -135,7 +135,7 @@ set(SRCS
 	./src/TriggerVolume.cpp
 	./src/CarCollisionTest.cpp
 	./src/OBJ.cpp
-	./src/Missle.cpp
+	./src/Missile.cpp
 )
  
 include_directories( ${OIS_INCLUDE_DIRS}
