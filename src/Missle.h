@@ -5,7 +5,7 @@
 class Missle:public GameObject
 {
 public:
-	Missle(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::Entity* missleEnt);
+	Missle(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::Entity* missleEnt, Ogre::SceneNode* parent);
 	~Missle();
 
 	virtual void Update();

@@ -49,7 +49,7 @@ void Car::FireMissle(Ogre::Entity* missleEnt)
 		mSceneManager->getRootSceneNode()->removeAndDestroyChild("missile");
 	}
 
-	mMissile = new Missle("missile", mSceneManager, missleEnt);
+	mMissile = new Missle("missile", mSceneManager, missleEnt, GetSceneNode());
 
 	world->addRigidBody(mMissile->GetRigidBody());
 

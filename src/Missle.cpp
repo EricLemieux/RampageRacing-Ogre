@@ -1,6 +1,6 @@
 #include "Missle.h"
 
-Missle::Missle(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::Entity* missleEnt)
+Missle::Missle(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::Entity* missleEnt, Ogre::SceneNode* parent)
 {
 	mName = name;
 
@@ -8,6 +8,9 @@ Missle::Missle(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, O
 
 	mSceneNode = mSceneManager->getRootSceneNode()->createChildSceneNode("missile");
 	mSceneNode->attachObject(missleEnt);
+
+	mSceneNode->setPosition(parent->getPosition());
+	mSceneNode->setOrientation(parent->getOrientation());
 
 	InitRigidBody();
 }
@@ -21,8 +24,6 @@ void Missle::InitRigidBody()
 {
 	//if mass is zero it counts as infinite
 	float mass = 1.0f;
-
-	mSceneNode->setPosition(0, 20, 0);
 
 	btQuaternion q = OgreToBtQuaternion(mSceneNode->getOrientation());
 	btVector3 v = OgreToBtVector3(mSceneNode->getPosition());
