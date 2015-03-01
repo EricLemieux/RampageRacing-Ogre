@@ -69,8 +69,8 @@ void Car::Update(void)
 	for (int i = 0; i < m_vehicle->getNumWheels(); ++i){
 		m_vehicle->updateWheelTransform(i, true);
 	}
-	int engineForce = 0;
-	float steerValue = 0;
+	engineForce = 0;
+	steerValue = 0;
 	//Move the car if the button is down
 	if (mCanMoveForward)
 	{
@@ -93,12 +93,16 @@ void Car::Update(void)
 	if (mTurningRight)
 	{
 		//TurnRight();
-		steerValue = 1;
+		steerValue += 0.05f;
+		if (steerValue > 0.5f)
+			steerValue = 0.5f;
 	}
 	else if (mTurningLeft)
 	{
 		//TurnLeft();
-		steerValue = -1;
+		steerValue -= 0.05f;
+		if (steerValue < -0.5f)
+			steerValue = -0.5f;
 	}
 	
 	int wheelIndex = 2;
@@ -158,7 +162,7 @@ void Car::InitRigidBody()
 	int forwardIndex = 2;
 	btVector3 wheelDirection(0, -1, 0);
 	btVector3 wheelAxle(-1, 0, 0);
-	float suspensionRestLength = 6.6f;
+	float suspensionRestLength = 10.6f;
 	bool isFrontWheel = true;
 
 	btCollisionShape* wheelShape = new btCylinderShapeX(btVector3(wheelWidth, wheelRadius, wheelRadius));
