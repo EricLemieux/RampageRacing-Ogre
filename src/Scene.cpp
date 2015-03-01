@@ -15,6 +15,8 @@ Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre:
 	mSceneMgr->setSkyBox(true, "sky");
 
 	mGameClient = client;
+	timeStep = 0;
+	clock.reset();
 }
 
 Scene::~Scene()
@@ -23,7 +25,9 @@ Scene::~Scene()
 
 bool Scene::Update()
 {
-	mPhysicsWorld->updateWorld();
+	timeStep += clock.getTimeSeconds();
+	clock.reset();
+	mPhysicsWorld->updateWorld(timeStep);
 
 	unsigned int size = mObjects.size(), i = 0;
 	for (;i < size; ++i)
@@ -278,10 +282,12 @@ void GameplayScene::AddTriggerVolumesToScene()
 
 bool GameplayScene::Update()
 {
-	GetPhysicsWorld()->updateWorld();
+	timeStep += clock.getTimeSeconds();
+	clock.reset();
+	GetPhysicsWorld()->updateWorld(timeStep);
 	bool test = false;
 	test = mCar->isColliding;
-	GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[0]->GetRigidBody(), *callback);
+//	GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[0]->GetRigidBody(), *callback);
     test = mCar->isColliding;
 
 	mCar->Update();
@@ -478,7 +484,9 @@ void MenuScene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
 
 bool MenuScene::Update()
 {
-	GetPhysicsWorld()->updateWorld();
+	timeStep += clock.getTimeSeconds();
+	clock.reset();
+	GetPhysicsWorld()->updateWorld(timeStep);
 
 	GetSceneManager()->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 

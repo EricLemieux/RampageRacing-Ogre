@@ -12,7 +12,7 @@ public:
 
 	void initWorld();
 	void addBodyToWorld(btRigidBody* newBody);
-	void updateWorld();
+	void updateWorld(float timeStep);
 
 	btDiscreteDynamicsWorld* getWorld(){ return world; }
 

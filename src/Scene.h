@@ -66,6 +66,10 @@ public:
 	inline std::shared_ptr<Scene> GetNewScene(){ swapToTheNewScene = false; return newScene; }
 
 protected:
+
+	btClock clock;
+	float timeStep;
+
 	bool swapToTheNewScene = false;
 	std::shared_ptr<Scene> newScene;
 
@@ -108,6 +112,8 @@ public:
 	virtual void AddCarToScene(Ogre::String name);
 	virtual void AddTriggerVolumesToScene();
 private:
+	
+
 	Car* mCar;
 	btRigidBody* body;
 
