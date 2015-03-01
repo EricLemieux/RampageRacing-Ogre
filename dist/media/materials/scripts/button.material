@@ -1,18 +1,69 @@
-material button_lambert
+material button_start
 {
 	technique
 	{
 		pass
 		{
-			ambient 0 0 0 1
-			specular 0.5 0.5 0.5 1 100
-
 			texture_unit
 			{
-				texture buttonStartTex.png
+				texture buttons/buttonStartTex.png
 			}
 		}
-
 	}
+}
 
+material button_quit
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/buttonExitTex.png
+			}
+		}
+	}
+}
+
+material button_level_island
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/buttonIsland.png
+			}
+		}
+	}
+}
+
+material button_play
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/buttonPlay.png
+			}
+		}
+	}
+}
+
+material button_home
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/buttonHome.png
+			}
+		}
+	}
 }

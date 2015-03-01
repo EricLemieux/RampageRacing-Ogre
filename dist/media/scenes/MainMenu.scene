@@ -20,20 +20,17 @@
             <position x="10" y="0" z="-40"/>
             <rotation qx="0" qy="0" qz="0" qw="1"/>
             <entity name="Car" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
-                <subentities>
-                    <subentity index="0" materialName="lambert1"/>
-                </subentities>
             </entity>
         </node>
 		<node name="bStart" id="10">
             <position x="-2" y="0.75" z="-5"/>
             <rotation qx="0" qy="0.3" qz="0" qw="1"/>
-            <entity name="bStartEnt0" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <entity name="bStartEnt0" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_start"></entity>
         </node>
 		<node name="bExit" id="10">
             <position x="-2" y="-0.75" z="-5"/>
             <rotation qx="0" qy="0.3" qz="0" qw="1"/>
-            <entity name="bExitEnt0" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <entity name="bExitEnt0" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_quit"></entity>
         </node>
 		<node name="Omni01" id="5">
             <position x="0" y="0" z="0" />
@@ -46,23 +43,40 @@
         </node>
 
         <!--Level Select-->
-        <node name="camPos1" id="10">
-            <position x="20" y="0" z="0"/>
+        <node name="camPos1">
+            <position x="0" y="40" z="0"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
         </node>
-        <node name="camTar1" id="10">
-            <position x="20" y="0" z="-1"/>
+        <node name="camTar1">
+            <position x="0" y="40" z="-1"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
         </node>
-        <node name="bStart1" id="10">
-            <position x="22" y="0.75" z="-5"/>
+        <node name="bLevel Island">
+            <position x="-2.5" y="41.4" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
-            <entity name="bStartEnt1" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <entity name="bLevel_Island" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_level_island"></entity>
         </node>
-        <node name="bExit1" id="10">
-            <position x="22" y="-0.75" z="-5"/>
+        <node name="bLevel Island2">
+            <position x="-2.5" y="40.3" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
-            <entity name="bExitEnt1" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <entity name="bLevel_Island2" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_level_island"></entity>
+        </node>
+        <node name="bLevel Island3">
+            <position x="-2.5" y="39.2" z="-5"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+            <entity name="bLevel_Island3" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_level_island"></entity>
+        </node>
+        <node name="bPlay">
+            <position x="2.7" y="38.5" z="-5"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+            <scale x="0.7" y="0.7" z="0.7" />
+            <entity name="bPlay" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_play"></entity>
+        </node>
+        <node name="bHome">
+            <position x="-3" y="38.3" z="-5"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+            <scale x="0.5" y="0.5" z="0.5" />
+            <entity name="bHome" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_home"></entity>
         </node>
         <node name="Omni" id="5">
             <position x="20" y="0" z="0" />
@@ -72,6 +86,13 @@
                 <colourDiffuse r="0.5" g="0.5" b="0.5" />
                 <colourSpecular r="0.5" g="0.5" b="0.5" />
             </light>
+        </node>
+        <!--Menu minis
+        They all start behind the camera and then we move them in front when selected-->
+         <node name="IslandMenuMini">
+            <position x="0" y="40" z="50"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+            <entity name="IslandMenuMini" castShadows="true" receiveShadows="true" meshFile="IslandMenuMini.mesh"></entity>
         </node>
     </nodes>
 </scene>

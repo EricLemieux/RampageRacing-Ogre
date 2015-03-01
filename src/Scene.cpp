@@ -374,11 +374,25 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 			}
 			else if (currentSubMenu == sm_LevelSelect)
 			{
-				if (itr->movable->getName() == "bStartEnt1")
+				Ogre::String str = itr->movable->getName();
+				char buttonType[256], levelName[256];
+				sscanf_s(str.c_str(), "%6s", &buttonType, 256);
+				if (!stricmp(buttonType, "bLevel"))
 				{
-					SwapToGameplayLevel("level1");
+					sscanf_s(str.c_str(),"%*[^_]_%s",&levelName,256);
+					mCurrentSelectedLevel = levelName;
+					GetSceneManager()->getSceneNode(Ogre::String(levelName) + "MenuMini")->setPosition(0.5, 40, -5);
 				}
-				else if (itr->movable->getName() == "bExitEnt1")
+
+				else if (itr->movable->getName() == "bPlay")
+				{
+					if (mCurrentSelectedLevel != "")
+					{
+						SwapToGameplayLevel(mCurrentSelectedLevel);
+					}
+				}
+
+				else if (itr->movable->getName() == "bHome")
 				{
 					nextSubMenu = sm_Main;
 				}
@@ -443,6 +457,11 @@ bool MenuScene::Update()
 	GetPhysicsWorld()->updateWorld();
 
 	GetSceneManager()->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
+
+	if (mCurrentSelectedLevel != "")
+	{
+		GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
+	}
 	
 	if (currentSubMenu != nextSubMenu)
 	{
@@ -451,7 +470,7 @@ bool MenuScene::Update()
 			GetCamera()->setPosition(Ogre::Math::lerp(GetCamPosFromSubMenu(currentSubMenu), GetCamTargetFromSubMenu(nextSubMenu), deltaT));
 			GetCamera()->lookAt(Ogre::Math::lerp(GetCamTargetFromSubMenu(currentSubMenu), GetCamTargetFromSubMenu(nextSubMenu), deltaT));
 
-			deltaT += 0.01f;
+			deltaT += 0.007f;
 		}
 		else
 		{

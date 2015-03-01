@@ -150,4 +150,6 @@ private:
 
 	Ogre::Vector3 GetCamPosFromSubMenu(int subMenu);
 	Ogre::Vector3 GetCamTargetFromSubMenu(int subMenu);
+
+	Ogre::String mCurrentSelectedLevel;
 };
