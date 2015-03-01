@@ -162,7 +162,7 @@ void Car::InitRigidBody()
 	int forwardIndex = 2;
 	btVector3 wheelDirection(0, -1, 0);
 	btVector3 wheelAxle(-1, 0, 0);
-	float suspensionRestLength = 6.6f;
+	float suspensionRestLength = 10.6f;
 	bool isFrontWheel = true;
 
 	btCollisionShape* wheelShape = new btCylinderShapeX(btVector3(wheelWidth, wheelRadius, wheelRadius));
