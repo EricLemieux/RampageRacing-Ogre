@@ -76,7 +76,7 @@ void Car::Update(void)
 	{
 		if (speed < 30)
 			++speed;
-		engineForce = -1000;
+		engineForce = -800;
 	}
 	else if (mCanMoveBackward)
 	{

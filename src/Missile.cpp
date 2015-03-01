@@ -36,6 +36,8 @@ void Missile::InitRigidBody()
 	boxShape->calculateLocalInertia(mass, boxInertia);
 	btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(mass, boxMotionState, boxShape, boxInertia);
 	mRigidBody = new btRigidBody(boxRigidBodyCI);
+
+	mRigidBody->setAngularFactor(0);
 }
 
 void Missile::Update()
