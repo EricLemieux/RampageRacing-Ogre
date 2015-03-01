@@ -247,10 +247,10 @@ void GameplayScene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
 void GameplayScene::AddCarToScene(Ogre::String name)
 {
 	//Create a game object thing
-	mCar = new Car("mCar", GetSceneManager());
+	mCar = new Car("mCar", GetSceneManager(), GetPhysicsWorld()->getWorld());
 
 	//Add the car's rigid body to the world
-	GetPhysicsWorld()->addBodyToWorld(mCar->GetRigidBody());
+//	GetPhysicsWorld()->addBodyToWorld(mCar->GetRigidBody());
 
 	Ogre::SceneNode* camNode = GetSceneManager()->getSceneNode("mCar")->createChildSceneNode();
 	camNode->attachObject(GetCamera().get());

@@ -5,7 +5,7 @@
 class Car : public GameObject
 {
 public:
-	Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager);
+	Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld);
 	~Car();
 
 public:
@@ -23,6 +23,13 @@ public:
 
 	bool mTurningRight = false;
 	bool mTurningLeft  = false;
+
+	btAlignedObjectArray<btCollisionShape*> mCollisionShapes;
+	btRaycastVehicle::btVehicleTuning       m_tuning;
+	btVehicleRaycaster*     m_vehicleRayCaster;
+	btRaycastVehicle*       m_vehicle;
+	btCollisionShape*       m_wheelShape;
+	btDiscreteDynamicsWorld* world;
 
 	virtual void InitRigidBody();
 
