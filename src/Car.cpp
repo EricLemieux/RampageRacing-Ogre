@@ -42,6 +42,27 @@ void Car::TurnLeft(float value)
 	TurnRight(-value);
 }
 
+void Car::FireMissle(Ogre::Entity* missleEnt)
+{
+	if (missileActive)
+	{
+		mSceneManager->getRootSceneNode()->removeAndDestroyChild("missile");
+	}
+
+	mMissile = new Missle("missile", mSceneManager, missleEnt);
+
+	world->addRigidBody(mMissile->GetRigidBody());
+
+	btScalar mat[16];
+	GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
+	btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
+	forward *= -10;
+	
+	mMissile->setVelocity(forward.x(), forward.y(), forward.z());
+	
+	missileActive = true;
+}
+
 void Car::Update(void)
 {
 	world->debugDrawWorld();
@@ -93,6 +114,8 @@ void Car::Update(void)
 	wheelIndex = 1;
 	m_vehicle->setSteeringValue(steerValue, wheelIndex);
 
+	if (missileActive)
+		mMissile->Update();
 
 	GameObject::Update();
 }

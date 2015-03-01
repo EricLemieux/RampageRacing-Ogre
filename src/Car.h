@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "Missle.h"
 
 class Car : public GameObject
 {
@@ -14,6 +15,8 @@ public:
 
 	void TurnRight(float value=0.3f);
 	void TurnLeft(float value=0.3f);
+
+	void FireMissle(Ogre::Entity* missleEnt);
 
 	virtual void Update(void);
 
@@ -37,5 +40,6 @@ private:
 	float speed = 0.0f;
 	float turnSpeed = 0.3f;
 
-	
+	Missle* mMissile;
+	bool missileActive = false;
 };

@@ -117,7 +117,9 @@ void Scene::SwapToGameplayLevel(Ogre::String levelName)
 //Gameplay scenes
 GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Client> client) : Scene(sceneMgr, camera, client)
 {
-
+	//Set up common entitys
+	mCommonMissle = mSceneMgr->createEntity("missle", "Missile.mesh");
+	mCommonMine = mSceneMgr->createEntity("mine", "Mine.mesh");
 }
 GameplayScene::~GameplayScene()
 {
@@ -176,6 +178,11 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 	{
 		mCar->mTurningLeft = true;
 		//mCar->TurnLeft();
+	}
+
+	if (arg.key == OIS::KC_SPACE)
+	{
+		mCar->FireMissle(mCommonMissle);
 	}
 
 	if (arg.key == OIS::KC_ESCAPE)
