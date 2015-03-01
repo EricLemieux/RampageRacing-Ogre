@@ -123,20 +123,37 @@ GameplayScene::~GameplayScene()
 {
 }
 
-void GameplayScene::LoadLevel(Ogre::String LevelName)
+void GameplayScene::LoadLevel(Ogre::String levelName)
 {
-	Scene::LoadLevel(LevelName);
+	Scene::LoadLevel(levelName);
 
-	//Load the physics mesh for that level
-	OBJ physMesh(LevelName + ".obj");	
+	Ogre::String basename, path;
+	Ogre::StringUtil::splitFilename(levelName + ".phys", basename, path);
 
-	btCollisionShape* boxShape = new btBvhTriangleMeshShape(physMesh.mTriMesh, false);
+	Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource(basename, "General");
 
-	btDefaultMotionState* boxMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
-	btVector3 boxInertia(0, 0, 0);
-	btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(0.0f, boxMotionState, boxShape, boxInertia);
-	body = new btRigidBody(boxRigidBodyCI);
-	GetPhysicsWorld()->addBodyToWorld(body);
+	Ogre::String data;
+
+	while (!pStream->eof())
+	{
+		//Get the next line of the file
+		data = pStream->getLine();
+
+		//Open the obj that file wants if it is not a comment
+		if (data.c_str()[0] != '#')
+		{
+			//Load the physics mesh for that level
+			OBJ physMesh(data);
+
+			btCollisionShape* boxShape = new btBvhTriangleMeshShape(physMesh.mTriMesh, false);
+
+			btDefaultMotionState* boxMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
+			btVector3 boxInertia(0, 0, 0);
+			btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(0.0f, boxMotionState, boxShape, boxInertia);
+			body = new btRigidBody(boxRigidBodyCI);
+			GetPhysicsWorld()->addBodyToWorld(body);
+		}
+	}
 }
 
 void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
