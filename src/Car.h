@@ -40,6 +40,9 @@ private:
 	float speed = 0.0f;
 	float turnSpeed = 0.3f;
 
+	int engineForce;
+	float steerValue;
+
 	Missle* mMissile;
 	bool missileActive = false;
 };
