@@ -71,5 +71,13 @@
             <entity name="tunnel" castShadows="true" receiveShadows="true" meshFile="RoadwayTunnel.mesh" static="true">
             </entity>
         </node>
+        <node name="insideWall">
+            <entity name="insideWall" castShadows="true" receiveShadows="true" meshFile="RoadwayInsideWall.mesh" static="true">
+            </entity>
+        </node>
+        <node name="outsideWall">
+            <entity name="outsideWall" castShadows="true" receiveShadows="true" meshFile="RoadwayOutsideWall.mesh" static="true">
+            </entity>
+        </node>
     </nodes>
 </scene>

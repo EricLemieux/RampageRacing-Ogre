@@ -1,2 +1,6 @@
 #Roadway level physics meshes
 RoadwayGround.obj
+RoadwayPath.obj
+RoadwayTunnel.obj
+RoadwayInsideWall.obj
+RoadwayOutsideWall.obj

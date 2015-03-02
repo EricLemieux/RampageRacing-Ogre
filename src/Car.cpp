@@ -74,7 +74,7 @@ void Car::Update(void)
 	for (int i = 0; i < m_vehicle->getNumWheels(); ++i){
 		m_vehicle->updateWheelTransform(i, true);
 	}
-	engineForce = 0;
+
 	//Move the car if the button is down
 	if (mCanMoveForward)
 	{
