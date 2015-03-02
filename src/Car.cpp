@@ -110,7 +110,7 @@ void Car::Update(void)
 	}
 	else
 	{
-		steerValue *= 0.99;
+		steerValue *= 0.97;
 	}
 
 	int wheelIndex = 2;
@@ -131,7 +131,7 @@ void Car::Update(void)
 
 	GameObject::Update();
 
-	mSceneNode->roll(Ogre::Radian(-steerValue));
+	mSceneNode->roll(Ogre::Radian(-steerValue*2));
 }
 
 void Car::InitRigidBody()
