@@ -79,5 +79,9 @@
             <entity name="outsideWall" castShadows="true" receiveShadows="true" meshFile="RoadwayOutsideWall.mesh" static="true">
             </entity>
         </node>
+        <node name="buidings">
+            <entity name="buidings" castShadows="true" receiveShadows="true" meshFile="Roadway/Buildings.mesh" static="true">
+            </entity>
+        </node>
     </nodes>
 </scene>
