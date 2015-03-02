@@ -406,7 +406,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		}
 		else if (currentSubMenu == sm_LevelSelect)
 		{
-			SwapToGameplayLevel("level1");
+			SwapToGameplayLevel(mCurrentSelectedLevel);
 		}
 	}
 
