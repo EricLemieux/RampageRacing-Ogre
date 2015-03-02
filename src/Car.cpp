@@ -75,14 +75,21 @@ void Car::Update(void)
 		m_vehicle->updateWheelTransform(i, true);
 	}
 
+	float maxSpeed = 100;
+	float currentSpeed = mRigidBody->getLinearVelocity().norm();
+	float speedRatio = 0.01f;
+	if (currentSpeed != 0){
+		speedRatio = currentSpeed / maxSpeed;
+	}
+
 	//Move the car if the button is down
 	if (mCanMoveForward)
 	{
-			engineForce = -400;
+			engineForce = -1000 / speedRatio;
 	}
 	else if (mCanMoveBackward)
 	{
-			engineForce = 300;
+			engineForce = 600;
 	}
 	else 
 	{
@@ -92,20 +99,20 @@ void Car::Update(void)
 	if (mTurningRight)
 	{
 		steerValue += 0.001f;
-		if (steerValue > 0.3f)
-			steerValue = 0.3f;
+		if (steerValue > 0.1f)
+			steerValue = 0.1f;
 	}
 	else if (mTurningLeft)
 	{
 		steerValue -= 0.001f;
-		if (steerValue < -0.3f)
-			steerValue = -0.3f;
+		if (steerValue < -0.1f)
+			steerValue = -0.1f;
 	}
 	else
 	{
 		steerValue *= 0.99;
 	}
-	
+
 	int wheelIndex = 2;
 	m_vehicle->applyEngineForce(engineForce, wheelIndex);
 	m_vehicle->setBrake(100, wheelIndex);
@@ -157,15 +164,15 @@ void Car::InitRigidBody()
 	
 
 	
-	float connectionHeight = 10.f;
-	float wheelWidth = 4.f;
-	float wheelRadius = 5.f;
+	float connectionHeight = 2.f;
+	float wheelWidth = 5.f;
+	float wheelRadius = 2.f;
 	int rightIndex = 0;
 	int upIndex = 1;
 	int forwardIndex = 2;
 	btVector3 wheelDirection(0, -1, 0);
 	btVector3 wheelAxle(-1, 0, 0);
-	float suspensionRestLength = 10.6f;
+	float suspensionRestLength = 4.f;
 	bool isFrontWheel = true;
 
 	btCollisionShape* wheelShape = new btCylinderShapeX(btVector3(wheelWidth, wheelRadius, wheelRadius));
@@ -185,10 +192,10 @@ void Car::InitRigidBody()
 	connectionPoint = btVector3((10.f - 0.3f*wheelWidth), connectionHeight, (-10.f - wheelRadius));
 	m_vehicle->addWheel(connectionPoint, wheelDirection, wheelAxle, suspensionRestLength, wheelRadius, m_tuning, false);
 
-	float   wheelFriction = 1000;
+	float   wheelFriction = 2000;
 	float   suspensionStiffness = 20.f;
-	float   suspensionDamping = 2.3f;
-	float   suspensionCompression = 4.4f;
+	float   suspensionDamping = 4.3f;
+	float   suspensionCompression = 10.4f;
 	float   rollInfluence = 0.1f;
 
 
