@@ -61,7 +61,7 @@ void Car::FireMissile(Ogre::Entity* MissileEnt)
 	btScalar mat[16];
 	GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
 	btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
-	forward *= -10;
+	forward *= -500;
 	
 	mMissile->setVelocity(forward.x(), forward.y(), forward.z());
 	
