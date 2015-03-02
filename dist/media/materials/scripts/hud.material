@@ -1,0 +1,41 @@
+material hud_lap_1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture hud/lap1.png
+			}
+		}
+	}
+}
+
+material hud_lap_2
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture hud/lap2.png
+			}
+		}
+	}
+}
+
+material hud_lap_3
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture hud/lap3.png
+			}
+		}
+	}
+}

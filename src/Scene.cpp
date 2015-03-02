@@ -190,6 +190,11 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 		mCar->FireMissile(mCommonMissile);
 	}
 
+	if (arg.key == OIS::KC_P)
+	{
+		SwapToMainMenu();
+	}
+
 	if (arg.key == OIS::KC_ESCAPE)
 	{
 		SwapToMainMenu();
@@ -271,6 +276,21 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 
 	GetCamera()->lookAt(mCar->GetSceneNode()->getPosition());
 
+	//Attach a light to the car
+	Ogre::SceneNode* carLight = GetSceneManager()->getSceneNode("mCar")->createChildSceneNode();
+	carLight->translate(0, 20, 0);
+	Ogre::Light* carLightEnt = GetSceneManager()->createLight("carLight");
+	carLightEnt->setDiffuseColour(1, 0, 0);
+	carLight->attachObject(carLightEnt);
+
+	//Attach the lap counter hud element
+	Ogre::SceneNode* lapcounter = camNode->createChildSceneNode();
+	lapcounter->translate(2.9, 0.4, -5);
+	lapcounter->scale(0.5, 0.5, 0.5);
+	Ogre::Entity* lapcounterEnt = mSceneMgr->createEntity("lapcounter", "button.mesh");
+	lapcounterEnt->setMaterialName("hud_lap_1");
+	lapcounter->attachObject(lapcounterEnt);
+
 	callback = new ContactSensorCallback(*(mCar->GetRigidBody()), *(mCar));
 }
 
@@ -292,32 +312,7 @@ bool GameplayScene::Update()
 	timeStep = clock.getTimeSeconds();
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
-	//bool test = false;
-	//test = mCar->isColliding;
-	// test = mCar->isColliding;
-	if (mCar->checkPointsHit == 0){
-		GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[1]->GetRigidBody(), *callback);
-		if (mCar->isColliding){
-			mCar->isColliding = false;
-			++mCar->checkPointsHit;
-		}
-	}
-	else if (mCar->checkPointsHit == 1){
-		GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[2]->GetRigidBody(), *callback);
-		if (mCar->isColliding){
-			mCar->isColliding = false;
-			++mCar->checkPointsHit;
-		}
-	}
-	else if (mCar->checkPointsHit == 2){
-		GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[0]->GetRigidBody(), *callback);
-		if (mCar->isColliding){
-			mCar->isColliding = false;
-			mCar->checkPointsHit = 0;
-			++mCar->lapCounter;
-		}
-	}
-
+	
 	mCar->Update();
 
 	//Send the position of the players car to the server
@@ -339,15 +334,48 @@ bool GameplayScene::Update()
 	//Get the positions from the server for the other cars
 	mGameClient->Recieve();
 
-	GetSceneManager()->getSceneNode("mCar2")->setPosition(mGameClient->GetPos(1));
+	//GetSceneManager()->getSceneNode("mCar2")->setPosition(mGameClient->GetPos(1));
 
-	//TEMP AS FUCK
-	//seriously kill this with fire...
-	//if (test)
-	//{
-	//	SwapToMainMenu();
-	//}
+	if (mCar->checkPointsHit == 0)
+	{
+		GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[1]->GetRigidBody(), *callback);
+		if (mCar->isColliding)
+		{
+			mCar->isColliding = false;
+			++mCar->checkPointsHit;
+		}
+	}
+	else if (mCar->checkPointsHit == 1)
+	{
+		GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[2]->GetRigidBody(), *callback);
+		if (mCar->isColliding)
+		{
+			mCar->isColliding = false;
+			++mCar->checkPointsHit;
+		}
+	}
+	else if (mCar->checkPointsHit == 2)
+	{
+		GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[0]->GetRigidBody(), *callback);
+		if (mCar->isColliding)
+		{
+			mCar->isColliding = false;
+			mCar->checkPointsHit = 0;
 
+			if (mCar->lapCounter < 2)
+			{
+				++mCar->lapCounter;
+				char buf[128];
+				sprintf_s(buf,128,"%s%i","hud_lap_",mCar->lapCounter+1);
+				GetSceneManager()->getEntity("lapcounter")->setMaterialName(buf);
+			}
+			else
+			{
+				SwapToMainMenu();
+			}
+		}
+	}
+	
 	return true;
 }
 
