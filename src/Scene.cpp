@@ -277,7 +277,13 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 void GameplayScene::AddTriggerVolumesToScene()
 {
 	//Temp only one trigger volume
-	mTriggerVolumes[0] = new TriggerVolume("trigger", GetSceneManager());
+	mTriggerVolumes[0] = new TriggerVolume("triggerFinishLine", GetSceneManager());
+	GetPhysicsWorld()->addBodyToWorld(mTriggerVolumes[0]->GetRigidBody());
+
+	mTriggerVolumes[1] = new TriggerVolume("triggerCheckpoint1", GetSceneManager());
+	GetPhysicsWorld()->addBodyToWorld(mTriggerVolumes[0]->GetRigidBody());
+
+	mTriggerVolumes[2] = new TriggerVolume("triggerCheckpoint2", GetSceneManager());
 	GetPhysicsWorld()->addBodyToWorld(mTriggerVolumes[0]->GetRigidBody());
 }
 

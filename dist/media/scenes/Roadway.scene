@@ -6,35 +6,44 @@
         <clipping near="0" far="1000"/>
     </environment>
     <nodes>
-    	<node name="trigger">
-            <position x="108" y="0" z="-70"/>
+        <!--Trigger Volumes-->
+    	<node name="triggerFinishLine">
+            <position x="-90" y="0" z="-95"/>
             <rotation qx="0" qy="-1.0" qz="0" qw="1"/>
-            <scale x="50" y="30" z="2"/>
-            <entity name="triggerEnt" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
-        	<subentities>
-				<subentity index="0" materialName="lambert1"/>
-			</subentities>
+            <scale x="100" y="30" z="2"/>
+            <entity name="triggerFinishLine" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
             </entity>
         </node>
+        <node name="triggerCheckpoint1">
+            <position x="2100" y="0" z="-590"/>
+            <rotation qx="0" qy="-1.0" qz="0" qw="1"/>
+            <scale x="100" y="30" z="2"/>
+            <entity name="triggerCheckpoint1" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
+            </entity>
+        </node>
+        <node name="triggerCheckpoint2">
+            <position x="370" y="0" z="-1920"/>
+            <rotation qx="0" qy="-1.0" qz="0" qw="1"/>
+            <scale x="100" y="30" z="2"/>
+            <entity name="triggerCheckpoint2" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
+            </entity>
+        </node>
+
+        <!--Cars-->
 		<node name="mCar">
 			<position x="0" y="5" z="0"/>
 			<rotation qx="0.0" qy="-1.0" qz="0.0" qw="1.0"/>
 			<scale x="1.0" y="1.0" z="1.0"/>
 			<entity name="mCarEnt" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
-			<subentities>
-				<subentity index="0" materialName="lambert1"/>
-			</subentities>
 			</entity>
 		</node>
 		<node name="mCar2">
 			<position x="10" y="0" z="0"/>
 			<rotation qx="0" qy="0" qz="0" qw="1"/>
 			<entity name="mCar2Ent" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
-			<subentities>
-				<subentity index="0" materialName="lambert1"/>
-			</subentities>
 			</entity>
 		</node>
+
 		<!--Lights-->
 		<node name="sun">
 			<position x="0" y="250" z="0"/>
