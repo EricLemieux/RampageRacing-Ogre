@@ -164,3 +164,28 @@ private:
 
 	Ogre::String mCurrentSelectedLevel;
 };
+
+class IntroScene : public Scene
+{
+public:
+	IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Client> client);
+	~IntroScene();
+
+	virtual bool Update();
+
+	inline virtual void KeyPressed(const OIS::KeyEvent &arg){}
+	inline virtual void KeyReleased(const OIS::KeyEvent &arg){}
+	
+	inline virtual void mouseMoved(const OIS::MouseEvent &arg){}
+	inline virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
+	inline virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
+	
+	inline virtual void axisMoved(const OIS::JoyStickEvent &arg, int axis){}
+	inline virtual void buttonPressed(const OIS::JoyStickEvent &arg, int button){}
+	inline virtual void buttonReleased(const OIS::JoyStickEvent &arg, int button){}
+	
+	virtual void LoadLevel(Ogre::String levelName);
+
+private:
+	float mTime = 0.0f;
+};

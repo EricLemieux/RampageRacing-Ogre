@@ -1,0 +1,21 @@
+material uoit_logo
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 1 1
+		}
+	}
+}
+
+material sleep_logo
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1 1
+		}
+	}
+}

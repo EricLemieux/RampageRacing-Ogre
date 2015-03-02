@@ -16,18 +16,14 @@ Game::~Game(void)
 void Game::createScene(void)
 {
 	//Set up the current scene
-	mCurrentScene = std::unique_ptr<MenuScene>(new MenuScene(mSceneMgr, mCamera, mGameClient));
+	mCurrentScene = std::unique_ptr<IntroScene>(new IntroScene(mSceneMgr, mCamera, mGameClient));
 
-	mCurrentScene->LoadLevel("MainMenu");
+	mCurrentScene->LoadLevel("Intro");
 }
 
 bool Game::keyPressed( const OIS::KeyEvent &arg )
 {
-	//Call the base class
-	//BaseApplication::keyPressed(arg);
-
 	mCurrentScene->KeyPressed(arg);
-
 
 	return true;
 }

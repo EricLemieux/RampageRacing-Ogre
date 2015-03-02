@@ -4,6 +4,7 @@
         <colourAmbient r="1.0" g="1.0" b="1.0"/>
         <colourBackground r="0" g="0" b="0"/>
         <clipping near="0" far="1000"/>
+        <skyBox material="sky"/>
     </environment>
     <nodes>
         <!--Triggers-->

@@ -12,8 +12,6 @@ Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre:
 	mPhysicsWorld = std::shared_ptr<PhysicsWorld>(new PhysicsWorld);
 	mPhysicsWorld->initWorld();
 
-	mSceneMgr->setSkyBox(true, "sky");
-
 	mGameClient = client;
 	timeStep = 0;
 	clock.reset();
@@ -618,4 +616,50 @@ Ogre::Vector3 MenuScene::GetCamTargetFromSubMenu(int subMenu)
 	str += buf;
 
 	return GetSceneManager()->getSceneNode(str)->getPosition();
+}
+
+//Intro Scene
+IntroScene::IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Client> client) : Scene(sceneMgr, camera, client)
+{
+
+}
+
+IntroScene::~IntroScene()
+{
+
+}
+
+bool IntroScene::Update()
+{
+	mTime += clock.getTimeSeconds();
+	clock.reset();
+
+	if (mTime < 5.0f)
+	{
+		//Move the logo infront of the camera
+		mSceneMgr->getSceneNode("UOIT_logo")->setPosition(0, 0, -5);
+	}
+	else if (mTime < 10.0f)
+	{
+		//Move the uoit logo out of the way and move the sleeples nights logo in front of the camera
+		mSceneMgr->getSceneNode("UOIT_logo")->setPosition(0, 0, 50);
+		mSceneMgr->getSceneNode("sleep_logo")->setPosition(0, 0, -5);
+	}
+	else
+	{
+		SwapToMainMenu();
+	}
+
+	Scene::Update();
+
+	return true;
+}
+
+void IntroScene::LoadLevel(Ogre::String levelName)
+{
+	Scene::LoadLevel(levelName);
+
+	//Set the position of the camera based on the starting camera node
+	GetCamera()->setPosition(Ogre::Vector3(0,0,0));
+	GetCamera()->lookAt(Ogre::Vector3(0,0,-5));
 }
