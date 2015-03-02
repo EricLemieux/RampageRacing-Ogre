@@ -7,6 +7,9 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	mSceneNode = mSceneManager->getSceneNode(name);
 	world = mWorld;
 
+	lapCounter = 0;
+	checkPointsHit = 0;
+
 	InitRigidBody();
 }
 
@@ -74,7 +77,7 @@ void Car::Update(void)
 	//Move the car if the button is down
 	if (mCanMoveForward)
 	{
-		engineForce = -500;
+		engineForce = -1000;
 	}
 	else if (mCanMoveBackward)
 	{
@@ -99,10 +102,10 @@ void Car::Update(void)
 	
 	int wheelIndex = 2;
 	m_vehicle->applyEngineForce(engineForce, wheelIndex);
-	m_vehicle->setBrake(1, wheelIndex);
+	m_vehicle->setBrake(100, wheelIndex);
 	wheelIndex = 3;
 	m_vehicle->applyEngineForce(engineForce, wheelIndex);
-	m_vehicle->setBrake(1, wheelIndex);
+	m_vehicle->setBrake(100, wheelIndex);
 
 
 	wheelIndex = 0;

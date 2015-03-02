@@ -27,6 +27,9 @@ public:
 	bool mTurningRight = false;
 	bool mTurningLeft  = false;
 
+	int lapCounter;
+	int checkPointsHit;
+
 	btAlignedObjectArray<btCollisionShape*> mCollisionShapes;
 	btRaycastVehicle::btVehicleTuning       m_tuning;
 	btVehicleRaycaster*     m_vehicleRayCaster;

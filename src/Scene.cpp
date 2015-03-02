@@ -281,10 +281,10 @@ void GameplayScene::AddTriggerVolumesToScene()
 	GetPhysicsWorld()->addBodyToWorld(mTriggerVolumes[0]->GetRigidBody());
 
 	mTriggerVolumes[1] = new TriggerVolume("triggerCheckpoint1", GetSceneManager());
-	GetPhysicsWorld()->addBodyToWorld(mTriggerVolumes[0]->GetRigidBody());
+	GetPhysicsWorld()->addBodyToWorld(mTriggerVolumes[1]->GetRigidBody());
 
 	mTriggerVolumes[2] = new TriggerVolume("triggerCheckpoint2", GetSceneManager());
-	GetPhysicsWorld()->addBodyToWorld(mTriggerVolumes[0]->GetRigidBody());
+	GetPhysicsWorld()->addBodyToWorld(mTriggerVolumes[2]->GetRigidBody());
 }
 
 bool GameplayScene::Update()
@@ -292,10 +292,31 @@ bool GameplayScene::Update()
 	timeStep = clock.getTimeSeconds();
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
-	bool test = false;
-	test = mCar->isColliding;
-//	GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[0]->GetRigidBody(), *callback);
-    test = mCar->isColliding;
+	//bool test = false;
+	//test = mCar->isColliding;
+	// test = mCar->isColliding;
+	if (mCar->checkPointsHit == 0){
+		GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[1]->GetRigidBody(), *callback);
+		if (mCar->isColliding){
+			mCar->isColliding = false;
+			++mCar->checkPointsHit;
+		}
+	}
+	else if (mCar->checkPointsHit == 1){
+		GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[2]->GetRigidBody(), *callback);
+		if (mCar->isColliding){
+			mCar->isColliding = false;
+			++mCar->checkPointsHit;
+		}
+	}
+	else if (mCar->checkPointsHit == 2){
+		GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[0]->GetRigidBody(), *callback);
+		if (mCar->isColliding){
+			mCar->isColliding = false;
+			mCar->checkPointsHit = 0;
+			++mCar->lapCounter;
+		}
+	}
 
 	mCar->Update();
 
@@ -322,10 +343,10 @@ bool GameplayScene::Update()
 
 	//TEMP AS FUCK
 	//seriously kill this with fire...
-	if (test)
-	{
-		SwapToMainMenu();
-	}
+	//if (test)
+	//{
+	//	SwapToMainMenu();
+	//}
 
 	return true;
 }
