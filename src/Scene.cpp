@@ -124,6 +124,7 @@ GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::
 	//Set up common entitys
 	mCommonMissile = mSceneMgr->createEntity("Missile", "Missile.mesh");
 	mCommonMine = mSceneMgr->createEntity("mine", "Mine.mesh");
+	//GetPhysicsWorld()->getWorld()->setInternalTickCallback((btInternalTickCallback)myTickCallback);
 }
 GameplayScene::~GameplayScene()
 {
@@ -321,6 +322,13 @@ bool GameplayScene::Update()
 	}
 
 	return true;
+}
+
+void GameplayScene::myTickCallback(btDynamicsWorld *world, btScalar timeStep){
+	btVector3 speed = mCar->GetRigidBody()->getLinearVelocity();
+	if (speed.norm() > 100){
+		mCar->GetRigidBody()->applyCentralForce(-speed);
+	}
 }
 
 

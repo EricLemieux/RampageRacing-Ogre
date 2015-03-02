@@ -76,13 +76,15 @@ void Car::Update(void)
 	{
 		if (speed < 30)
 			++speed;
-		engineForce = -800;
+		if (mRigidBody->getLinearVelocity().norm() < 100)
+			engineForce = -800;
 	}
 	else if (mCanMoveBackward)
 	{
 		if (speed > -20)
 			--speed;
-		engineForce = 500;
+		if (mRigidBody->getLinearVelocity().norm() > -50)
+			engineForce = 500;
 	}
 	else {
 		speed = speed * 0.99f;
@@ -104,6 +106,7 @@ void Car::Update(void)
 		if (steerValue < -0.5f)
 			steerValue = -0.5f;
 	}
+	
 	
 	int wheelIndex = 2;
 	m_vehicle->applyEngineForce(engineForce, wheelIndex);

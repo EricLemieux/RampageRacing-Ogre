@@ -111,6 +111,8 @@ public:
 
 	virtual void AddCarToScene(Ogre::String name);
 	virtual void AddTriggerVolumesToScene();
+
+	void myTickCallback(btDynamicsWorld *world, btScalar timeStep);
 private:
 	
 
