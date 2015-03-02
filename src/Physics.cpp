@@ -39,8 +39,8 @@ void PhysicsWorld::addBodyToWorld(btRigidBody* newBody){
 	world->addRigidBody(newBody);
 }
 
-void PhysicsWorld::updateWorld(){
-	world->stepSimulation(1.f / 60.0f);
+void PhysicsWorld::updateWorld(float timeStep){
+	world->stepSimulation(timeStep, 5, 1.f/60.f);
 }
 
 void PhysicsWorld::deleteWorld(){
