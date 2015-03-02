@@ -10,6 +10,8 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	lapCounter = 0;
 	checkPointsHit = 0;
 
+	steerValue = 0.0f;
+
 	InitRigidBody();
 }
 
@@ -73,33 +75,35 @@ void Car::Update(void)
 		m_vehicle->updateWheelTransform(i, true);
 	}
 	engineForce = 0;
-	steerValue = 0;
 	//Move the car if the button is down
 	if (mCanMoveForward)
 	{
-		if (mRigidBody->getLinearVelocity().norm() < 100)
-			engineForce = -1000;
+			engineForce = -400;
 	}
 	else if (mCanMoveBackward)
 	{
-		if (mRigidBody->getLinearVelocity().norm() > -50)
 			engineForce = 300;
 	}
-	else {
+	else 
+	{
 		engineForce = 0;
 	}
 
 	if (mTurningRight)
 	{
-		steerValue += 0.1f;
-		if (steerValue > 0.8f)
-			steerValue = 0.8f;
+		steerValue += 0.001f;
+		if (steerValue > 0.3f)
+			steerValue = 0.3f;
 	}
 	else if (mTurningLeft)
 	{
-		steerValue -= 0.1f;
-		if (steerValue < -0.8f)
-			steerValue = -0.8f;
+		steerValue -= 0.001f;
+		if (steerValue < -0.3f)
+			steerValue = -0.3f;
+	}
+	else
+	{
+		steerValue *= 0.99;
 	}
 	
 	int wheelIndex = 2;
@@ -119,6 +123,8 @@ void Car::Update(void)
 		mMissile->Update();
 
 	GameObject::Update();
+
+	mSceneNode->roll(Ogre::Radian(-steerValue));
 }
 
 void Car::InitRigidBody()
