@@ -283,7 +283,7 @@ void GameplayScene::AddTriggerVolumesToScene()
 
 bool GameplayScene::Update()
 {
-	timeStep += clock.getTimeSeconds();
+	timeStep = clock.getTimeSeconds();
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
 	bool test = false;
