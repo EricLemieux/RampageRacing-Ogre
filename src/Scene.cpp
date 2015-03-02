@@ -472,6 +472,9 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				sscanf_s(str.c_str(), "%6s", &buttonType, 256);
 				if (!stricmp(buttonType, "bLevel"))
 				{
+					//Move the current Selection back
+					GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->setPosition(0.5, 40, 50);
+
 					sscanf_s(str.c_str(),"%*[^_]_%s",&levelName,256);
 					mCurrentSelectedLevel = levelName;
 					GetSceneManager()->getSceneNode(Ogre::String(levelName) + "MenuMini")->setPosition(0.5, 40, -5);
@@ -590,6 +593,10 @@ void MenuScene::LoadLevel(Ogre::String levelName)
 	//Set the position of the camera based on the starting camera node
 	GetCamera()->setPosition(GetCamPosFromSubMenu(currentSubMenu));
 	GetCamera()->lookAt(GetCamTargetFromSubMenu(currentSubMenu));
+
+	//Set the default level
+	mCurrentSelectedLevel = "Roadway";
+	GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->setPosition(0.5, 40, -5);
 }
 
 Ogre::Vector3 MenuScene::GetCamPosFromSubMenu(int subMenu)

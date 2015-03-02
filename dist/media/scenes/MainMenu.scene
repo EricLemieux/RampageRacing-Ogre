@@ -97,7 +97,7 @@
         <node name="RoadwayMenuMini">
             <position x="0" y="40" z="50"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
-            <entity name="RoadwayMenuMini" castShadows="true" receiveShadows="true" meshFile="IslandMenuMini.mesh"></entity>
+            <entity name="RoadwayMenuMini" castShadows="true" receiveShadows="true" meshFile="RoadwayMenuMini.mesh"></entity>
         </node>
     </nodes>
 </scene>
