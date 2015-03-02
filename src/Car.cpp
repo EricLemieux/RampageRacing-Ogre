@@ -77,11 +77,13 @@ void Car::Update(void)
 	//Move the car if the button is down
 	if (mCanMoveForward)
 	{
-		engineForce = -1000;
+		if (mRigidBody->getLinearVelocity().norm() < 100)
+			engineForce = -1000;
 	}
 	else if (mCanMoveBackward)
 	{
-		engineForce = 300;
+		if (mRigidBody->getLinearVelocity().norm() > -50)
+			engineForce = 300;
 	}
 	else {
 		engineForce = 0;
