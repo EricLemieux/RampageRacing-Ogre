@@ -40,6 +40,20 @@ material button_level_island
 	}
 }
 
+material button_level_roadway
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/buttonRoadway.png
+			}
+		}
+	}
+}
+
 material button_play
 {
 	technique

@@ -7,7 +7,7 @@
     </environment>
     <nodes>
     	<node name="trigger">
-            <position x="108" y="10000" z="-70"/>
+            <position x="108" y="0" z="-70"/>
             <rotation qx="0" qy="-1.0" qz="0" qw="1"/>
             <scale x="50" y="30" z="2"/>
             <entity name="triggerEnt" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
@@ -46,24 +46,20 @@
 		</node>
 
 		<!--World-->
-		<node name="island">
-            <position x="-135.176" y="0" z="23.9817"/>
-            <!--<scale x="58.7855" y="1.29463" z="30.5546"/>-->
+		<node name="path">
+            <position x="0" y="0" z="0"/>
             <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <entity name="island" castShadows="true" receiveShadows="true" meshFile="island.mesh" static="true">
-                <subentities>
-                    <subentity index="0" materialName="sand"/>
-                </subentities>
+            <entity name="path" castShadows="true" receiveShadows="true" meshFile="RoadwayPath.mesh" static="true" materialFile="roadway_road">
             </entity>
         </node>
-         <node name="ocean">
-            <position x="-57.5753" y="-20.6484" z="-5.66318"/>
-            <scale x="100.26" y="1" z="86.2116"/>
+        <node name="ground">
+            <position x="0" y="0" z="0"/>
             <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <entity name="ocean" castShadows="true" receiveShadows="true" meshFile="ocean.mesh">
-                <subentities>
-                    <subentity index="0" materialName="water"/>
-                </subentities>
+            <entity name="ground" castShadows="true" receiveShadows="true" meshFile="RoadwayGround.mesh" static="true" materialFile="roadway_grass">
+            </entity>
+        </node>
+        <node name="tunnel">
+            <entity name="tunnel" castShadows="true" receiveShadows="true" meshFile="RoadwayTunnel.mesh" static="true">
             </entity>
         </node>
     </nodes>

@@ -74,43 +74,35 @@ void Car::Update(void)
 	//Move the car if the button is down
 	if (mCanMoveForward)
 	{
-		if (speed < 30)
-			++speed;
-		engineForce = -800;
+		engineForce = -30;
 	}
 	else if (mCanMoveBackward)
 	{
-		if (speed > -20)
-			--speed;
-		engineForce = 500;
+		engineForce = 20;
 	}
 	else {
-		speed = speed * 0.99f;
-		
-		//MoveForward(speed);
+		engineForce = 0;
 	}
 
 	if (mTurningRight)
 	{
-		//TurnRight();
-		steerValue += 0.05f;
-		if (steerValue > 0.5f)
-			steerValue = 0.5f;
+		steerValue += 0.1f;
+		if (steerValue > 0.8f)
+			steerValue = 0.8f;
 	}
 	else if (mTurningLeft)
 	{
-		//TurnLeft();
-		steerValue -= 0.05f;
-		if (steerValue < -0.5f)
-			steerValue = -0.5f;
+		steerValue -= 0.1f;
+		if (steerValue < -0.8f)
+			steerValue = -0.8f;
 	}
 	
 	int wheelIndex = 2;
 	m_vehicle->applyEngineForce(engineForce, wheelIndex);
-	m_vehicle->setBrake(100, wheelIndex);
+	m_vehicle->setBrake(1, wheelIndex);
 	wheelIndex = 3;
 	m_vehicle->applyEngineForce(engineForce, wheelIndex);
-	m_vehicle->setBrake(100, wheelIndex);
+	m_vehicle->setBrake(1, wheelIndex);
 
 
 	wheelIndex = 0;
