@@ -144,6 +144,27 @@ GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::
 	mCommonMine = mSceneMgr->createEntity("mine", "Mine.mesh");
 	//GetPhysicsWorld()->getWorld()->setInternalTickCallback((btInternalTickCallback)myTickCallback);
 
+	//Set up the extra cameras
+	for (unsigned int i = 0; i < numLocalPlayers - 1; ++i)
+	{
+		char name[128];
+		sprintf_s(name,128,"extraCam%i",i);
+
+		//TODO
+		//FIX
+		//This needs to be fixed, the game still crashes on the second play
+		if (extraCamsExist)
+			mSceneMgr->destroyCamera(name);
+
+		mExtraPlayerCameras[i] = std::shared_ptr<Ogre::Camera>(mSceneMgr->createCamera(name));
+
+		mExtraPlayerCameras[i]->setPosition(0, i*100, 0);
+		mExtraPlayerCameras[i]->lookAt(0, 0, -50);
+		mExtraPlayerCameras[i]->setNearClipDistance(0.1f);
+	}
+
+	extraCamsExist = true;
+
 	SetUpViewports();
 }
 GameplayScene::~GameplayScene()
@@ -411,7 +432,7 @@ void GameplayScene::SetUpViewports()
 	//Clear all of the viewports
 	mWindow->removeAllViewports();
 	
-	switch(mNumLocalPlayers)
+	switch (numLocalPlayers)
 	{
 	case 1:
 	{
@@ -425,9 +446,9 @@ void GameplayScene::SetUpViewports()
 		vp1->setDimensions(0, 0, 1, 0.5);
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
 	
-		Ogre::Viewport* vp2 = mWindow->addViewport(mCamera.get(),1);
+		Ogre::Viewport* vp2 = mWindow->addViewport(mExtraPlayerCameras[0].get(), 1);
 		vp2->setDimensions(0, 0.5, 1, 0.5);
-		mCamera->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
+		mExtraPlayerCameras[0]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
 		break;
 	}
 	case 3:
@@ -436,13 +457,13 @@ void GameplayScene::SetUpViewports()
 		vp1->setDimensions(0, 0, 0.5, 0.5);
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
 	
-		Ogre::Viewport* vp2 = mWindow->addViewport(mCamera.get(), 1);
+		Ogre::Viewport* vp2 = mWindow->addViewport(mExtraPlayerCameras[0].get(), 1);
 		vp2->setDimensions(0.5, 0, 0.5, 0.5);
-		mCamera->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
+		mExtraPlayerCameras[0]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
 	
-		Ogre::Viewport* vp3 = mWindow->addViewport(mCamera.get(), 2);
+		Ogre::Viewport* vp3 = mWindow->addViewport(mExtraPlayerCameras[1].get(), 2);
 		vp3->setDimensions(0, 0.5, 1, 0.5);
-		mCamera->setAspectRatio(Ogre::Real(vp3->getActualWidth()) / Ogre::Real(vp3->getActualHeight()));
+		mExtraPlayerCameras[1]->setAspectRatio(Ogre::Real(vp3->getActualWidth()) / Ogre::Real(vp3->getActualHeight()));
 		break;
 	}
 	case 4:
@@ -451,17 +472,17 @@ void GameplayScene::SetUpViewports()
 		vp1->setDimensions(0, 0, 0.5, 0.5);
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
 	
-		Ogre::Viewport* vp2 = mWindow->addViewport(mCamera.get(), 1);
+		Ogre::Viewport* vp2 = mWindow->addViewport(mExtraPlayerCameras[0].get(), 1);
 		vp2->setDimensions(0.5, 0, 0.5, 0.5);
-		mCamera->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
+		mExtraPlayerCameras[0]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
 	
-		Ogre::Viewport* vp3 = mWindow->addViewport(mCamera.get(), 2);
+		Ogre::Viewport* vp3 = mWindow->addViewport(mExtraPlayerCameras[1].get(), 2);
 		vp3->setDimensions(0, 0.5, 0.5, 0.5);
-		mCamera->setAspectRatio(Ogre::Real(vp3->getActualWidth()) / Ogre::Real(vp3->getActualHeight()));
+		mExtraPlayerCameras[1]->setAspectRatio(Ogre::Real(vp3->getActualWidth()) / Ogre::Real(vp3->getActualHeight()));
 	
-		Ogre::Viewport* vp4 = mWindow->addViewport(mCamera.get(), 3);
+		Ogre::Viewport* vp4 = mWindow->addViewport(mExtraPlayerCameras[2].get(), 3);
 		vp4->setDimensions(0.5, 0.5, 0.5, 0.5);
-		mCamera->setAspectRatio(Ogre::Real(vp4->getActualWidth()) / Ogre::Real(vp4->getActualHeight()));
+		mExtraPlayerCameras[2]->setAspectRatio(Ogre::Real(vp4->getActualWidth()) / Ogre::Real(vp4->getActualHeight()));
 		break;
 	}
 	}
@@ -506,6 +527,15 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 			nextSubMenu = sm_Main;
 		}
 	}
+
+	if (arg.key == OIS::KC_1)
+		numLocalPlayers = 1;
+	if (arg.key == OIS::KC_2)
+		numLocalPlayers = 2;
+	if (arg.key == OIS::KC_3)
+		numLocalPlayers = 3;
+	if (arg.key == OIS::KC_4)
+		numLocalPlayers = 4;
 }
 void MenuScene::KeyReleased(const OIS::KeyEvent &arg)
 {

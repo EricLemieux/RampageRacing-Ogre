@@ -31,6 +31,12 @@
 
 #include "Client.h"
 
+//Bad practice but works
+static bool extraCamsExist = false;
+
+static unsigned int numLocalPlayers = 3;
+
+
 class Scene
 {
 public:
@@ -90,8 +96,6 @@ protected:
 
 	void SwapToMainMenu();
 	void SwapToGameplayLevel(Ogre::String levelName);
-
-	unsigned int mNumLocalPlayers = 3;
 };
 
 class GameplayScene : public Scene
@@ -132,6 +136,8 @@ private:
 
 	Ogre::Entity* mCommonMissile;
 	Ogre::Entity* mCommonMine;
+
+	std::shared_ptr<Ogre::Camera> mExtraPlayerCameras[3];
 };
 
 class MenuScene : public Scene
