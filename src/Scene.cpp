@@ -1,10 +1,15 @@
 #include "Scene.h"
 
-Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Ogre::RenderWindow> window)
+Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window)
 {
 	mSceneMgr = sceneMgr;
 
-	mCamera= camera;
+	mCamera = cameras[0];
+
+	for (unsigned int i = 0; i < 4; ++i)
+	{
+		mCameras[i] = cameras[i];
+	}
 
 	ResetCamera();
 	
@@ -109,7 +114,7 @@ void Scene::ResetCamera()
 void Scene::SwapToMainMenu()
 {
 	GetSceneManager()->clearScene();
-	newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), this->mGameClient, mCamera, mWindow));
+	newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), this->mGameClient, mCameras, mWindow));
 	newScene->LoadLevel("MainMenu");
 	swapToTheNewScene = true;
 }
@@ -117,7 +122,7 @@ void Scene::SwapToMainMenu()
 void Scene::SwapToGameplayLevel(Ogre::String levelName)
 {
 	GetSceneManager()->clearScene();
-	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), this->mGameClient, mCamera, mWindow));
+	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), this->mGameClient, mCameras, mWindow));
 	newScene->LoadLevel(levelName);
 	newScene->AddCarToScene("myCar");
 	newScene->AddTriggerVolumesToScene();
@@ -137,34 +142,13 @@ void Scene::SetUpViewports()
 
 
 //Gameplay scenes
-GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Ogre::RenderWindow> window) : Scene(sceneMgr, client, camera, window)
+GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window) : Scene(sceneMgr, client, cameras, window)
 {
 	//Set up common entitys
 	mCommonMissile = mSceneMgr->createEntity("Missile", "Missile.mesh");
 	mCommonMine = mSceneMgr->createEntity("mine", "Mine.mesh");
 	//GetPhysicsWorld()->getWorld()->setInternalTickCallback((btInternalTickCallback)myTickCallback);
-
-	//Set up the extra cameras
-	for (unsigned int i = 0; i < numLocalPlayers - 1; ++i)
-	{
-		char name[128];
-		sprintf_s(name,128,"extraCam%i",i);
-
-		//TODO
-		//FIX
-		//This needs to be fixed, the game still crashes on the second play
-		if (extraCamsExist)
-			mSceneMgr->destroyCamera(name);
-
-		mExtraPlayerCameras[i] = std::shared_ptr<Ogre::Camera>(mSceneMgr->createCamera(name));
-
-		mExtraPlayerCameras[i]->setPosition(0, i*100, 0);
-		mExtraPlayerCameras[i]->lookAt(0, 0, -50);
-		mExtraPlayerCameras[i]->setNearClipDistance(0.1f);
-	}
-
-	extraCamsExist = true;
-
+	
 	SetUpViewports();
 }
 GameplayScene::~GameplayScene()
@@ -446,9 +430,9 @@ void GameplayScene::SetUpViewports()
 		vp1->setDimensions(0, 0, 1, 0.5);
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
 	
-		Ogre::Viewport* vp2 = mWindow->addViewport(mExtraPlayerCameras[0].get(), 1);
+		Ogre::Viewport* vp2 = mWindow->addViewport(mCameras[1].get(), 1);
 		vp2->setDimensions(0, 0.5, 1, 0.5);
-		mExtraPlayerCameras[0]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
+		mCameras[1]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
 		break;
 	}
 	case 3:
@@ -457,13 +441,13 @@ void GameplayScene::SetUpViewports()
 		vp1->setDimensions(0, 0, 0.5, 0.5);
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
 	
-		Ogre::Viewport* vp2 = mWindow->addViewport(mExtraPlayerCameras[0].get(), 1);
+		Ogre::Viewport* vp2 = mWindow->addViewport(mCameras[1].get(), 1);
 		vp2->setDimensions(0.5, 0, 0.5, 0.5);
-		mExtraPlayerCameras[0]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
+		mCameras[1]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
 	
-		Ogre::Viewport* vp3 = mWindow->addViewport(mExtraPlayerCameras[1].get(), 2);
+		Ogre::Viewport* vp3 = mWindow->addViewport(mCameras[2].get(), 2);
 		vp3->setDimensions(0, 0.5, 1, 0.5);
-		mExtraPlayerCameras[1]->setAspectRatio(Ogre::Real(vp3->getActualWidth()) / Ogre::Real(vp3->getActualHeight()));
+		mCameras[2]->setAspectRatio(Ogre::Real(vp3->getActualWidth()) / Ogre::Real(vp3->getActualHeight()));
 		break;
 	}
 	case 4:
@@ -472,17 +456,17 @@ void GameplayScene::SetUpViewports()
 		vp1->setDimensions(0, 0, 0.5, 0.5);
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
 	
-		Ogre::Viewport* vp2 = mWindow->addViewport(mExtraPlayerCameras[0].get(), 1);
+		Ogre::Viewport* vp2 = mWindow->addViewport(mCameras[1].get(), 1);
 		vp2->setDimensions(0.5, 0, 0.5, 0.5);
-		mExtraPlayerCameras[0]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
+		mCameras[1]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
 	
-		Ogre::Viewport* vp3 = mWindow->addViewport(mExtraPlayerCameras[1].get(), 2);
+		Ogre::Viewport* vp3 = mWindow->addViewport(mCameras[2].get(), 2);
 		vp3->setDimensions(0, 0.5, 0.5, 0.5);
-		mExtraPlayerCameras[1]->setAspectRatio(Ogre::Real(vp3->getActualWidth()) / Ogre::Real(vp3->getActualHeight()));
+		mCameras[2]->setAspectRatio(Ogre::Real(vp3->getActualWidth()) / Ogre::Real(vp3->getActualHeight()));
 	
-		Ogre::Viewport* vp4 = mWindow->addViewport(mExtraPlayerCameras[2].get(), 3);
+		Ogre::Viewport* vp4 = mWindow->addViewport(mCameras[3].get(), 3);
 		vp4->setDimensions(0.5, 0.5, 0.5, 0.5);
-		mExtraPlayerCameras[2]->setAspectRatio(Ogre::Real(vp4->getActualWidth()) / Ogre::Real(vp4->getActualHeight()));
+		mCameras[3]->setAspectRatio(Ogre::Real(vp4->getActualWidth()) / Ogre::Real(vp4->getActualHeight()));
 		break;
 	}
 	}
@@ -490,7 +474,7 @@ void GameplayScene::SetUpViewports()
 
 
 //Menu Scene
-MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Ogre::RenderWindow> window) : Scene(sceneMgr, client, camera, window)
+MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window) : Scene(sceneMgr, client, cameras, window)
 {
 	currentSubMenu = nextSubMenu = sm_Main;
 
@@ -734,7 +718,7 @@ Ogre::Vector3 MenuScene::GetCamTargetFromSubMenu(int subMenu)
 }
 
 //Intro Scene
-IntroScene::IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Ogre::RenderWindow> window) : Scene(sceneMgr, client, camera, window)
+IntroScene::IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window) : Scene(sceneMgr, client, cameras, window)
 {
 	SetUpViewports();
 }

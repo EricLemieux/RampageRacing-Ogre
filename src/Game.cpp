@@ -17,7 +17,7 @@ void Game::createScene(void)
 {
 	//Set up the current scene
 	//mCurrentScene = std::unique_ptr<IntroScene>(new IntroScene(mSceneMgr, mGameClient, mWindow));
-	mCurrentScene = std::unique_ptr<IntroScene>(new IntroScene(mSceneMgr, mGameClient, mCamera, mWindow));
+	mCurrentScene = std::unique_ptr<IntroScene>(new IntroScene(mSceneMgr, mGameClient, mCameras, mWindow));
 
 	mCurrentScene->LoadLevel("Intro");
 }

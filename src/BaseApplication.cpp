@@ -20,7 +20,6 @@ This source file is part of the
 BaseApplication::BaseApplication(void)
     : mRoot(0),
     mSceneMgr(0),
-	mCamera(0),
     mWindow(0),
     mResourcesCfg(Ogre::StringUtil::BLANK),
     mPluginsCfg(Ogre::StringUtil::BLANK),
@@ -73,14 +72,20 @@ void BaseApplication::chooseSceneManager(void)
 //-------------------------------------------------------------------------------------
 void BaseApplication::createCamera(void)
 {
-    // Create the camera
-    mCamera = std::shared_ptr<Ogre::Camera>(mSceneMgr->createCamera("PlayerCam"));
-   
-    // Position it at 500 in Z direction
-    mCamera->setPosition(Ogre::Vector3(0,0,80));
-    // Look back along -Z
-    mCamera->lookAt(Ogre::Vector3(0,0,-300));
-    mCamera->setNearClipDistance(0.1);
+	for (unsigned int i = 0; i < 4; ++i)
+	{
+		char camName[128];
+		sprintf_s(camName, 128, "playerCam%i", i);
+
+		// Create the camera
+		mCameras[i] = std::shared_ptr<Ogre::Camera>(mSceneMgr->createCamera(camName));
+
+		// Position it at 500 in Z direction
+		mCameras[i]->setPosition(Ogre::Vector3(0, 0, 80));
+		// Look back along -Z
+		mCameras[i]->lookAt(Ogre::Vector3(0, 0, -300));
+		mCameras[i]->setNearClipDistance(0.1);
+	}
 }
 //-------------------------------------------------------------------------------------
 void BaseApplication::createFrameListener(void)
@@ -137,11 +142,11 @@ void BaseApplication::destroyScene(void)
 void BaseApplication::createViewports(void)
 {
 	// Create one viewport, entire window
-	Ogre::Viewport* vp = mWindow->addViewport(mCamera.get());
+	Ogre::Viewport* vp = mWindow->addViewport(mCameras[0].get());
 	vp->setBackgroundColour(Ogre::ColourValue(0,0,0));
 	
 	// Alter the camera aspect ratio to match the viewport
-	mCamera->setAspectRatio(
+	mCameras[0]->setAspectRatio(
 	    Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 }
 //-------------------------------------------------------------------------------------

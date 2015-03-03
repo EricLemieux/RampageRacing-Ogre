@@ -32,15 +32,13 @@
 #include "Client.h"
 
 //Bad practice but works
-static bool extraCamsExist = false;
-
 static unsigned int numLocalPlayers = 3;
 
 
 class Scene
 {
 public:
-	Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Ogre::RenderWindow> window);
+	Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window);
 	~Scene();
 
 	virtual bool Update();
@@ -84,6 +82,7 @@ protected:
 	std::shared_ptr<Client> mGameClient;
 
 	std::shared_ptr<Ogre::SceneManager> mSceneMgr;
+	std::shared_ptr<Ogre::Camera> mCameras[4];
 	std::shared_ptr<Ogre::Camera> mCamera;
 
 	std::shared_ptr<PhysicsWorld> mPhysicsWorld;
@@ -101,7 +100,7 @@ protected:
 class GameplayScene : public Scene
 {
 public:
-	GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Ogre::RenderWindow> window);
+	GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window);
 	~GameplayScene();
 
 	virtual bool Update();
@@ -136,14 +135,12 @@ private:
 
 	Ogre::Entity* mCommonMissile;
 	Ogre::Entity* mCommonMine;
-
-	std::shared_ptr<Ogre::Camera> mExtraPlayerCameras[3];
 };
 
 class MenuScene : public Scene
 {
 public:
-	MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Ogre::RenderWindow> window);
+	MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window);
 	~MenuScene();
 
 	virtual bool Update();
@@ -181,7 +178,7 @@ private:
 class IntroScene : public Scene
 {
 public:
-	IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Ogre::RenderWindow> window);
+	IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window);
 	~IntroScene();
 
 	virtual bool Update();

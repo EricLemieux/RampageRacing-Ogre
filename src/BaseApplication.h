@@ -80,7 +80,7 @@ protected:
 	virtual bool Render();
 
 	std::shared_ptr<Ogre::Root> mRoot;
-    std::shared_ptr<Ogre::Camera> mCamera;
+    std::shared_ptr<Ogre::Camera> mCameras[4];
     std::shared_ptr<Ogre::SceneManager> mSceneMgr;
 	std::shared_ptr<Ogre::RenderWindow> mWindow;
 	Ogre::String mResourcesCfg;
