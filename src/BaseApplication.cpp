@@ -20,6 +20,7 @@ This source file is part of the
 BaseApplication::BaseApplication(void)
     : mRoot(0),
     mSceneMgr(0),
+	mCamera(0),
     mWindow(0),
     mResourcesCfg(Ogre::StringUtil::BLANK),
     mPluginsCfg(Ogre::StringUtil::BLANK),
@@ -72,14 +73,14 @@ void BaseApplication::chooseSceneManager(void)
 //-------------------------------------------------------------------------------------
 void BaseApplication::createCamera(void)
 {
-   // // Create the camera
-   // mCamera = std::shared_ptr<Ogre::Camera>(mSceneMgr->createCamera("PlayerCam"));
-   //
-   // // Position it at 500 in Z direction
-   // mCamera->setPosition(Ogre::Vector3(0,0,80));
-   // // Look back along -Z
-   // mCamera->lookAt(Ogre::Vector3(0,0,-300));
-   // mCamera->setNearClipDistance(0.1);
+    // Create the camera
+    mCamera = std::shared_ptr<Ogre::Camera>(mSceneMgr->createCamera("PlayerCam"));
+   
+    // Position it at 500 in Z direction
+    mCamera->setPosition(Ogre::Vector3(0,0,80));
+    // Look back along -Z
+    mCamera->lookAt(Ogre::Vector3(0,0,-300));
+    mCamera->setNearClipDistance(0.1);
 }
 //-------------------------------------------------------------------------------------
 void BaseApplication::createFrameListener(void)
@@ -135,13 +136,13 @@ void BaseApplication::destroyScene(void)
 //-------------------------------------------------------------------------------------
 void BaseApplication::createViewports(void)
 {
-// // Create one viewport, entire window
-// Ogre::Viewport* vp = mWindow->addViewport(mCamera.get());
-// vp->setBackgroundColour(Ogre::ColourValue(0,0,0));
-//
-// // Alter the camera aspect ratio to match the viewport
-// mCamera->setAspectRatio(
-//     Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
+	// Create one viewport, entire window
+	Ogre::Viewport* vp = mWindow->addViewport(mCamera.get());
+	vp->setBackgroundColour(Ogre::ColourValue(0,0,0));
+	
+	// Alter the camera aspect ratio to match the viewport
+	mCamera->setAspectRatio(
+	    Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 }
 //-------------------------------------------------------------------------------------
 void BaseApplication::setupResources(void)
@@ -364,9 +365,6 @@ bool BaseApplication::Update()
 
 bool BaseApplication::Render()
 {
-	int a = mWindow->getNumViewports();
-	int b = mSceneMgr->getCameras().size();
-
 	mRoot->renderOneFrame();
 
 	return true;

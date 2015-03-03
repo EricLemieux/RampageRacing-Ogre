@@ -17,9 +17,9 @@ void Game::createScene(void)
 {
 	//Set up the current scene
 	//mCurrentScene = std::unique_ptr<IntroScene>(new IntroScene(mSceneMgr, mGameClient, mWindow));
-	mCurrentScene = std::unique_ptr<MenuScene>(new MenuScene(mSceneMgr, mGameClient, mWindow));
+	mCurrentScene = std::unique_ptr<IntroScene>(new IntroScene(mSceneMgr, mGameClient, mCamera, mWindow));
 
-	mCurrentScene->LoadLevel("MainMenu");
+	mCurrentScene->LoadLevel("Intro");
 }
 
 bool Game::keyPressed( const OIS::KeyEvent &arg )

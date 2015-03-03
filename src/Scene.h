@@ -34,7 +34,7 @@
 class Scene
 {
 public:
-	Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::RenderWindow> window);
+	Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Ogre::RenderWindow> window);
 	~Scene();
 
 	virtual bool Update();
@@ -60,7 +60,7 @@ public:
 	virtual void SetUpViewports();
 
 	inline std::shared_ptr<Ogre::SceneManager> GetSceneManager(){ return mSceneMgr; }
-	inline std::shared_ptr<Ogre::Camera> GetCamera(){ return mCameras[0]; }
+	inline std::shared_ptr<Ogre::Camera> GetCamera(){ return mCamera; }
 	inline std::shared_ptr<PhysicsWorld> GetPhysicsWorld(){ return mPhysicsWorld; }
 
 	inline bool GetIfShouldSwapScenes(){ return swapToTheNewScene; }
@@ -78,7 +78,7 @@ protected:
 	std::shared_ptr<Client> mGameClient;
 
 	std::shared_ptr<Ogre::SceneManager> mSceneMgr;
-	std::vector<std::shared_ptr<Ogre::Camera>> mCameras;
+	std::shared_ptr<Ogre::Camera> mCamera;
 
 	std::shared_ptr<PhysicsWorld> mPhysicsWorld;
 
@@ -91,13 +91,13 @@ protected:
 	void SwapToMainMenu();
 	void SwapToGameplayLevel(Ogre::String levelName);
 
-	unsigned int mNumLocalPlayers = 4;
+	unsigned int mNumLocalPlayers = 3;
 };
 
 class GameplayScene : public Scene
 {
 public:
-	GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::RenderWindow> window);
+	GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Ogre::RenderWindow> window);
 	~GameplayScene();
 
 	virtual bool Update();
@@ -137,7 +137,7 @@ private:
 class MenuScene : public Scene
 {
 public:
-	MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::RenderWindow> window);
+	MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Ogre::RenderWindow> window);
 	~MenuScene();
 
 	virtual bool Update();
@@ -175,7 +175,7 @@ private:
 class IntroScene : public Scene
 {
 public:
-	IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::RenderWindow> window);
+	IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> camera, std::shared_ptr<Ogre::RenderWindow> window);
 	~IntroScene();
 
 	virtual bool Update();
