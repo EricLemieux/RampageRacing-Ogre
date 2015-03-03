@@ -19,7 +19,6 @@ This source file is part of the
 //-------------------------------------------------------------------------------------
 BaseApplication::BaseApplication(void)
     : mRoot(0),
-    mCamera(0),
     mSceneMgr(0),
     mWindow(0),
     mResourcesCfg(Ogre::StringUtil::BLANK),
@@ -53,7 +52,7 @@ bool BaseApplication::configure(void)
     {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'
-        mWindow = std::shared_ptr<Ogre::RenderWindow>(mRoot->initialise(true, "TutorialApplication Render Window"));
+        mWindow = std::shared_ptr<Ogre::RenderWindow>(mRoot->initialise(true, "Rampage Racing"));
 
         return true;
     }
@@ -73,14 +72,14 @@ void BaseApplication::chooseSceneManager(void)
 //-------------------------------------------------------------------------------------
 void BaseApplication::createCamera(void)
 {
-    // Create the camera
-    mCamera = std::shared_ptr<Ogre::Camera>(mSceneMgr->createCamera("PlayerCam"));
-
-    // Position it at 500 in Z direction
-    mCamera->setPosition(Ogre::Vector3(0,0,80));
-    // Look back along -Z
-    mCamera->lookAt(Ogre::Vector3(0,0,-300));
-    mCamera->setNearClipDistance(0.1);
+   // // Create the camera
+   // mCamera = std::shared_ptr<Ogre::Camera>(mSceneMgr->createCamera("PlayerCam"));
+   //
+   // // Position it at 500 in Z direction
+   // mCamera->setPosition(Ogre::Vector3(0,0,80));
+   // // Look back along -Z
+   // mCamera->lookAt(Ogre::Vector3(0,0,-300));
+   // mCamera->setNearClipDistance(0.1);
 }
 //-------------------------------------------------------------------------------------
 void BaseApplication::createFrameListener(void)
@@ -136,13 +135,13 @@ void BaseApplication::destroyScene(void)
 //-------------------------------------------------------------------------------------
 void BaseApplication::createViewports(void)
 {
-    // Create one viewport, entire window
-    Ogre::Viewport* vp = mWindow->addViewport(mCamera.get());
-    vp->setBackgroundColour(Ogre::ColourValue(0,0,0));
-
-    // Alter the camera aspect ratio to match the viewport
-    mCamera->setAspectRatio(
-        Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
+// // Create one viewport, entire window
+// Ogre::Viewport* vp = mWindow->addViewport(mCamera.get());
+// vp->setBackgroundColour(Ogre::ColourValue(0,0,0));
+//
+// // Alter the camera aspect ratio to match the viewport
+// mCamera->setAspectRatio(
+//     Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 }
 //-------------------------------------------------------------------------------------
 void BaseApplication::setupResources(void)
@@ -280,28 +279,6 @@ bool BaseApplication::keyPressed( const OIS::KeyEvent &arg )
         Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(tfo);
         Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(aniso);
     }
-    else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode
-    {
-        Ogre::String newVal;
-        Ogre::PolygonMode pm;
-
-        switch (mCamera->getPolygonMode())
-        {
-        case Ogre::PM_SOLID:
-            newVal = "Wireframe";
-            pm = Ogre::PM_WIREFRAME;
-            break;
-        case Ogre::PM_WIREFRAME:
-            newVal = "Points";
-            pm = Ogre::PM_POINTS;
-            break;
-        default:
-            newVal = "Solid";
-            pm = Ogre::PM_SOLID;
-        }
-
-        mCamera->setPolygonMode(pm);
-    }
     else if(arg.key == OIS::KC_F5)   // refresh all textures
     {
         Ogre::TextureManager::getSingleton().reloadAll();
@@ -387,6 +364,9 @@ bool BaseApplication::Update()
 
 bool BaseApplication::Render()
 {
+	int a = mWindow->getNumViewports();
+	int b = mSceneMgr->getCameras().size();
+
 	mRoot->renderOneFrame();
 
 	return true;
