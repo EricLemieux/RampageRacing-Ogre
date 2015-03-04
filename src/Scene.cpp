@@ -488,6 +488,10 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 	{
 		if (currentSubMenu == sm_Main)
 		{
+			nextSubMenu = sm_PlayerCount;
+		}
+		else if (currentSubMenu == sm_PlayerCount)
+		{
 			nextSubMenu = sm_LevelSelect;
 		}
 		else if (currentSubMenu == sm_LevelSelect)
@@ -502,7 +506,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		{
 			exit(1);
 		}
-		else if (currentSubMenu == sm_LevelSelect)
+		else
 		{
 			nextSubMenu = sm_Main;
 		}
@@ -543,13 +547,25 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 			{
 				if (itr->movable->getName() == "bStartEnt0")
 				{
-					nextSubMenu = sm_LevelSelect;
+					nextSubMenu = sm_PlayerCount;
 				}
 				else if (itr->movable->getName() == "bExitEnt0")
 				{
 					//exit the game
 
 					exit(1);
+				}
+			}
+			else if (currentSubMenu == sm_PlayerCount)
+			{
+				Ogre::String str = itr->movable->getName();
+				char buttonType[256];
+				sscanf_s(str.c_str(), "%8s", &buttonType, 256);
+				if (!stricmp(buttonType, "bPlayers"))
+				{
+					sscanf_s(str.c_str(),"%*[^_]_%i",&numLocalPlayers);
+
+					nextSubMenu = sm_LevelSelect;
 				}
 			}
 			else if (currentSubMenu == sm_LevelSelect)
@@ -560,11 +576,11 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				if (!stricmp(buttonType, "bLevel"))
 				{
 					//Move the current Selection back
-					GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->setPosition(0.5, 40, 50);
+					GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->setPosition(0.5, 20, 50);
 
 					sscanf_s(str.c_str(),"%*[^_]_%s",&levelName,256);
 					mCurrentSelectedLevel = levelName;
-					GetSceneManager()->getSceneNode(Ogre::String(levelName) + "MenuMini")->setPosition(0.5, 40, -5);
+					GetSceneManager()->getSceneNode(Ogre::String(levelName) + "MenuMini")->setPosition(0.5, 20, -5);
 				}
 
 				else if (itr->movable->getName() == "bPlay")
@@ -637,7 +653,7 @@ void MenuScene::LoadLevel(Ogre::String levelName)
 
 	//Set the default level
 	mCurrentSelectedLevel = "Roadway";
-	GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->setPosition(0.5, 40, -5);
+	GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->setPosition(0.5, 20, -5);
 }
 
 Ogre::Vector3 MenuScene::GetCamPosFromSubMenu(int subMenu)

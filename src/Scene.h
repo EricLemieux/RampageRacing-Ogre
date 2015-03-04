@@ -160,6 +160,7 @@ private:
 	enum subMenus
 	{
 		sm_Main = 0,
+		sm_PlayerCount,
 		sm_LevelSelect
 	};
 

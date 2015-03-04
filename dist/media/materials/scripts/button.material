@@ -81,3 +81,59 @@ material button_home
 		}
 	}
 }
+
+material button_one_player
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/button1Player.png
+			}
+		}
+	}
+}
+
+material button_two_player
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/button2Player.png
+			}
+		}
+	}
+}
+
+material button_three_player
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/button3Player.png
+			}
+		}
+	}
+}
+
+material button_four_player
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/button4Player.png
+			}
+		}
+	}
+}
