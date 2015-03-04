@@ -14,18 +14,3 @@ inline btVector3 OgreToBtVector3(Ogre::Vector3 v){	return btVector3(v.x, v.y, v.
 //From bullet to ogre
 inline Ogre::Quaternion BtToOgreQuaternion(btQuaternion *q){	return Ogre::Quaternion(q->w(), q->x(), q->y(), q->z());	}
 inline Ogre::Vector3 BtToOgreVector3(btVector3 *v){	return Ogre::Vector3(v->x(), v->y(), v->z());	}
-
-//Some enumerations for the xbox controller
-enum XBOX_BUTTONS
-{
-	XBOX_A = 0,
-	XBOX_B,
-	XBOX_X,
-	XBOX_Y,
-	XBOX_LB,
-	XBOX_RB,
-	XBOX_BACK,
-	XBOX_START,
-	XBOX_LS,
-	XBOX_RS
-};

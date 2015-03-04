@@ -6,6 +6,11 @@ Game::Game(void) : BaseApplication()
 
 	mGameClient->Connect("localhost", 8080, 8081, "password");
 	mGameClient->SendString("connect");
+
+	for (unsigned int i = 0; i < 4; ++i)
+	{
+		mControllers[i] = std::shared_ptr<Controller>(new Controller(i));
+	}
 }
  
 Game::~Game(void)
@@ -16,8 +21,7 @@ Game::~Game(void)
 void Game::createScene(void)
 {
 	//Set up the current scene
-	//mCurrentScene = std::unique_ptr<IntroScene>(new IntroScene(mSceneMgr, mGameClient, mWindow));
-	mCurrentScene = std::unique_ptr<IntroScene>(new IntroScene(mSceneMgr, mGameClient, mCameras, mWindow));
+	mCurrentScene = std::unique_ptr<IntroScene>(new IntroScene(mSceneMgr, mGameClient, mCameras, mWindow, mControllers));
 
 	mCurrentScene->LoadLevel("Intro");
 }
@@ -60,31 +64,6 @@ bool Game::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 	BaseApplication::mouseReleased(arg, id);
 
 	mCurrentScene->mouseReleased(arg, id);
-
-	return true;
-}
-
-bool Game::axisMoved(const OIS::JoyStickEvent &arg, int axis)
-{
-	BaseApplication::axisMoved(arg, axis);
-
-	mCurrentScene->axisMoved(arg, axis);
-
-	return true;
-}
-bool Game::buttonPressed(const OIS::JoyStickEvent &arg, int button)
-{
-	BaseApplication::buttonPressed(arg, button);
-
-	mCurrentScene->buttonPressed(arg, button);
-
-	return true;
-}
-bool Game::buttonReleased(const OIS::JoyStickEvent &arg, int button)
-{
-	BaseApplication::buttonReleased(arg, button);
-
-	mCurrentScene->buttonReleased(arg, button);
 
 	return true;
 }

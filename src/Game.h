@@ -12,6 +12,8 @@
 
 #include "Client.h"
 
+#include "Controller.h"
+
 class Game : public BaseApplication
 {
 public:
@@ -30,12 +32,10 @@ protected:
 	virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 	virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
-	virtual bool axisMoved(const OIS::JoyStickEvent &arg, int axis);
-	virtual bool buttonPressed(const OIS::JoyStickEvent &arg, int button);
-	virtual bool buttonReleased(const OIS::JoyStickEvent &arg, int button);
-
 private:
 	std::shared_ptr<Client> mGameClient;
+
+	std::shared_ptr<Controller> mControllers[4];
 
 public:
 	std::shared_ptr<Scene> mCurrentScene;

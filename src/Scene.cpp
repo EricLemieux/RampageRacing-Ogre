@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window)
+Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4])
 {
 	mSceneMgr = sceneMgr;
 
@@ -9,6 +9,7 @@ Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Clien
 	for (unsigned int i = 0; i < 4; ++i)
 	{
 		mCameras[i] = cameras[i];
+		mControllers[i] = controllers[i];
 	}
 
 	ResetCamera();
@@ -38,6 +39,8 @@ bool Scene::Update()
 	clock.reset();
 	mPhysicsWorld->updateWorld(timeStep);
 
+	ControllerInput();
+
 	unsigned int size = mObjects.size(), i = 0;
 	for (;i < size; ++i)
 	{
@@ -58,49 +61,15 @@ void Scene::LoadLevel(Ogre::String LevelName)
 	a.parseDotScene(LevelName + ".scene", "General", mSceneMgr.get());
 }
 
-void Scene::KeyPressed(const OIS::KeyEvent &arg)
-{
-	int a = 0;
-}
-void Scene::KeyReleased(const OIS::KeyEvent &arg)
-{
+void Scene::KeyPressed(const OIS::KeyEvent &arg){}
+void Scene::KeyReleased(const OIS::KeyEvent &arg){}
 
-}
+void Scene::mouseMoved(const OIS::MouseEvent &arg){}
+void Scene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
+void Scene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
 
-void Scene::mouseMoved(const OIS::MouseEvent &arg)
-{
-
-}
-void Scene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-{
-
-}
-void Scene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-{
-
-}
-
-void Scene::axisMoved(const OIS::JoyStickEvent &arg, int axis)
-{
-
-}
-void Scene::buttonPressed(const OIS::JoyStickEvent &arg, int button)
-{
-
-}
-void Scene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
-{
-
-}
-
-void Scene::AddCarToScene(Ogre::String name)
-{
-
-}
-void Scene::AddTriggerVolumesToScene()
-{
-
-}
+void Scene::AddCarToScene(Ogre::String name){}
+void Scene::AddTriggerVolumesToScene(){}
 
 void Scene::ResetCamera()
 {
@@ -115,7 +84,7 @@ void Scene::ResetCamera()
 void Scene::SwapToMainMenu()
 {
 	GetSceneManager()->clearScene();
-	newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), this->mGameClient, mCameras, mWindow));
+	newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), this->mGameClient, mCameras, mWindow, mControllers));
 	newScene->LoadLevel("MainMenu");
 	swapToTheNewScene = true;
 }
@@ -123,7 +92,7 @@ void Scene::SwapToMainMenu()
 void Scene::SwapToGameplayLevel(Ogre::String levelName)
 {
 	GetSceneManager()->clearScene();
-	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), this->mGameClient, mCameras, mWindow));
+	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), this->mGameClient, mCameras, mWindow, mControllers));
 	newScene->LoadLevel(levelName);
 	newScene->AddCarToScene("myCar");
 	newScene->AddTriggerVolumesToScene();
@@ -141,9 +110,14 @@ void Scene::SetUpViewports()
 	mCamera->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 }
 
+void Scene::ControllerInput()
+{
+
+}
+
 
 //Gameplay scenes
-GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window) : Scene(sceneMgr, client, cameras, window)
+GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]) : Scene(sceneMgr, client, cameras, window, controllers)
 {
 	//Set up common entitys
 	mCommonMissile = mSceneMgr->createEntity("Missile", "Missile.mesh");
@@ -151,9 +125,7 @@ GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::
 	
 	SetUpViewports();
 }
-GameplayScene::~GameplayScene()
-{
-}
+GameplayScene::~GameplayScene(){}
 
 void GameplayScene::LoadLevel(Ogre::String levelName)
 {
@@ -246,45 +218,9 @@ void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
 	}
 }
 
-void GameplayScene::mouseMoved(const OIS::MouseEvent &arg)
-{
-
-}
-void GameplayScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-{
-
-}
-void GameplayScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-{
-
-}
-
-void GameplayScene::axisMoved(const OIS::JoyStickEvent &arg, int axis)
-{
-
-}
-void GameplayScene::buttonPressed(const OIS::JoyStickEvent &arg, int button)
-{
-	if (button == XBOX_A)
-	{
-		mCar->mCanMoveForward = true;
-	}
-	if (button == XBOX_B)
-	{
-		mCar->mCanMoveBackward = true;
-	}
-}
-void GameplayScene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
-{
-	if (button == XBOX_A)
-	{
-		mCar->mCanMoveForward = false;
-	}
-	if (button == XBOX_B)
-	{
-		mCar->mCanMoveBackward = false;
-	}
-}
+void GameplayScene::mouseMoved(const OIS::MouseEvent &arg){}
+void GameplayScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
+void GameplayScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
 
 void GameplayScene::AddCarToScene(Ogre::String name)
 {
@@ -346,6 +282,8 @@ bool GameplayScene::Update()
 	timeStep = clock.getTimeSeconds();
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
+
+	ControllerInput();
 	
 	for (unsigned int i = 0; i < numLocalPlayers; ++i)
 	{
@@ -483,10 +421,23 @@ void GameplayScene::SetUpViewports()
 	}
 	}
 }
+void GameplayScene::ControllerInput()
+{
+	for (unsigned int i = 0; i < numLocalPlayers; ++i)
+	{
+		if (mControllers[i]->IsConnected())
+		{
+			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
+			{
+				mControllers[i]->Vibrate(1.0f, 0);
+			}
+		}
+	}
+}
 
 
 //Menu Scene
-MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window) : Scene(sceneMgr, client, cameras, window)
+MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]) : Scene(sceneMgr, client, cameras, window, controllers)
 {
 	currentSubMenu = nextSubMenu = sm_Main;
 
@@ -494,9 +445,7 @@ MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_p
 
 	SetUpViewports();
 }
-MenuScene::~MenuScene()
-{
-}
+MenuScene::~MenuScene(){}
 
 void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 {
@@ -533,15 +482,9 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 	if (arg.key == OIS::KC_4)
 		numLocalPlayers = 4;
 }
-void MenuScene::KeyReleased(const OIS::KeyEvent &arg)
-{
+void MenuScene::KeyReleased(const OIS::KeyEvent &arg){}
 
-}
-
-void MenuScene::mouseMoved(const OIS::MouseEvent &arg)
-{
-
-}
+void MenuScene::mouseMoved(const OIS::MouseEvent &arg){}
 void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
 	Ogre::RaySceneQuery *q = GetSceneManager()->createRayQuery(Ogre::Ray());
@@ -607,61 +550,15 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 		}
 	}
 }
-void MenuScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-{
-
-}
-
-void MenuScene::axisMoved(const OIS::JoyStickEvent &arg, int axis)
-{
-	if (arg.state.mAxes[0].rel > 0.5)
-	{
-		int a = 0;
-	}
-
-	//itJoystickListener = mJoystickListeners.begin();
-	//itJoystickListenerEnd = mJoystickListeners.end();
-	//for (; itJoystickListener != itJoystickListenerEnd; ++itJoystickListener) {
-	//	if (!itJoystickListener->second->axisMoved(e, axis))
-	//		break;
-	//}
-}
-void MenuScene::buttonPressed(const OIS::JoyStickEvent &arg, int button)
-{
-	if (button == XBOX_A)
-	{
-		if (currentSubMenu == sm_Main)
-		{
-			nextSubMenu = sm_LevelSelect;
-		}
-		else if (currentSubMenu == sm_LevelSelect)
-		{
-			SwapToGameplayLevel("level1");
-		}
-	}
-
-	if (button == XBOX_B)
-	{
-		if (currentSubMenu == sm_Main)
-		{
-			exit(1);
-		}
-		else if (currentSubMenu == sm_LevelSelect)
-		{
-			nextSubMenu = sm_Main;
-		}
-	}
-}
-void MenuScene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
-{
-
-}
+void MenuScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
 
 bool MenuScene::Update()
 {
 	timeStep += clock.getTimeSeconds();
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
+
+	ControllerInput();
 
 	GetSceneManager()->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 
@@ -728,17 +625,18 @@ Ogre::Vector3 MenuScene::GetCamTargetFromSubMenu(int subMenu)
 
 	return GetSceneManager()->getSceneNode(str)->getPosition();
 }
+void MenuScene::ControllerInput()
+{
+
+}
 
 //Intro Scene
-IntroScene::IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window) : Scene(sceneMgr, client, cameras, window)
+IntroScene::IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]) : Scene(sceneMgr, client, cameras, window, controllers)
 {
 	SetUpViewports();
 }
 
-IntroScene::~IntroScene()
-{
-
-}
+IntroScene::~IntroScene(){}
 
 bool IntroScene::Update()
 {

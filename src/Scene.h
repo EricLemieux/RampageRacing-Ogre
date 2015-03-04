@@ -31,6 +31,8 @@
 
 #include "Client.h"
 
+#include "Controller.h"
+
 //Bad practice but works
 static unsigned int numLocalPlayers = 3;
 
@@ -38,7 +40,7 @@ static unsigned int numLocalPlayers = 3;
 class Scene
 {
 public:
-	Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window);
+	Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]);
 	~Scene();
 
 	virtual bool Update();
@@ -54,9 +56,7 @@ public:
 	virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
-	virtual void axisMoved(const OIS::JoyStickEvent &arg, int axis);
-	virtual void buttonPressed(const OIS::JoyStickEvent &arg, int button);
-	virtual void buttonReleased(const OIS::JoyStickEvent &arg, int button);
+	virtual void ControllerInput();
 
 	virtual void AddCarToScene(Ogre::String name);
 	virtual void AddTriggerVolumesToScene();
@@ -91,6 +91,8 @@ protected:
 
 	std::vector<GameObject*> mObjects;
 
+	std::shared_ptr<Controller> mControllers[4];
+
 	void ResetCamera(void);
 
 	void SwapToMainMenu();
@@ -100,7 +102,7 @@ protected:
 class GameplayScene : public Scene
 {
 public:
-	GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window);
+	GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]);
 	~GameplayScene();
 
 	virtual bool Update();
@@ -114,9 +116,7 @@ public:
 	virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
-	virtual void axisMoved(const OIS::JoyStickEvent &arg, int axis);
-	virtual void buttonPressed(const OIS::JoyStickEvent &arg, int button);
-	virtual void buttonReleased(const OIS::JoyStickEvent &arg, int button);
+	virtual void ControllerInput();
 
 	virtual void AddCarToScene(Ogre::String name);
 	virtual void AddTriggerVolumesToScene();
@@ -141,7 +141,7 @@ private:
 class MenuScene : public Scene
 {
 public:
-	MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window);
+	MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]);
 	~MenuScene();
 
 	virtual bool Update();
@@ -153,9 +153,7 @@ public:
 	virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 	virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
-	virtual void axisMoved(const OIS::JoyStickEvent &arg, int axis);
-	virtual void buttonPressed(const OIS::JoyStickEvent &arg, int button);
-	virtual void buttonReleased(const OIS::JoyStickEvent &arg, int button);
+	virtual void ControllerInput();
 
 	virtual void LoadLevel(Ogre::String levelName);
 private:
@@ -179,7 +177,7 @@ private:
 class IntroScene : public Scene
 {
 public:
-	IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window);
+	IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]);
 	~IntroScene();
 
 	virtual bool Update();
@@ -190,10 +188,8 @@ public:
 	inline virtual void mouseMoved(const OIS::MouseEvent &arg){ SwapToMainMenu(); }
 	inline virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
 	inline virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
-	
-	inline virtual void axisMoved(const OIS::JoyStickEvent &arg, int axis){}
-	inline virtual void buttonPressed(const OIS::JoyStickEvent &arg, int button){ SwapToMainMenu(); }
-	inline virtual void buttonReleased(const OIS::JoyStickEvent &arg, int button){}
+
+	virtual void ControllerInput(){}
 	
 	virtual void LoadLevel(Ogre::String levelName);
 

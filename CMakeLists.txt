@@ -121,6 +121,7 @@ set(HDRS
 	./src/CarCollisionTest.h
 	./src/OBJ.h
 	./src/Missile.h
+	./src/Controller.h
 )
  
 set(SRCS
@@ -136,6 +137,7 @@ set(SRCS
 	./src/CarCollisionTest.cpp
 	./src/OBJ.cpp
 	./src/Missile.cpp
+	./src/Controller.cpp
 )
  
 include_directories( ${OIS_INCLUDE_DIRS}
@@ -192,9 +194,11 @@ target_link_libraries(OgreApp 	debug ${XML_DLL_DEBUG_PATH}/tinyxml2.lib
 target_link_libraries(OgreApp 	debug ${RakNet_DLL_DEBUG_PATH}/RakNetDLL.lib
 								optimized ${RakNet_DLL_RELEASE_PATH}/RakNetDLL.lib)
 
+target_link_libraries(OgreApp 	XInput9_1_0.lib)
+
 target_link_libraries(Server 	debug ${RakNet_DLL_DEBUG_PATH}/RakNetDLL.lib
 								optimized ${RakNet_DLL_RELEASE_PATH}/RakNetDLL.lib)
- 
+
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/media)
  
