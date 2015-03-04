@@ -30,27 +30,6 @@
             </entity>
         </node>
 
-        <!--Cars-->
-		<node name="mCar">
-			<position x="0" y="25" z="0"/>
-			<rotation qx="0.0" qy="-1.0" qz="0.0" qw="1.0"/>
-			<scale x="1.0" y="1.0" z="1.0"/>
-			<entity name="mCarEnt" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
-			<subentities>
-				<subentity index="0" materialName="lambert1"/>
-			</subentities>
-			</entity>
-		</node>
-		<node name="mCar2">
-			<position x="10" y="0" z="0"/>
-			<rotation qx="0" qy="0" qz="0" qw="1"/>
-			<entity name="mCar2Ent" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
-			<subentities>
-				<subentity index="0" materialName="lambert1"/>
-			</subentities>
-			</entity>
-		</node>
-
 		<!--Lights-->
 		<node name="sun">
 			<position x="0" y="250" z="0"/>

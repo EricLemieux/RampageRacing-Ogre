@@ -21,6 +21,8 @@ Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Clien
 
 	mWindow->setActive(true);
 
+	//mCarEnt = std::shared_ptr<Ogre::Entity>(mSceneMgr->createEntity("BoltCar", "BoltCar.mesh"));
+
 	mGameClient = client;
 	timeStep = 0;
 	clock.reset();
@@ -102,12 +104,11 @@ void Scene::AddTriggerVolumesToScene()
 
 void Scene::ResetCamera()
 {
-	//unsigned int camCount = mCameras.size(), i = 0;
-	//for (; i < camCount; ++i)
+	for (unsigned int i = 0; i < numLocalPlayers; ++i)
 	{
-		mCamera->setPosition(0.0f, 0.0f, 0.0f);
-		mCamera->lookAt(0.0f, 0.0f, -1.0f);
-		mCamera->setNearClipDistance(0.1f);
+		mCameras[i]->setPosition(0.0f, 0.0f, 0.0f);
+		mCameras[i]->lookAt(0.0f, 0.0f, -1.0f);
+		mCameras[i]->setNearClipDistance(0.1f);
 	}
 }
 
@@ -147,7 +148,6 @@ GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::
 	//Set up common entitys
 	mCommonMissile = mSceneMgr->createEntity("Missile", "Missile.mesh");
 	mCommonMine = mSceneMgr->createEntity("mine", "Mine.mesh");
-	//GetPhysicsWorld()->getWorld()->setInternalTickCallback((btInternalTickCallback)myTickCallback);
 	
 	SetUpViewports();
 }
@@ -288,35 +288,44 @@ void GameplayScene::buttonReleased(const OIS::JoyStickEvent &arg, int button)
 
 void GameplayScene::AddCarToScene(Ogre::String name)
 {
-	//Create a game object thing
-	mCar = new Car("mCar", GetSceneManager(), GetPhysicsWorld()->getWorld());
+	for (unsigned int i = 0; i < numLocalPlayers; ++i)
+	{
+		char name[128];
+		sprintf_s(name, 128, "mCar%i",i);
 
-	//Add the car's rigid body to the world
-//	GetPhysicsWorld()->addBodyToWorld(mCar->GetRigidBody());
+		//Create a game object thing
+		mCars[i] = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), "BoltCar.mesh"));
 
-	Ogre::SceneNode* camNode = GetSceneManager()->getSceneNode("mCar")->createChildSceneNode();
-	camNode->attachObject(GetCamera().get());
-	
-	camNode->translate(Ogre::Vector3(0.0f, 10.0f, 40.0f));
+		Ogre::SceneNode* camNode = GetSceneManager()->getSceneNode(name)->createChildSceneNode();
+		camNode->attachObject(mCameras[i].get());
 
-	GetCamera()->lookAt(mCar->GetSceneNode()->getPosition());
+		camNode->translate(Ogre::Vector3(0.0f, 10.0f, 40.0f));
 
-	//Attach a light to the car
-	Ogre::SceneNode* carLight = GetSceneManager()->getSceneNode("mCar")->createChildSceneNode();
-	carLight->translate(0, 20, 0);
-	Ogre::Light* carLightEnt = GetSceneManager()->createLight("carLight");
-	carLightEnt->setDiffuseColour(1, 1, 1);
-	carLight->attachObject(carLightEnt);
+		mCameras[i]->lookAt(mCars[i]->GetSceneNode()->getPosition());
 
-	//Attach the lap counter hud element
-	Ogre::SceneNode* lapcounter = camNode->createChildSceneNode();
-	lapcounter->translate(2.9, 0.4, -5);
-	lapcounter->scale(0.5, 0.5, 0.5);
-	Ogre::Entity* lapcounterEnt = mSceneMgr->createEntity("lapcounter", "button.mesh");
-	lapcounterEnt->setMaterialName("hud_lap_1");
-	lapcounter->attachObject(lapcounterEnt);
+		//Attach a light to the car
+		Ogre::SceneNode* carLight = GetSceneManager()->getSceneNode(name)->createChildSceneNode();
+		carLight->translate(0, 20, 0);
+		char l[128];
+		sprintf_s(l, 128, "carLight%i", i);
+		Ogre::Light* carLightEnt = GetSceneManager()->createLight(l);
+		carLightEnt->setDiffuseColour(1, 1, 1);
+		carLight->attachObject(carLightEnt);
 
-	callback = new ContactSensorCallback(*(mCar->GetRigidBody()), *(mCar));
+		//Attach the lap counter hud element
+		Ogre::SceneNode* lapcounter = camNode->createChildSceneNode();
+		lapcounter->translate(2.9, 0.4, -5);
+		lapcounter->scale(0.5, 0.5, 0.5);
+		char lc[128];
+		sprintf_s(lc, 128, "lapcounter%i", i);
+		Ogre::Entity* lapcounterEnt = mSceneMgr->createEntity(lc, "button.mesh");
+		lapcounterEnt->setMaterialName("hud_lap_1");
+		lapcounter->attachObject(lapcounterEnt);
+
+		callback = new ContactSensorCallback(*(mCars[i]->GetRigidBody()), *(mCars[i]));
+	}
+
+	mCar = mCars[0];	
 }
 
 void GameplayScene::AddTriggerVolumesToScene()
@@ -338,7 +347,10 @@ bool GameplayScene::Update()
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
 	
-	mCar->Update();
+	for (unsigned int i = 0; i < numLocalPlayers; ++i)
+	{
+		mCars[i]->Update();
+	}
 
 	//Send the position of the players car to the server
 	{

@@ -126,7 +126,8 @@ public:
 	virtual void SetUpViewports();
 
 private:
-	Car* mCar;
+	std::shared_ptr<Car> mCars[4];
+	std::shared_ptr<Car> mCar;
 	btRigidBody* body;
 
 	ContactSensorCallback* callback;

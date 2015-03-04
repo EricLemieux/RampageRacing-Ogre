@@ -1,10 +1,15 @@
 #include "Car.h"
 
-Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld)
+Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld, Ogre::String carEntName)
 {
 	mName = name;
 	mSceneManager = manager;
-	mSceneNode = mSceneManager->getSceneNode(name);
+	
+	mSceneNode = mSceneManager->getRootSceneNode()->createChildSceneNode(name);
+	Ogre::Entity* someEnt = mSceneManager->createEntity(carEntName);
+	mSceneNode->attachObject(someEnt);
+	mSceneNode->translate(0, 5, 0);
+
 	world = mWorld;
 
 	lapCounter = 0;
