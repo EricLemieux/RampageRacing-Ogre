@@ -20,12 +20,12 @@ public:
 
 	virtual void Update(void);
 
-	bool mCanMoveForward	= false;
-	bool mCanMoveBackward	= false;
+	//The percentage of the engine force used to move
+	float mCanMoveForward	= 0.0f;
+	float mCanMoveBackward	= 0.0f;
 	bool isColliding		= false;
 
-	bool mTurningRight = false;
-	bool mTurningLeft  = false;
+	float mTurning = 0.0f;
 
 	int lapCounter;
 	int checkPointsHit;

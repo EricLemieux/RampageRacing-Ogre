@@ -88,29 +88,30 @@ void Car::Update(void)
 	}
 
 	//Move the car if the button is down
-	if (mCanMoveForward)
+	if (mCanMoveForward != 0.0f)
 	{
-			engineForce = -1000 / speedRatio;
+		if (mCanMoveForward > 1.0f)
+			mCanMoveForward = 1.0f;
+		engineForce = (-1000.0f / speedRatio) * mCanMoveForward;
 	}
-	else if (mCanMoveBackward)
+	else if (mCanMoveBackward != 0.0f)
 	{
-			engineForce = 600;
+		if (mCanMoveBackward > 1.0f)
+			mCanMoveBackward = 1.0f;
+		engineForce = (600) * mCanMoveBackward;
 	}
 	else 
 	{
 		engineForce = 0;
 	}
 
-	if (mTurningRight)
+	if (mTurning != 0.0f)
 	{
-		steerValue += 0.001f;
+		steerValue += (0.002f * mTurning);
+
 		if (steerValue > 0.1f)
 			steerValue = 0.1f;
-	}
-	else if (mTurningLeft)
-	{
-		steerValue -= 0.001f;
-		if (steerValue < -0.1f)
+		else if (steerValue < -0.1f)
 			steerValue = -0.1f;
 	}
 	else

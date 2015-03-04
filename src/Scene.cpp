@@ -164,22 +164,20 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 {
 	if (arg.key == OIS::KC_W)
 	{
-		mCar->mCanMoveForward = true;
+		mCar->mCanMoveForward = 1.0f;
 	}
 	else if (arg.key == OIS::KC_S)
 	{
-		mCar->mCanMoveBackward = true;
+		mCar->mCanMoveBackward = 1.0f;
 	}
 
 	if (arg.key == OIS::KC_D)
 	{
-		mCar->mTurningRight = true;
-		//mCar->TurnRight();
+		mCar->mTurning = 1.0f;
 	}
 	else if (arg.key == OIS::KC_A)
 	{
-		mCar->mTurningLeft = true;
-		//mCar->TurnLeft();
+		mCar->mTurning = -1.0f;
 	}
 
 	if (arg.key == OIS::KC_SPACE)
@@ -201,20 +199,20 @@ void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
 {
 	if (arg.key == OIS::KC_W)
 	{
-		mCar->mCanMoveForward = false;
+		mCar->mCanMoveForward = 0.0f;
 	}
 	if (arg.key == OIS::KC_S)
 	{
-		mCar->mCanMoveBackward = false;
+		mCar->mCanMoveBackward = 0.0f;
 	}
 
 	if (arg.key == OIS::KC_D)
 	{
-		mCar->mTurningRight = false;
+		mCar->mTurning = 0.0f;
 	}
 	if (arg.key == OIS::KC_A)
 	{
-		mCar->mTurningLeft = false;
+		mCar->mTurning = 0.0f;
 	}
 }
 
@@ -429,7 +427,44 @@ void GameplayScene::ControllerInput()
 		{
 			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
 			{
-				mControllers[i]->Vibrate(1.0f, 0);
+				mCars[i]->mCanMoveForward = 1.0f;
+			}
+			else
+			{
+				mCars[i]->mCanMoveForward = 0.0f;
+			}
+			
+			//Left joystick for turning
+			float lsx = mControllers[i]->GetState().Gamepad.sThumbLX;
+			if (lsx < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || lsx > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+			{
+				mCars[i]->mTurning = lsx / 32767.0f;
+			}
+			else
+			{
+				mCars[i]->mTurning = 0.0f;
+			}
+
+			//Right trigger for acceleration
+			float rt = mControllers[i]->GetState().Gamepad.bRightTrigger;
+			if (rt >  XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+			{
+				mCars[i]->mCanMoveForward = 1.0f;
+			}
+			else
+			{
+				mCars[i]->mCanMoveForward = 0.0f;
+			}
+
+			//Left trigger for reversing
+			float lt = mControllers[i]->GetState().Gamepad.bLeftTrigger;
+			if (lt > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+			{
+				mCars[i]->mCanMoveBackward = 1.0f;
+			}
+			else
+			{
+				mCars[i]->mCanMoveBackward = 0.0f;
 			}
 		}
 	}
