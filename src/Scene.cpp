@@ -285,11 +285,7 @@ bool GameplayScene::Update()
 	}
 
 	//update the active weapons
-	unsigned int i = 0, size = mActiveWeapons.size();
-	for (;i < size; ++i)
-	{
-		mActiveWeapons[i]->Update();
-	}
+	std::for_each(mActiveWeapons.begin(), mActiveWeapons.end(), [](std::shared_ptr<GameObject> obj){obj->Update(); });
 
 	//Send the position of the players car to the server
 	{

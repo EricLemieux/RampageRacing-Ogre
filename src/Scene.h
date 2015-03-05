@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <list>
 
 #include <OgreCamera.h>
 #include <OgreEntity.h>
@@ -136,7 +137,7 @@ private:
 	//currently 3 because 2 checkpoints and 1 finish line
 	TriggerVolume* mTriggerVolumes[3];
 
-	std::vector<std::shared_ptr<GameObject>> mActiveWeapons;
+	std::list<std::shared_ptr<GameObject>> mActiveWeapons;
 };
 
 class MenuScene : public Scene
