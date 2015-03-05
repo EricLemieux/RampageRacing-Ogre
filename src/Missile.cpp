@@ -1,13 +1,14 @@
 #include "Missile.h"
 
-Missile::Missile(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::Entity* MissileEnt, Ogre::SceneNode* parent)
+Missile::Missile(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::SceneNode* parent)
 {
 	mName = name;
 
 	mSceneManager = manager;
 
-	mSceneNode = mSceneManager->getRootSceneNode()->createChildSceneNode("missile");
-	mSceneNode->attachObject(MissileEnt);
+	mSceneNode = mSceneManager->getRootSceneNode()->createChildSceneNode();
+	Ogre::Entity* missileEnt = mSceneManager->createEntity("Missile.mesh");
+	mSceneNode->attachObject(missileEnt);
 
 	mSceneNode->setPosition(parent->getPosition());
 	mSceneNode->setOrientation(parent->getOrientation());
@@ -17,7 +18,6 @@ Missile::Missile(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager,
 
 Missile::~Missile()
 {
-
 }
 
 void Missile::InitRigidBody()

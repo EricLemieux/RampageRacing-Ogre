@@ -125,6 +125,8 @@ public:
 
 	virtual void SetUpViewports();
 
+	void FireMissile(int carID);
+
 private:
 	std::shared_ptr<Car> mCars[4];
 	std::shared_ptr<Car> mCar;
@@ -134,8 +136,7 @@ private:
 	//currently 3 because 2 checkpoints and 1 finish line
 	TriggerVolume* mTriggerVolumes[3];
 
-	Ogre::Entity* mCommonMissile;
-	Ogre::Entity* mCommonMine;
+	std::vector<std::shared_ptr<GameObject>> mActiveWeapons;
 };
 
 class MenuScene : public Scene

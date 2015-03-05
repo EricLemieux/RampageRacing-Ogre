@@ -5,7 +5,7 @@
 class Missile:public GameObject
 {
 public:
-	Missile(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::Entity* MissileEnt, Ogre::SceneNode* parent);
+	Missile(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::SceneNode* parent);
 	~Missile();
 
 	virtual void Update();
