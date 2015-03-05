@@ -119,6 +119,10 @@ void Scene::ControllerInput()
 //Gameplay scenes
 GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]) : Scene(sceneMgr, client, cameras, window, controllers)
 {
+	//Set up common entitys
+	mCommonMissile = mSceneMgr->createEntity("Missile", "Missile.mesh");
+	mCommonMine = mSceneMgr->createEntity("mine", "Mine.mesh");
+	
 	SetUpViewports();
 }
 GameplayScene::~GameplayScene(){}
@@ -178,7 +182,7 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 
 	if (arg.key == OIS::KC_SPACE)
 	{
-		FireMissile(0);
+		mCar->FireMissile(mCommonMissile);
 	}
 
 	if (arg.key == OIS::KC_P)
@@ -284,9 +288,6 @@ bool GameplayScene::Update()
 		mCars[i]->Update();
 	}
 
-	//update the active weapons
-	std::for_each(mActiveWeapons.begin(), mActiveWeapons.end(), [](std::shared_ptr<GameObject> obj){obj->Update(); });
-
 	//Send the position of the players car to the server
 	{
 		char str[256];
@@ -307,6 +308,26 @@ bool GameplayScene::Update()
 	mGameClient->Recieve();
 
 	//GetSceneManager()->getSceneNode("mCar2")->setPosition(mGameClient->GetPos(1));
+
+	//COLLISION DETECTION
+	btDiscreteDynamicsWorld* world = GetPhysicsWorld()->getWorld();
+	int numManifolds = world->getDispatcher()->getNumManifolds();
+	for (int i = 0; i < numManifolds; ++i){
+		btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
+		btCollisionObject* objA = (btCollisionObject*)(contactManifold->getBody0());
+		btCollisionObject* objB = (btCollisionObject*)(contactManifold->getBody1());
+
+		int numContacts = contactManifold->getNumContacts();
+		for (int j = 0; j < numContacts; ++j){
+			btManifoldPoint& pt = contactManifold->getContactPoint(j);
+			if (pt.getDistance() < 0.f){
+				const btVector3& ptA = pt.getPositionWorldOnA();
+				const btVector3& ptB = pt.getPositionWorldOnB();
+				const btVector3& normalOnB = pt.m_normalWorldOnB;
+				//contact stuff in here
+			}
+		}
+	}
 
 	if (mCar->checkPointsHit == 0)
 	{
@@ -467,22 +488,6 @@ void GameplayScene::ControllerInput()
 			}
 		}
 	}
-}
-
-void GameplayScene::FireMissile(int carID)
-{
-	std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mCars[carID]->GetSceneNode()));
-
-	mPhysicsWorld->getWorld()->addRigidBody(missile->GetRigidBody());
-
-	btScalar mat[16];
-	mCars[carID]->GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
-	btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
-	forward *= -500;
-
-	missile->setVelocity(forward.x(), forward.y(), forward.z());
-
-	mActiveWeapons.push_back(missile);
 }
 
 
