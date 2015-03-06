@@ -34,8 +34,11 @@
 
 #include "Controller.h"
 
+#include <OgreOverlayContainer.h>
+#include <OgreOverlayManager.h>
+
 //Bad practice but works
-static unsigned int numLocalPlayers = 3;
+static unsigned int numLocalPlayers = 1;
 
 
 class Scene
@@ -83,6 +86,7 @@ protected:
 	std::shared_ptr<Client> mGameClient;
 
 	std::shared_ptr<Ogre::SceneManager> mSceneMgr;
+
 	std::shared_ptr<Ogre::Camera> mCameras[4];
 	std::shared_ptr<Ogre::Camera> mCamera;
 

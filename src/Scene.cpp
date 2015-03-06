@@ -84,7 +84,7 @@ void Scene::ResetCamera()
 void Scene::SwapToMainMenu()
 {
 	GetSceneManager()->clearScene();
-	newScene = std::shared_ptr<MenuScene>(new MenuScene(GetSceneManager(), this->mGameClient, mCameras, mWindow, mControllers));
+	newScene = std::shared_ptr<MenuScene>(new MenuScene(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers));
 	newScene->LoadLevel("MainMenu");
 	swapToTheNewScene = true;
 }
@@ -92,7 +92,7 @@ void Scene::SwapToMainMenu()
 void Scene::SwapToGameplayLevel(Ogre::String levelName)
 {
 	GetSceneManager()->clearScene();
-	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(GetSceneManager(), this->mGameClient, mCameras, mWindow, mControllers));
+	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers));
 	newScene->LoadLevel(levelName);
 	newScene->AddCarToScene("myCar");
 	newScene->AddTriggerVolumesToScene();
@@ -234,23 +234,38 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 		mCameras[i]->lookAt(mCars[i]->GetSceneNode()->getPosition());
 
 		//Attach a light to the car
-		Ogre::SceneNode* carLight = GetSceneManager()->getSceneNode(name)->createChildSceneNode();
+		Ogre::SceneNode* carLight = mSceneMgr->getSceneNode(name)->createChildSceneNode();
 		carLight->translate(0, 20, 0);
 		char l[128];
 		sprintf_s(l, 128, "carLight%i", i);
-		Ogre::Light* carLightEnt = GetSceneManager()->createLight(l);
+		Ogre::Light* carLightEnt = mSceneMgr->createLight(l);
 		carLightEnt->setDiffuseColour(1, 1, 1);
 		carLight->attachObject(carLightEnt);
 
-		//Attach the lap counter hud element
-		Ogre::SceneNode* lapcounter = camNode->createChildSceneNode();
-		lapcounter->translate(2.9, 0.4, -5);
-		lapcounter->scale(0.5, 0.5, 0.5);
+		//Set up the HUD elements attached to the car
+		Ogre::SceneNode* lapCounterNode = mSceneMgr->getSceneNode(name)->createChildSceneNode();
+		lapCounterNode->translate(0, 0, 20);
 		char lc[128];
-		sprintf_s(lc, 128, "lapcounter%i", i);
-		Ogre::Entity* lapcounterEnt = mSceneMgr->createEntity(lc, "button.mesh");
-		lapcounterEnt->setMaterialName("hud_lap_1");
-		lapcounter->attachObject(lapcounterEnt);
+		sprintf_s(lc, 128, "currentWeapon%i", i);
+		Ogre::Entity* lapCounterEnt = mSceneMgr->createEntity(lc,"HUDTile.mesh");
+		lapCounterEnt->setMaterialName("hud_empty");
+		lapCounterNode->attachObject(lapCounterEnt);
+
+		Ogre::SceneNode* thingNode = mSceneMgr->getSceneNode(name)->createChildSceneNode();
+		thingNode->translate(-5, -1, 20);
+		char lc2[128];
+		sprintf_s(lc2, 128, "playerPostion%i", i);
+		Ogre::Entity* thingEnt = mSceneMgr->createEntity(lc2, "HUDTile.mesh");
+		thingEnt->setMaterialName("hud_lap_1");
+		thingNode->attachObject(thingEnt);
+
+		Ogre::SceneNode* thing2Node = mSceneMgr->getSceneNode(name)->createChildSceneNode();
+		thing2Node->translate(5, -1, 20);
+		char lc3[128];
+		sprintf_s(lc3, 128, "lapCounter%i", i);
+		Ogre::Entity* thing2Ent = mSceneMgr->createEntity(lc3, "HUDTile.mesh");
+		thing2Ent->setMaterialName("hud_lap_1");
+		thing2Node->attachObject(thing2Ent);
 
 		callback = new ContactSensorCallback(*(mCars[i]->GetRigidBody()), *(mCars[i]));
 	}
@@ -358,8 +373,8 @@ bool GameplayScene::Update()
 			{
 				++mCar->lapCounter;
 				char buf[128];
-				sprintf_s(buf,128,"%s%i","hud_lap_",mCar->lapCounter+1);
-				GetSceneManager()->getEntity("lapcounter")->setMaterialName(buf);
+				sprintf_s(buf,128,"%s%i","hud_lap_",mCar->lapCounter+1);				
+				mSceneMgr->getEntity("lapCounter0")->setMaterialName(buf);
 			}
 			else
 			{
@@ -382,7 +397,8 @@ void GameplayScene::SetUpViewports()
 {
 	//Clear all of the viewports
 	mWindow->removeAllViewports();
-	
+
+
 	switch (numLocalPlayers)
 	{
 	case 1:
@@ -396,6 +412,7 @@ void GameplayScene::SetUpViewports()
 		Ogre::Viewport* vp1 = mWindow->addViewport(mCamera.get());
 		vp1->setDimensions(0, 0, 1, 0.5);
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
+		vp1->setOverlaysEnabled(false);
 	
 		Ogre::Viewport* vp2 = mWindow->addViewport(mCameras[1].get(), 1);
 		vp2->setDimensions(0, 0.5, 1, 0.5);
@@ -438,6 +455,7 @@ void GameplayScene::SetUpViewports()
 	}
 	}
 }
+
 void GameplayScene::ControllerInput()
 {
 	for (unsigned int i = 0; i < numLocalPlayers; ++i)
