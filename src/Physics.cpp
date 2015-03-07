@@ -15,12 +15,15 @@ PhysicsWorld::~PhysicsWorld()
 }
 
 void PhysicsWorld::initWorld(){
-	broadphase = new btDbvtBroadphase();
+	
 
 	collisionConfiguration = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collisionConfiguration);
 
 	solver = new btSequentialImpulseConstraintSolver;
+
+	sweepBP = new btAxisSweep3(btVector3(-1000, -1000, -1000), btVector3(1000, 1000, 1000));
+	broadphase = sweepBP;
 
 	world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 
@@ -33,6 +36,8 @@ void PhysicsWorld::initWorld(){
     btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
 	groundRigidBody = new btRigidBody(groundRigidBodyCI);
     world->addRigidBody(groundRigidBody);
+
+	sweepBP->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 }
 
 void PhysicsWorld::addBodyToWorld(btRigidBody* newBody){

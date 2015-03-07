@@ -10,6 +10,8 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	mSceneNode->attachObject(someEnt);
 	mSceneNode->translate(0, 5, 0);
 
+	
+
 	world = mWorld;
 
 	lapCounter = 0;
@@ -111,6 +113,8 @@ void Car::Update(void)
 	wheelIndex = 1;
 	m_vehicle->setSteeringValue(steerValue, wheelIndex);
 
+	ghost->setWorldTransform(mRigidBody->getWorldTransform());
+
 	GameObject::Update();
 
 	mSceneNode->roll(Ogre::Radian(-steerValue*2));
@@ -127,10 +131,17 @@ void Car::InitRigidBody()
 
 	btTransform transform = btTransform(q, v);
 
+	ghost = new btPairCachingGhostObject();
+	ghost->setWorldTransform(transform);
+	
+
 	btCollisionShape* boxShape = new btBoxShape(btVector3(20, 5, 20));
 	btCompoundShape* compound = new btCompoundShape();
 	mCollisionShapes.push_back(boxShape);
 	mCollisionShapes.push_back(compound);
+
+	ghost->setCollisionShape(boxShape);
+	ghost->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
 
 	compound->addChildShape(transform, boxShape);
 
@@ -142,7 +153,7 @@ void Car::InitRigidBody()
 	mRigidBody = new btRigidBody(boxRigidBodyCI);
 	mRigidBody->setActivationState(DISABLE_DEACTIVATION);
 	world->addRigidBody(mRigidBody);
-
+	world->addCollisionObject(ghost);
 	
 
 	

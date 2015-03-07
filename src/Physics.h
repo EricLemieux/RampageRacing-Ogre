@@ -2,6 +2,7 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
+#include <BulletCollision\CollisionDispatch\btGhostObject.h>
 
 #include <memory>
 
@@ -21,6 +22,7 @@ public:
 private:
 	btDiscreteDynamicsWorld* world;
 
+	btAxisSweep3* sweepBP;
 	btBroadphaseInterface* broadphase;
 	btDefaultCollisionConfiguration* collisionConfiguration;
 	btCollisionDispatcher* dispatcher;

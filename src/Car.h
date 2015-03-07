@@ -34,6 +34,7 @@ public:
 	btRaycastVehicle*       m_vehicle;
 	btCollisionShape*       m_wheelShape;
 	btDiscreteDynamicsWorld* world;
+	btPairCachingGhostObject* ghost;
 
 	virtual void InitRigidBody();
 

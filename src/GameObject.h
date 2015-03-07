@@ -3,6 +3,7 @@
 #include <Ogre.h>
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
+#include <BulletCollision\CollisionDispatch\btGhostObject.h>
 
 #include "System.h"
 

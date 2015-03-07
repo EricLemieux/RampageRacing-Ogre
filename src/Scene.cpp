@@ -325,63 +325,83 @@ bool GameplayScene::Update()
 
 	//COLLISION DETECTION
 	btDiscreteDynamicsWorld* world = GetPhysicsWorld()->getWorld();
-	int numManifolds = world->getDispatcher()->getNumManifolds();
-	for (int i = 0; i < numManifolds; ++i){
-		btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
-		btCollisionObject* objA = (btCollisionObject*)(contactManifold->getBody0());
-		btCollisionObject* objB = (btCollisionObject*)(contactManifold->getBody1());
+	world->getDispatcher()->dispatchAllCollisionPairs(mCar->ghost->getOverlappingPairCache(), world->getDispatchInfo(), world->getDispatcher());
+	//btTransform transform = mCar->ghost->getWorldTransform();
+	btManifoldArray manifoldArray;
 
-		int numContacts = contactManifold->getNumContacts();
-		for (int j = 0; j < numContacts; ++j){
-			btManifoldPoint& pt = contactManifold->getContactPoint(j);
-			if (pt.getDistance() < 0.f){
-				const btVector3& ptA = pt.getPositionWorldOnA();
-				const btVector3& ptB = pt.getPositionWorldOnB();
-				const btVector3& normalOnB = pt.m_normalWorldOnB;
-				//contact stuff in here
-			}
+	for (int i = 0; i < mCar->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++i){
+		manifoldArray.resize(0);
+		btBroadphasePair* collisionPair = &(mCar->ghost->getOverlappingPairCache()->getOverlappingPairArray()[i]);
+		if (collisionPair->m_algorithm)
+			collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
+
+		for (int j = 0; j < manifoldArray.size(); ++j){
+			btPersistentManifold* manifold = manifoldArray[j];
+			bool test0 = manifold->getBody0() == mCar->ghost ? true : false;
+			bool test1 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
+			if (test1)
+				int a = 0;
 		}
 	}
 
-	if (mCar->checkPointsHit == 0)
-	{
-		GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[1]->GetRigidBody(), *callback);
-		if (mCar->isColliding)
-		{
-			mCar->isColliding = false;
-			++mCar->checkPointsHit;
-		}
-	}
-	else if (mCar->checkPointsHit == 1)
-	{
-		GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[2]->GetRigidBody(), *callback);
-		if (mCar->isColliding)
-		{
-			mCar->isColliding = false;
-			++mCar->checkPointsHit;
-		}
-	}
-	else if (mCar->checkPointsHit == 2)
-	{
-		GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[0]->GetRigidBody(), *callback);
-		if (mCar->isColliding)
-		{
-			mCar->isColliding = false;
-			mCar->checkPointsHit = 0;
+	//btDiscreteDynamicsWorld* world = GetPhysicsWorld()->getWorld();
+	//int numManifolds = world->getDispatcher()->getNumManifolds();
+	//for (int i = 0; i < numManifolds; ++i){
+	//	btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
+	//	btCollisionObject* objA = (btCollisionObject*)(contactManifold->getBody0());
+	//	btCollisionObject* objB = (btCollisionObject*)(contactManifold->getBody1());
 
-			if (mCar->lapCounter < 2)
-			{
-				++mCar->lapCounter;
-				char buf[128];
-				sprintf_s(buf,128,"%s%i","hud_lap_",mCar->lapCounter+1);				
-				mSceneMgr->getEntity("lapCounter0")->setMaterialName(buf);
-			}
-			else
-			{
-				SwapToMainMenu();
-			}
-		}
-	}
+	//	int numContacts = contactManifold->getNumContacts();
+	//	for (int j = 0; j < numContacts; ++j){
+	//		btManifoldPoint& pt = contactManifold->getContactPoint(j);
+	//		if (pt.getDistance() < 0.f){
+	//			const btVector3& ptA = pt.getPositionWorldOnA();
+	//			const btVector3& ptB = pt.getPositionWorldOnB();
+	//			const btVector3& normalOnB = pt.m_normalWorldOnB;
+	//			//contact stuff in here
+	//		}
+	//	}
+	//}
+
+	//if (mCar->checkPointsHit == 0)
+	//{
+	//	GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[1]->GetRigidBody(), *callback);
+	//	if (mCar->isColliding)
+	//	{
+	//		mCar->isColliding = false;
+	//		++mCar->checkPointsHit;
+	//	}
+	//}
+	//else if (mCar->checkPointsHit == 1)
+	//{
+	//	GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[2]->GetRigidBody(), *callback);
+	//	if (mCar->isColliding)
+	//	{
+	//		mCar->isColliding = false;
+	//		++mCar->checkPointsHit;
+	//	}
+	//}
+	//else if (mCar->checkPointsHit == 2)
+	//{
+	//	GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[0]->GetRigidBody(), *callback);
+	//	if (mCar->isColliding)
+	//	{
+	//		mCar->isColliding = false;
+	//		mCar->checkPointsHit = 0;
+
+	//		if (mCar->lapCounter < 2)
+	//		{
+	//			++mCar->lapCounter;
+	//			char buf[128];
+	//			sprintf_s(buf,128,"%s%i","hud_lap_",mCar->lapCounter+1);				
+	//			mSceneMgr->getEntity("lapCounter0")->setMaterialName(buf);
+	//		}
+	//		else
+	//		{
+	//			SwapToMainMenu();
+	//		}
+	//	}
+	//}
 	
 	return true;
 }
