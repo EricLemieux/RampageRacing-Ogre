@@ -8,7 +8,7 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	mSceneNode = mSceneManager->getRootSceneNode()->createChildSceneNode(name);
 	Ogre::Entity* someEnt = mSceneManager->createEntity(carEntName);
 	mSceneNode->attachObject(someEnt);
-	mSceneNode->translate(0, 5, 0);
+	mSceneNode->translate(0, 100, 0);
 
 	
 
