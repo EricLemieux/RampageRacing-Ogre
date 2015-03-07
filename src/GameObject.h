@@ -9,6 +9,12 @@
 
 #include <memory>
 
+enum type{
+	CAR = 0,
+	MISSILE = 1,
+	MINE = 2
+};
+
 class GameObject
 {
 public:
@@ -25,6 +31,8 @@ private:
 	virtual void InitRigidBody();
 
 protected:
+	int id;
+
 	Ogre::String mName;
 	Ogre::SceneNode* mSceneNode;
 	btRigidBody* mRigidBody;
