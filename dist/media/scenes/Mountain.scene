@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene formatVersion="1.0" upAxis="y" unitsPerMeter="1" unitType="centimeters" minOgreVersion="1.9" ogreMaxVersion="2.6.4" author="OgreMax Scene Exporter (www.ogremax.com)" application="Maya">
+    <environment>
+        <colourAmbient r="1.0" g="1.0" b="1.0"/>
+        <colourBackground r="0" g="0" b="0"/>
+        <clipping near="0" far="1000"/>
+        <skyBox material="sky"/>
+    </environment>
+    <nodes>
+        <!--Triggers-->
+        <node name="triggerFinishLine">
+            <position x="108" y="10000" z="-70"/>
+            <rotation qx="0" qy="-1.0" qz="0" qw="1"/>
+            <scale x="50" y="30" z="2"/>
+            <entity name="triggerFinishLine" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
+            </entity>
+        </node>
+        <node name="triggerCheckpoint1">
+            <position x="108" y="10000" z="-70"/>
+            <rotation qx="0" qy="-1.0" qz="0" qw="1"/>
+            <scale x="50" y="30" z="2"/>
+            <entity name="triggerCheckpoint1" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
+            </entity>
+        </node>
+        <node name="triggerCheckpoint2">
+            <position x="108" y="10000" z="-70"/>
+            <rotation qx="0" qy="-1.0" qz="0" qw="1"/>
+            <scale x="50" y="30" z="2"/>
+            <entity name="triggerCheckpoint2" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
+            </entity>
+        </node>
+
+        <!--Lights-->
+        <node name="sun">
+            <position x="0" y="250" z="0"/>
+            <rotation qx="0" qy="0" qz="0" qw="1"/>
+            <light name="sunLight" type="point" intensity="10.0" contrast="0">
+                <colourDiffuse r="0.5" g="0.5" b="0.5" />
+                <colourSpecular r="0.5" g="0.5" b="0.5" />
+            </light>
+        </node>
+
+        <!--World-->
+        <node name="mountain">
+            <position x="0" y="0" z="0"/>
+            <rotation qx="0" qy="0" qz="0" qw="1"/>
+            <entity name="mountain" castShadows="true" receiveShadows="true" meshFile="Mountain/mountain.mesh" static="true"></entity>
+        </node>
+
+    </nodes>
+</scene>
