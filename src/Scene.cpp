@@ -335,13 +335,15 @@ bool GameplayScene::Update()
 		if (collisionPair->m_algorithm)
 			collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
 
-		for (int j = 0; j < manifoldArray.size(); ++j){
-			btPersistentManifold* manifold = manifoldArray[j];
+		//for (int j = 0; j < manifoldArray.size(); ++j){
+		if (manifoldArray.size() > 0){
+			btPersistentManifold* manifold = manifoldArray[0];
 			bool test0 = manifold->getBody0() == mCar->ghost ? true : false;
 			bool test1 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
 			if (test1)
 				int a = 0;
 		}
+		//}
 	}
 
 	//btDiscreteDynamicsWorld* world = GetPhysicsWorld()->getWorld();
