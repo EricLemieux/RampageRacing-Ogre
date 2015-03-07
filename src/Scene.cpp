@@ -180,6 +180,10 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 	{
 		FireMissile(0);
 	}
+	if (arg.key == OIS::KC_V)
+	{
+		DropMine(0);
+	}
 
 	if (arg.key == OIS::KC_P)
 	{
@@ -541,6 +545,14 @@ void GameplayScene::FireMissile(int carID)
 	forward *= -500;
 
 	missile->setVelocity(forward.x(), forward.y(), forward.z());
+
+	mActiveWeapons.push_back(missile);
+}
+void GameplayScene::DropMine(int carID)
+{
+	std::shared_ptr<Mine> missile = std::shared_ptr<Mine>(new Mine("mine", mSceneMgr, mCars[carID]->GetSceneNode()));
+
+	mPhysicsWorld->getWorld()->addRigidBody(missile->GetRigidBody());
 
 	mActiveWeapons.push_back(missile);
 }

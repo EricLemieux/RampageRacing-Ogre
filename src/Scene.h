@@ -34,6 +34,9 @@
 
 #include "Controller.h"
 
+#include "Missile.h"
+#include "Mine.h"
+
 #include <OgreOverlayContainer.h>
 #include <OgreOverlayManager.h>
 
@@ -131,6 +134,7 @@ public:
 	virtual void SetUpViewports();
 
 	void FireMissile(int carID);
+	void DropMine(int carID);
 
 private:
 	std::shared_ptr<Car> mCars[4];

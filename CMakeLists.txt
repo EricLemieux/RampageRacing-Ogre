@@ -122,6 +122,8 @@ set(HDRS
 	./src/OBJ.h
 	./src/Missile.h
 	./src/Controller.h
+	./src/Mine.h
+	./src/ItemBox.h
 )
  
 set(SRCS
@@ -138,6 +140,8 @@ set(SRCS
 	./src/OBJ.cpp
 	./src/Missile.cpp
 	./src/Controller.cpp
+	./src/Mine.cpp
+	./src/ItemBox.cpp
 )
  
 include_directories( ${OIS_INCLUDE_DIRS}
