@@ -224,7 +224,7 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 		sprintf_s(name, 128, "mCar%i",i);
 
 		//Create a game object thing
-		mCars[i] = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), "BoltCar.mesh"));
+		mCars[i] = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), "BoltCar.mesh", i));
 
 		Ogre::SceneNode* camNode = GetSceneManager()->getSceneNode(name)->createChildSceneNode();
 		camNode->attachObject(mCameras[i].get());

@@ -9,8 +9,8 @@
     <nodes>
         <!--Triggers-->
         <node name="triggerFinishLine">
-            <position x="108" y="10000" z="-70"/>
-            <rotation qx="0" qy="-1.0" qz="0" qw="1"/>
+            <position x="0" y="100" z="0"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <scale x="50" y="30" z="2"/>
             <entity name="triggerFinishLine" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
             </entity>

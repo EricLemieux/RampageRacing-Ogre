@@ -1,6 +1,6 @@
 #include "Car.h"
 
-Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld, Ogre::String carEntName)
+Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld, Ogre::String carEntName, int ID)
 {
 	mName = name;
 	mSceneManager = manager;
@@ -8,9 +8,14 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	mSceneNode = mSceneManager->getRootSceneNode()->createChildSceneNode(name);
 	Ogre::Entity* someEnt = mSceneManager->createEntity(carEntName);
 	mSceneNode->attachObject(someEnt);
-	mSceneNode->translate(0, 100, 0);
 
-	
+	Ogre::Matrix4 t = mSceneManager->getSceneNode("triggerFinishLine")->_getFullTransform();
+	Ogre::Vector3 forward = Ogre::Vector3(t[2][0], t[2][1], t[2][2]);
+
+	Ogre::Vector3 pos = Ogre::Vector3(t[0][3], t[1][3], t[2][3]);
+	pos += forward.normalisedCopy() * (ID * 20.0f);
+	pos.y += 5;
+	mSceneNode->translate(pos);
 
 	world = mWorld;
 
