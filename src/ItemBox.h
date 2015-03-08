@@ -18,8 +18,9 @@ public:
 
 	virtual void Update();
 
-
 	virtual ITEM_BOX_TYPE getType(){ return mType; }
+
+	btPairCachingGhostObject* ghost;
 
 private:
 	virtual void InitRigidBody();
