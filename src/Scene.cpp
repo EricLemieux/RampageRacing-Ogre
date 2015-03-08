@@ -377,9 +377,9 @@ bool GameplayScene::Update()
 			if (collisionPair->m_algorithm)
 				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
 
-			for (int k = 0; k < manifoldArray.size(); ++k){
+			//for (int k = 0; k < manifoldArray.size(); ++k){
 				if (manifoldArray.size() > 0){
-					btPersistentManifold* manifold = manifoldArray[k];
+					btPersistentManifold* manifold = manifoldArray[0];
 
 					//HARD CODED CHECK POINT NUMBERS, FIX THIS AT SOME POINT
 					for (unsigned int tv = 0; tv < 3; ++tv){
@@ -401,13 +401,14 @@ bool GameplayScene::Update()
 					{
 						bool test0 = manifold->getBody0() == mItemBoxes[ib]->GetRigidBody() ? true : false;
 						bool test1 = manifold->getBody1() == mItemBoxes[ib]->GetRigidBody() ? true : false;
-						if (test0 || test1)
+						if ((test0 || test1) && mCars[i]->mCurrentItem == IBT_NONE)
 						{
+
 							mCars[i]->mCurrentItem = mItemBoxes[ib]->getType();
 						}
 					}
 				}
-			}
+			//}
 		}
 	}
 

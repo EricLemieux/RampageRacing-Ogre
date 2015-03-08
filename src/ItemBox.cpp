@@ -39,8 +39,10 @@ void ItemBox::InitRigidBody()
 	btDefaultMotionState* boxMotionState = new btDefaultMotionState(transform);
 	btVector3 boxInertia(0, 0, 0);
 	boxShape->calculateLocalInertia(mass, boxInertia);
-	btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(mass, boxMotionState, boxShape, boxInertia);
+	btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(0, boxMotionState, boxShape, boxInertia);
 	mRigidBody = new btRigidBody(boxRigidBodyCI);
+	mRigidBody->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
+
 
 	ghost->setCollisionShape(boxShape);
 	ghost->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
@@ -50,5 +52,7 @@ void ItemBox::InitRigidBody()
 
 void ItemBox::Update()
 {
+	ghost->setWorldTransform(mRigidBody->getWorldTransform());
+
 	GameObject::Update();
 }
