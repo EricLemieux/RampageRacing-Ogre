@@ -11,7 +11,7 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 
 	Ogre::Matrix4 t = mSceneManager->getSceneNode("triggerFinishLine")->_getFullTransform();
 	Ogre::Vector3 forward = Ogre::Vector3(t[2][0], t[2][1], t[2][2]);
-
+	
 	Ogre::Vector3 pos = Ogre::Vector3(t[0][3], t[1][3], t[2][3]);
 	pos += forward.normalisedCopy() * (ID * 20.0f);
 	pos.y += 5;
@@ -22,7 +22,7 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	lapCounter = 0;
 	checkPointsHit = 0;
 
-	steerValue = 0.0f;
+	steerValue = 0.0f;               
 
 	InitRigidBody();
 }
@@ -132,7 +132,6 @@ void Car::InitRigidBody()
 
 	btQuaternion q = OgreToBtQuaternion(mSceneNode->getOrientation());
 	btVector3 v = OgreToBtVector3(mSceneNode->getPosition());
-	//v.setY(v.getY() - 100);
 
 	btTransform transform = btTransform(q, v);
 
@@ -148,7 +147,8 @@ void Car::InitRigidBody()
 	ghost->setCollisionShape(boxShape);
 	ghost->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
 
-	compound->addChildShape(transform, boxShape);
+	btTransform t = btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 5, 0));
+	compound->addChildShape(t, boxShape);
 
 	btDefaultMotionState* boxMotionState = new btDefaultMotionState(transform);
 	btVector3 boxInertia(0, 0, 0);
