@@ -34,6 +34,7 @@
 
 #include "Controller.h"
 
+#include "ItemBox.h"
 #include "Missile.h"
 #include "Mine.h"
 
@@ -133,6 +134,8 @@ public:
 
 	virtual void SetUpViewports();
 
+	void SetUpItemBoxes();
+
 	void FireMissile(int carID);
 	void DropMine(int carID);
 
@@ -146,6 +149,7 @@ private:
 	TriggerVolume* mTriggerVolumes[3];
 
 	std::list<std::shared_ptr<GameObject>> mActiveWeapons;
+	std::vector<std::shared_ptr<ItemBox>> mItemBoxes;
 };
 
 class MenuScene : public Scene

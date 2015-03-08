@@ -154,6 +154,36 @@ void GameplayScene::LoadLevel(Ogre::String levelName)
 			GetPhysicsWorld()->addBodyToWorld(body);
 		}
 	}
+
+	SetUpItemBoxes();
+}
+
+void GameplayScene::SetUpItemBoxes()
+{
+	//should be replaced with the number of checkpoints, currently its only 3 so whatever
+	//TODO
+	for (unsigned int i = 1; i < 3; ++i)
+	{
+		for (unsigned int j = 0; j < 3; ++j)
+		{
+			char name[128];
+			sprintf_s(name, 128, "itemBox%i", (i*3)+j);
+
+			Ogre::Vector3 pos;
+			Ogre::Quaternion rot;
+
+			char checkpointName[128];
+			sprintf_s(checkpointName, 128, "triggerCheckpoint%i", i);
+			Ogre::Matrix4 m = mSceneMgr->getSceneNode(checkpointName)->_getFullTransform();
+			Ogre::Vector3 rightVector = Ogre::Vector3(m[0][0], m[0][1], m[0][2]).normalisedCopy();
+
+			pos = mSceneMgr->getSceneNode(checkpointName)->getPosition();
+			pos += rightVector * (30 - j * 30.0f);
+			rot = mSceneMgr->getSceneNode(checkpointName)->getOrientation();
+
+			std::shared_ptr<ItemBox> box = std::shared_ptr<ItemBox>(new ItemBox(name, mSceneMgr, BT_ATTACK, pos, rot));
+		}
+	}
 }
 
 void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
@@ -348,67 +378,7 @@ bool GameplayScene::Update()
 				int a = 0;
 		}
 		//}
-	}
-
-	//btDiscreteDynamicsWorld* world = GetPhysicsWorld()->getWorld();
-	//int numManifolds = world->getDispatcher()->getNumManifolds();
-	//for (int i = 0; i < numManifolds; ++i){
-	//	btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
-	//	btCollisionObject* objA = (btCollisionObject*)(contactManifold->getBody0());
-	//	btCollisionObject* objB = (btCollisionObject*)(contactManifold->getBody1());
-
-	//	int numContacts = contactManifold->getNumContacts();
-	//	for (int j = 0; j < numContacts; ++j){
-	//		btManifoldPoint& pt = contactManifold->getContactPoint(j);
-	//		if (pt.getDistance() < 0.f){
-	//			const btVector3& ptA = pt.getPositionWorldOnA();
-	//			const btVector3& ptB = pt.getPositionWorldOnB();
-	//			const btVector3& normalOnB = pt.m_normalWorldOnB;
-	//			//contact stuff in here
-	//		}
-	//	}
-	//}
-
-	//if (mCar->checkPointsHit == 0)
-	//{
-	//	GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[1]->GetRigidBody(), *callback);
-	//	if (mCar->isColliding)
-	//	{
-	//		mCar->isColliding = false;
-	//		++mCar->checkPointsHit;
-	//	}
-	//}
-	//else if (mCar->checkPointsHit == 1)
-	//{
-	//	GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[2]->GetRigidBody(), *callback);
-	//	if (mCar->isColliding)
-	//	{
-	//		mCar->isColliding = false;
-	//		++mCar->checkPointsHit;
-	//	}
-	//}
-	//else if (mCar->checkPointsHit == 2)
-	//{
-	//	GetPhysicsWorld()->getWorld()->contactPairTest(mCar->GetRigidBody(), mTriggerVolumes[0]->GetRigidBody(), *callback);
-	//	if (mCar->isColliding)
-	//	{
-	//		mCar->isColliding = false;
-	//		mCar->checkPointsHit = 0;
-
-	//		if (mCar->lapCounter < 2)
-	//		{
-	//			++mCar->lapCounter;
-	//			char buf[128];
-	//			sprintf_s(buf,128,"%s%i","hud_lap_",mCar->lapCounter+1);				
-	//			mSceneMgr->getEntity("lapCounter0")->setMaterialName(buf);
-	//		}
-	//		else
-	//		{
-	//			SwapToMainMenu();
-	//		}
-	//	}
-	//}
-	
+	}	
 	return true;
 }
 

@@ -1,8 +1,10 @@
 #include "ItemBox.h"
 
-ItemBox::ItemBox(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::SceneNode* parent)
+ItemBox::ItemBox(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, ITEM_BOX_TYPE type, Ogre::Vector3 position, Ogre::Quaternion rotation)
 {
 	mName = name;
+
+	mType = type;
 
 	mSceneManager = manager;
 
@@ -10,8 +12,8 @@ ItemBox::ItemBox(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager,
 	Ogre::Entity* missileEnt = mSceneManager->createEntity("ItemBox.mesh");
 	mSceneNode->attachObject(missileEnt);
 
-	mSceneNode->setPosition(parent->getPosition());
-	mSceneNode->setOrientation(parent->getOrientation());
+	mSceneNode->setPosition(position);
+	mSceneNode->setOrientation(rotation);
 
 	InitRigidBody();
 }
