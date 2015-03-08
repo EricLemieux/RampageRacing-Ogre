@@ -30,6 +30,9 @@ void Missile::InitRigidBody()
 
 	btTransform transform = btTransform(q, v);
 
+	ghost = new btPairCachingGhostObject();
+	ghost->setWorldTransform(transform);
+
 	btCollisionShape* boxShape = new btBoxShape(btVector3(1, 1, 1));
 	btDefaultMotionState* boxMotionState = new btDefaultMotionState(transform);
 	btVector3 boxInertia(0, 0, 0);
@@ -37,12 +40,16 @@ void Missile::InitRigidBody()
 	btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(mass, boxMotionState, boxShape, boxInertia);
 	mRigidBody = new btRigidBody(boxRigidBodyCI);
 
+	ghost->setCollisionShape(boxShape);
+	ghost->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
+
 	mRigidBody->setAngularFactor(0);
 }
 
 void Missile::Update()
 {
 	mRigidBody->setLinearVelocity(mVelocity);
+	ghost->setWorldTransform(mRigidBody->getWorldTransform());
 
 	GameObject::Update();
 }

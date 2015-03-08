@@ -538,6 +538,7 @@ void GameplayScene::FireMissile(int carID)
 	std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mCars[carID]->GetSceneNode()));
 
 	mPhysicsWorld->getWorld()->addRigidBody(missile->GetRigidBody());
+	mPhysicsWorld->getWorld()->addCollisionObject(missile->ghost);
 
 	btScalar mat[16];
 	mCars[carID]->GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
@@ -553,6 +554,7 @@ void GameplayScene::DropMine(int carID)
 	std::shared_ptr<Mine> missile = std::shared_ptr<Mine>(new Mine("mine", mSceneMgr, mCars[carID]->GetSceneNode()));
 
 	mPhysicsWorld->getWorld()->addRigidBody(missile->GetRigidBody());
+	mPhysicsWorld->getWorld()->addCollisionObject(missile->ghost);
 
 	mActiveWeapons.push_back(missile);
 }
