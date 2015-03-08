@@ -181,7 +181,8 @@ void GameplayScene::SetUpItemBoxes()
 			pos += rightVector * (30 - j * 30.0f);
 			rot = mSceneMgr->getSceneNode(checkpointName)->getOrientation();
 
-			std::shared_ptr<ItemBox> box = std::shared_ptr<ItemBox>(new ItemBox(name, mSceneMgr, BT_ATTACK, pos, rot));
+			std::shared_ptr<ItemBox> box = std::shared_ptr<ItemBox>(new ItemBox(name, mSceneMgr, IBT_ATTACK, pos, rot));
+			mItemBoxes.push_back(box);
 		}
 	}
 }
@@ -378,6 +379,14 @@ bool GameplayScene::Update()
 				bool test1 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
 				if (test1)
 					int a = 0;
+
+				for (unsigned int ib = 0; ib < mItemBoxes.size(); ++ib)
+				{
+					if (manifold->getBody1() == mItemBoxes[ib]->GetRigidBody())
+					{
+						mCars[i]->mCurrentItem = mItemBoxes[ib]->getType();
+					}
+				}
 			}
 			//}
 		}
@@ -557,19 +566,24 @@ void GameplayScene::ControllerInput()
 
 void GameplayScene::FireMissile(int carID)
 {
-	std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mCars[carID]->GetSceneNode()));
+	if (mCars[carID]->mCurrentItem == IBT_ATTACK)
+	{
+		std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mCars[carID]->GetSceneNode()));
 
-	mPhysicsWorld->getWorld()->addRigidBody(missile->GetRigidBody());
-	mPhysicsWorld->getWorld()->addCollisionObject(missile->ghost);
+		mPhysicsWorld->getWorld()->addRigidBody(missile->GetRigidBody());
+		mPhysicsWorld->getWorld()->addCollisionObject(missile->ghost);
 
-	btScalar mat[16];
-	mCars[carID]->GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
-	btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
-	forward *= -500;
+		btScalar mat[16];
+		mCars[carID]->GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
+		btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
+		forward *= -500;
 
-	missile->setVelocity(forward.x(), forward.y(), forward.z());
+		missile->setVelocity(forward.x(), forward.y(), forward.z());
 
-	mActiveWeapons.push_back(missile);
+		mActiveWeapons.push_back(missile);
+
+		mCars[carID]->mCurrentItem = IBT_NONE;
+	}
 }
 void GameplayScene::DropMine(int carID)
 {

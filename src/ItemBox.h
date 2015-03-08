@@ -4,10 +4,10 @@
 
 enum ITEM_BOX_TYPE
 {
-	BT_NONE,
-	BT_ATTACK,
-	BT_DEFENCE,
-	BT_SPEED
+	IBT_NONE,
+	IBT_ATTACK,
+	IBT_DEFENCE,
+	IBT_SPEED
 };
 
 class ItemBox :public GameObject

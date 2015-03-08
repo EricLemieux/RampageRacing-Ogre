@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include "Missile.h"
+#include "ItemBox.h"
 
 class Car : public GameObject
 {
@@ -36,6 +37,8 @@ public:
 	btDiscreteDynamicsWorld* world;
 
 	virtual void InitRigidBody();
+
+	ITEM_BOX_TYPE mCurrentItem;
 
 private:
 	float speed = 0.0f;

@@ -25,6 +25,8 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	steerValue = 0.0f;               
 
 	InitRigidBody();
+
+	mCurrentItem = IBT_NONE;
 }
 
 Car::~Car()
