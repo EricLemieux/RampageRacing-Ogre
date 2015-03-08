@@ -360,14 +360,14 @@ bool GameplayScene::Update()
 	//COLLISION DETECTION
 	btDiscreteDynamicsWorld* world = GetPhysicsWorld()->getWorld();
 
-	for (int i = 0; i < 4; ++i){
+	for (int i = 0; i < numLocalPlayers; ++i){
 		world->getDispatcher()->dispatchAllCollisionPairs(mCars[i]->ghost->getOverlappingPairCache(), world->getDispatchInfo(), world->getDispatcher());
 		//btTransform transform = mCar->ghost->getWorldTransform();
 		btManifoldArray manifoldArray;
 
-		for (int i = 0; i < mCars[i]->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++i){
+		for (int j = 0; j < mCars[i]->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++j){
 			manifoldArray.resize(0);
-			btBroadphasePair* collisionPair = &(mCars[i]->ghost->getOverlappingPairCache()->getOverlappingPairArray()[i]);
+			btBroadphasePair* collisionPair = &(mCars[i]->ghost->getOverlappingPairCache()->getOverlappingPairArray()[j]);
 			if (collisionPair->m_algorithm)
 				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
 
@@ -411,9 +411,9 @@ bool GameplayScene::Update()
 		//btTransform transform = mCar->ghost->getWorldTransform();
 		btManifoldArray manifoldArray;
 
-		for (int i = 0; i < mItemBoxes[i]->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++i){
+		for (int j = 0; j < mItemBoxes[i]->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++j){
 			manifoldArray.resize(0);
-			btBroadphasePair* collisionPair = &(mItemBoxes[i]->ghost->getOverlappingPairCache()->getOverlappingPairArray()[i]);
+			btBroadphasePair* collisionPair = &(mItemBoxes[i]->ghost->getOverlappingPairCache()->getOverlappingPairArray()[j]);
 			if (collisionPair->m_algorithm)
 				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
 
