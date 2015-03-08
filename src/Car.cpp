@@ -54,6 +54,7 @@ void Car::MoveBackward(float distance)
 void Car::TurnRight(float value)
 {
 	GetRigidBody()->activate();
+	
 	GetRigidBody()->setAngularVelocity(btVector3(0.0f, -value, 0.0f));
 }
 void Car::TurnLeft(float value)
@@ -80,13 +81,13 @@ void Car::Update(void)
 	{
 		if (mCanMoveForward > 1.0f)
 			mCanMoveForward = 1.0f;
-		engineForce = (-1000.0f / speedRatio) * mCanMoveForward;
+		engineForce = (-2000.0f / speedRatio) * mCanMoveForward;
 	}
 	else if (mCanMoveBackward != 0.0f)
 	{
 		if (mCanMoveBackward > 1.0f)
 			mCanMoveBackward = 1.0f;
-		engineForce = (600) * mCanMoveBackward;
+		engineForce = (1000) * mCanMoveBackward;
 	}
 	else 
 	{
@@ -97,10 +98,19 @@ void Car::Update(void)
 	{
 		steerValue += (0.002f * mTurning);
 
-		if (steerValue > 0.1f)
-			steerValue = 0.1f;
-		else if (steerValue < -0.1f)
-			steerValue = -0.1f;
+		if (steerValue > 0){
+			TurnRight(steerValue*10);
+		}
+		else if (steerValue < 0){
+			TurnRight(steerValue * 10);
+		}
+
+		if (steerValue > 0.2f){
+			steerValue = 0.2f;
+		}
+		else if (steerValue < -0.2f){
+			steerValue = -0.2f;
+		}
 	}
 	else
 	{
@@ -116,9 +126,9 @@ void Car::Update(void)
 
 
 	wheelIndex = 0;
-	m_vehicle->setSteeringValue(steerValue, wheelIndex);
+	//m_vehicle->setSteeringValue(steerValue, wheelIndex);
 	wheelIndex = 1;
-	m_vehicle->setSteeringValue(steerValue, wheelIndex);
+	//m_vehicle->setSteeringValue(steerValue, wheelIndex);
 
 	ghost->setWorldTransform(mRigidBody->getWorldTransform());
 
@@ -149,7 +159,7 @@ void Car::InitRigidBody()
 	ghost->setCollisionShape(boxShape);
 	ghost->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
 
-	btTransform t = btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 5, 0));
+	btTransform t = btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 3, 0));
 	compound->addChildShape(t, boxShape);
 
 	btDefaultMotionState* boxMotionState = new btDefaultMotionState(transform);

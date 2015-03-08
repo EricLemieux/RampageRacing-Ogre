@@ -182,7 +182,12 @@ void GameplayScene::SetUpItemBoxes()
 			rot = mSceneMgr->getSceneNode(checkpointName)->getOrientation();
 
 			std::shared_ptr<ItemBox> box = std::shared_ptr<ItemBox>(new ItemBox(name, mSceneMgr, IBT_ATTACK, pos, rot));
+			mPhysicsWorld->getWorld()->addRigidBody(box->GetRigidBody());
+			mPhysicsWorld->getWorld()->addCollisionObject(box->ghost);
+
 			mItemBoxes.push_back(box);
+
+			
 		}
 	}
 }
@@ -372,23 +377,37 @@ bool GameplayScene::Update()
 			if (collisionPair->m_algorithm)
 				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
 
-			//for (int j = 0; j < manifoldArray.size(); ++j){
-			if (manifoldArray.size() > 0){
-				btPersistentManifold* manifold = manifoldArray[0];
-				bool test0 = manifold->getBody0() == mCars[i]->ghost ? true : false;
-				bool test1 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
-				if (test1)
-					int a = 0;
+			for (int k = 0; k < manifoldArray.size(); ++k){
+				if (manifoldArray.size() > 0){
+					btPersistentManifold* manifold = manifoldArray[k];
 
-				for (unsigned int ib = 0; ib < mItemBoxes.size(); ++ib)
-				{
-					if (manifold->getBody1() == mItemBoxes[ib]->GetRigidBody())
+					//HARD CODED CHECK POINT NUMBERS, FIX THIS AT SOME POINT
+					for (unsigned int tv = 0; tv < 3; ++tv){
+						if (manifold->getBody1() == mTriggerVolumes[tv]->GetRigidBody()){
+							if (mCars[i]->checkPointsHit == 0 && tv == 1){
+								mCars[i]->checkPointsHit++;
+							}
+							else if (mCars[i]->checkPointsHit == 1 && tv == 2){
+								mCars[i]->checkPointsHit++;
+							}
+							else if (mCars[i]->checkPointsHit == 2 && tv == 0){
+								mCars[i]->checkPointsHit = 0;
+								mCars[i]->lapCounter++;
+							}
+						}
+					}
+
+					for (unsigned int ib = 0; ib < mItemBoxes.size(); ++ib)
 					{
-						mCars[i]->mCurrentItem = mItemBoxes[ib]->getType();
+						bool test0 = manifold->getBody0() == mItemBoxes[ib]->GetRigidBody() ? true : false;
+						bool test1 = manifold->getBody1() == mItemBoxes[ib]->GetRigidBody() ? true : false;
+						if (test0 || test1)
+						{
+							mCars[i]->mCurrentItem = mItemBoxes[ib]->getType();
+						}
 					}
 				}
 			}
-			//}
 		}
 	}
 
@@ -406,10 +425,10 @@ bool GameplayScene::Update()
 			//for (int j = 0; j < manifoldArray.size(); ++j){
 			if (manifoldArray.size() > 0){
 				btPersistentManifold* manifold = manifoldArray[0];
-				bool test0 = manifold->getBody0() == obj->ghost ? true : false;
+				bool test0 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
 				bool test1 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
-				if (test1)
-					int a = 0;
+				if (test1 || test0)
+ 					int a = 0;
 			}
 			//}
 		}
@@ -427,12 +446,14 @@ bool GameplayScene::Update()
 				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
 
 			//for (int j = 0; j < manifoldArray.size(); ++j){
-			if (manifoldArray.size() > 0){
-				btPersistentManifold* manifold = manifoldArray[0];
-				bool test0 = manifold->getBody0() == mItemBoxes[i]->ghost ? true : false;
-				bool test1 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
-				if (test1)
-					int a = 0;
+			for (int c = 0; c < numLocalPlayers; c++){
+				if (manifoldArray.size() > 0){
+					btPersistentManifold* manifold = manifoldArray[0];
+					bool test0 = manifold->getBody0() == mItemBoxes[i]->ghost ? true : false;
+					bool test1 = manifold->getBody1() == mCars[c]->GetRigidBody() ? true : false;
+					if (test1)
+						int a = 0;
+				}
 			}
 			//}
 		}
