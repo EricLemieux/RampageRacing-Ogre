@@ -173,6 +173,11 @@ find_path(XML_DLL_RELEASE_PATH REQUIRED)
 find_path(XML_INCLUDE_PATH REQUIRED)
 
 include_directories(${XML_INCLUDE_PATH})
+
+#find the FMOD Audio stuff
+find_path(FMOD_API_DIR REQUIRED)
+
+include_directories(${FMOD_API_DIR}/inc/)
  
 add_executable(OgreApp WIN32 ${HDRS} ${SRCS})
 add_executable(Server ${SVR_HDRS} ${SVR_SRCS})
@@ -197,6 +202,9 @@ target_link_libraries(OgreApp 	debug ${XML_DLL_DEBUG_PATH}/tinyxml2.lib
 
 target_link_libraries(OgreApp 	debug ${RakNet_DLL_DEBUG_PATH}/RakNetDLL.lib
 								optimized ${RakNet_DLL_RELEASE_PATH}/RakNetDLL.lib)
+
+target_link_libraries(OgreApp 	debug ${FMOD_API_DIR}/lib/fmodexL_vc.lib
+								optimized ${FMOD_API_DIR}/lib/fmodex_vc.lib)
 
 target_link_libraries(OgreApp 	XInput9_1_0.lib)
 
@@ -241,6 +249,7 @@ if(WIN32)
 		${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.dll
 		${OGRE_PLUGIN_DIR_REL}/OIS.dll
 		${RakNet_DLL_RELEASE_PATH}/RakNetDLL.dll
+		${FMOD_API_DIR}/fmodex.dll
 		DESTINATION bin
 		CONFIGURATIONS Release RelWithDebInfo
 	)
@@ -250,6 +259,7 @@ if(WIN32)
 		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
 		${RakNet_DLL_DEBUG_PATH}/RakNetDLL.dll
+		${FMOD_API_DIR}/fmodexL.dll
 		DESTINATION bin
 		CONFIGURATIONS Debug
 	)
