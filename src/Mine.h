@@ -10,8 +10,6 @@ public:
 
 	virtual void Update();
 
-	btPairCachingGhostObject* ghost;
-
 private:
 	virtual void InitRigidBody();
 };

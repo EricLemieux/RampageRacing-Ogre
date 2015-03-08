@@ -359,26 +359,78 @@ bool GameplayScene::Update()
 
 	//COLLISION DETECTION
 	btDiscreteDynamicsWorld* world = GetPhysicsWorld()->getWorld();
-	world->getDispatcher()->dispatchAllCollisionPairs(mCar->ghost->getOverlappingPairCache(), world->getDispatchInfo(), world->getDispatcher());
-	//btTransform transform = mCar->ghost->getWorldTransform();
-	btManifoldArray manifoldArray;
 
-	for (int i = 0; i < mCar->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++i){
-		manifoldArray.resize(0);
-		btBroadphasePair* collisionPair = &(mCar->ghost->getOverlappingPairCache()->getOverlappingPairArray()[i]);
-		if (collisionPair->m_algorithm)
-			collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
+	for (int i = 0; i < 4; ++i){
+		world->getDispatcher()->dispatchAllCollisionPairs(mCars[i]->ghost->getOverlappingPairCache(), world->getDispatchInfo(), world->getDispatcher());
+		//btTransform transform = mCar->ghost->getWorldTransform();
+		btManifoldArray manifoldArray;
 
-		//for (int j = 0; j < manifoldArray.size(); ++j){
-		if (manifoldArray.size() > 0){
-			btPersistentManifold* manifold = manifoldArray[0];
-			bool test0 = manifold->getBody0() == mCar->ghost ? true : false;
-			bool test1 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
-			if (test1)
-				int a = 0;
+		for (int i = 0; i < mCars[i]->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++i){
+			manifoldArray.resize(0);
+			btBroadphasePair* collisionPair = &(mCars[i]->ghost->getOverlappingPairCache()->getOverlappingPairArray()[i]);
+			if (collisionPair->m_algorithm)
+				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
+
+			//for (int j = 0; j < manifoldArray.size(); ++j){
+			if (manifoldArray.size() > 0){
+				btPersistentManifold* manifold = manifoldArray[0];
+				bool test0 = manifold->getBody0() == mCars[i]->ghost ? true : false;
+				bool test1 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
+				if (test1)
+					int a = 0;
+			}
+			//}
 		}
-		//}
-	}	
+	}
+
+	std::for_each(mActiveWeapons.begin(), mActiveWeapons.end(), [&](std::shared_ptr<GameObject> obj) {
+		world->getDispatcher()->dispatchAllCollisionPairs(obj->ghost->getOverlappingPairCache(), world->getDispatchInfo(), world->getDispatcher());
+		//btTransform transform = mCar->ghost->getWorldTransform();
+		btManifoldArray manifoldArray;
+
+		for (int i = 0; i < obj->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++i){
+			manifoldArray.resize(0);
+			btBroadphasePair* collisionPair = &(obj->ghost->getOverlappingPairCache()->getOverlappingPairArray()[i]);
+			if (collisionPair->m_algorithm)
+				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
+
+			//for (int j = 0; j < manifoldArray.size(); ++j){
+			if (manifoldArray.size() > 0){
+				btPersistentManifold* manifold = manifoldArray[0];
+				bool test0 = manifold->getBody0() == obj->ghost ? true : false;
+				bool test1 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
+				if (test1)
+					int a = 0;
+			}
+			//}
+		}
+	});
+
+	for (int i = 0; i < mItemBoxes.size(); ++i){
+		world->getDispatcher()->dispatchAllCollisionPairs(mItemBoxes[i]->ghost->getOverlappingPairCache(), world->getDispatchInfo(), world->getDispatcher());
+		//btTransform transform = mCar->ghost->getWorldTransform();
+		btManifoldArray manifoldArray;
+
+		for (int i = 0; i < mItemBoxes[i]->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++i){
+			manifoldArray.resize(0);
+			btBroadphasePair* collisionPair = &(mItemBoxes[i]->ghost->getOverlappingPairCache()->getOverlappingPairArray()[i]);
+			if (collisionPair->m_algorithm)
+				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
+
+			//for (int j = 0; j < manifoldArray.size(); ++j){
+			if (manifoldArray.size() > 0){
+				btPersistentManifold* manifold = manifoldArray[0];
+				bool test0 = manifold->getBody0() == mItemBoxes[i]->ghost ? true : false;
+				bool test1 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
+				if (test1)
+					int a = 0;
+			}
+			//}
+		}
+	}
+
+	
+
 	return true;
 }
 

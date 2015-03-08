@@ -12,8 +12,6 @@ public:
 
 	inline void setVelocity(float x, float y, float z){ mVelocity = btVector3(x,y,z); }
 
-	btPairCachingGhostObject* ghost;
-
 private:
 	virtual void InitRigidBody();
 

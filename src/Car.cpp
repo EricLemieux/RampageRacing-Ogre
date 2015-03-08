@@ -162,15 +162,15 @@ void Car::InitRigidBody()
 	
 
 	
-	float connectionHeight = 2.f;
-	float wheelWidth = 5.f;
-	float wheelRadius = 2.f;
+	float connectionHeight = 1.f;
+	float wheelWidth = 1.f;
+	float wheelRadius = 3.f;
 	int rightIndex = 0;
 	int upIndex = 1;
 	int forwardIndex = 2;
 	btVector3 wheelDirection(0, -1, 0);
 	btVector3 wheelAxle(-1, 0, 0);
-	float suspensionRestLength = 4.f;
+	float suspensionRestLength = 3.f;
 	bool isFrontWheel = true;
 
 	btCollisionShape* wheelShape = new btCylinderShapeX(btVector3(wheelWidth, wheelRadius, wheelRadius));

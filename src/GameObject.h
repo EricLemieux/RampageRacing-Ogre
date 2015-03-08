@@ -26,6 +26,7 @@ public:
 	inline Ogre::SceneNode* GetSceneNode(void){return mSceneNode;}
 	inline btRigidBody* GetRigidBody(void){return mRigidBody;}
 	virtual void Update(void);
+	btPairCachingGhostObject* ghost;
 
 private:
 	virtual void InitRigidBody();
