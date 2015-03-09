@@ -403,7 +403,7 @@ bool GameplayScene::Update()
 
 								if (mCars[i]->lapCounter > 2)
 								{
-									if (mNumPlayersCompletedRace == numLocalPlayers)
+									if (mNumPlayersCompletedRace == numLocalPlayers-1)
 									{
 										SwapToMainMenu();
 									}
