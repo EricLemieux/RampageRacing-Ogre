@@ -9,8 +9,20 @@ ItemBox::ItemBox(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager,
 	mSceneManager = manager;
 
 	mSceneNode = mSceneManager->getRootSceneNode()->createChildSceneNode();
-	Ogre::Entity* missileEnt = mSceneManager->createEntity("ItemBox.mesh");
-	mSceneNode->attachObject(missileEnt);
+	Ogre::Entity* itemBoxEnt = mSceneManager->createEntity("ItemBox.mesh");
+	switch(type)
+	{
+	case IBT_ATTACK:
+		itemBoxEnt->setMaterialName("itemBox_attack");
+		break;
+	case IBT_DEFENCE:
+		itemBoxEnt->setMaterialName("itemBox_defend");
+		break;
+	case IBT_SPEED:
+		itemBoxEnt->setMaterialName("itemBox_speed");
+		break;
+	}
+	mSceneNode->attachObject(itemBoxEnt);
 
 	mSceneNode->setPosition(position);
 	mSceneNode->setOrientation(rotation);

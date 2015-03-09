@@ -179,9 +179,18 @@ void GameplayScene::SetUpItemBoxes()
 
 			pos = mSceneMgr->getSceneNode(checkpointName)->getPosition();
 			pos += rightVector * (30 - j * 30.0f);
+			pos.y -= 5.0f;
 			rot = mSceneMgr->getSceneNode(checkpointName)->getOrientation();
 
-			std::shared_ptr<ItemBox> box = std::shared_ptr<ItemBox>(new ItemBox(name, mSceneMgr, IBT_ATTACK, pos, rot));
+			ITEM_BOX_TYPE boxType = IBT_NONE;
+			if (j == 0)
+				boxType = IBT_ATTACK;
+			else if (j == 1)
+				boxType = IBT_DEFENCE;
+			else if (j == 2)
+				boxType = IBT_SPEED;
+
+			std::shared_ptr<ItemBox> box = std::shared_ptr<ItemBox>(new ItemBox(name, mSceneMgr, boxType, pos, rot));
 			mPhysicsWorld->getWorld()->addRigidBody(box->GetRigidBody());
 			mPhysicsWorld->getWorld()->addCollisionObject(box->ghost);
 

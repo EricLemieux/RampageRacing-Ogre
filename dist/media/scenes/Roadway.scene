@@ -11,7 +11,7 @@
             <position x="-90" y="0" z="-95"/>
             <rotation qx="0" qy="0" qz="0" qw="1"/>
             <scale x="100" y="30" z="2"/>
-            <entity name="triggerFinishLine" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
+            <entity name="triggerFinishLine" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh" materialFile="finishline">
             </entity>
         </node>
         <node name="triggerCheckpoint1">
