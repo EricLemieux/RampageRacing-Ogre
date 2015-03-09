@@ -70,7 +70,7 @@ void Car::Update(void)
 		m_vehicle->updateWheelTransform(i, true);
 	}
 
-	float maxSpeed = 100;
+	float maxSpeed = 150;
 	float currentSpeed = mRigidBody->getLinearVelocity().norm();
 	float speedRatio = 0.01f;
 	if (currentSpeed != 0){
@@ -118,10 +118,10 @@ void Car::Update(void)
 		steerValue *= 0.97;
 	}
 
-	int wheelIndex = 2;
+	int wheelIndex = 0;
 	m_vehicle->applyEngineForce(engineForce, wheelIndex);
 	m_vehicle->setBrake(100, wheelIndex);
-	wheelIndex = 3;
+	wheelIndex = 1;
 	m_vehicle->applyEngineForce(engineForce, wheelIndex);
 	m_vehicle->setBrake(100, wheelIndex);
 
