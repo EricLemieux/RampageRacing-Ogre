@@ -444,7 +444,7 @@ bool GameplayScene::Update()
 					for (; itr != mActiveWeapons.end(); ++itr){
 						if (manifold->getBody0() == (*itr)->GetRigidBody() || manifold->getBody1() == (*itr)->GetRigidBody()){
 							btVector3 force = (*itr)->GetRigidBody()->getWorldTransform().getOrigin() - mCars[i]->GetRigidBody()->getWorldTransform().getOrigin();
-							mCars[i]->GetRigidBody()->applyCentralForce(force * 5000);
+							mCars[i]->GetRigidBody()->applyCentralForce(force * -2000);
 						}
 					}
 				}

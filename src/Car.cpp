@@ -23,6 +23,8 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 
 	lapCounter = 0;
 	checkPointsHit = 0;
+	engineForce = 0;
+	brakeForce = 100;
 
 	steerValue = 0.0f;               
 
@@ -70,7 +72,7 @@ void Car::Update(void)
 		m_vehicle->updateWheelTransform(i, true);
 	}
 
-	float maxSpeed = 150;
+	float maxSpeed = 100;
 	float currentSpeed = mRigidBody->getLinearVelocity().norm();
 	float speedRatio = 0.01f;
 	if (currentSpeed != 0){
@@ -82,17 +84,20 @@ void Car::Update(void)
 	{
 		if (mCanMoveForward > 1.0f)
 			mCanMoveForward = 1.0f;
-		engineForce = (-2000.0f / speedRatio) * mCanMoveForward;
+		engineForce = (-5000.0f / speedRatio) * mCanMoveForward;
+		brakeForce = 0;
 	}
 	else if (mCanMoveBackward != 0.0f && !mFinishedRace)
 	{
 		if (mCanMoveBackward > 1.0f)
 			mCanMoveBackward = 1.0f;
-		engineForce = (1000) * mCanMoveBackward;
+		engineForce = (10000) * mCanMoveBackward;
+		brakeForce = 100;
 	}
 	else 
 	{
 		engineForce = 0;
+		brakeForce = 50;
 	}
 
 	if (mTurning != 0.0f && !mFinishedRace)
@@ -117,19 +122,27 @@ void Car::Update(void)
 	{
 		steerValue *= 0.97;
 	}
+	//if (engineForce > 000)
+		//engineForce = 000;
 
 	int wheelIndex = 0;
-	m_vehicle->applyEngineForce(engineForce, wheelIndex);
-	m_vehicle->setBrake(100, wheelIndex);
+	//m_vehicle->applyEngineForce(engineForce, wheelIndex);
+	m_vehicle->setBrake(brakeForce, wheelIndex);
 	wheelIndex = 1;
-	m_vehicle->applyEngineForce(engineForce, wheelIndex);
-	m_vehicle->setBrake(100, wheelIndex);
+	//m_vehicle->applyEngineForce(engineForce, wheelIndex);
+	m_vehicle->setBrake(brakeForce, wheelIndex);
 
+	btScalar mat[16];
+	mRigidBody->getWorldTransform().getOpenGLMatrix(mat);
+	btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
+	mRigidBody->applyCentralForce(forward * engineForce);
 
-	wheelIndex = 0;
-	//m_vehicle->setSteeringValue(steerValue, wheelIndex);
-	wheelIndex = 1;
-	//m_vehicle->setSteeringValue(steerValue, wheelIndex);
+	wheelIndex = 3;
+	//m_vehicle->applyEngineForce(engineForce, wheelIndex);
+	//m_vehicle->setBrake(100, wheelIndex);
+	wheelIndex = 2;
+	//m_vehicle->applyEngineForce(engineForce, wheelIndex);
+	//m_vehicle->setBrake(100, wheelIndex);
 
 	ghost->setWorldTransform(mRigidBody->getWorldTransform());
 
@@ -203,7 +216,7 @@ void Car::InitRigidBody()
 	connectionPoint = btVector3((10.f - wheelWidth), connectionHeight, (-10.f - wheelRadius));
 	m_vehicle->addWheel(connectionPoint, wheelDirection, wheelAxle, suspensionRestLength, wheelRadius, m_tuning, false);
 
-	float   wheelFriction = 2000;
+	float   wheelFriction = 100;
 	float   suspensionStiffness = 20.f;
 	float   suspensionDamping = 4.3f;
 	float   suspensionCompression = 10.4f;

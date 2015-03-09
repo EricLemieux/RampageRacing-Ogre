@@ -47,5 +47,6 @@ private:
 	float turnSpeed = 0.3f;
 
 	int engineForce;
+	int brakeForce;
 	float steerValue;
 };
