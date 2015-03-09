@@ -290,25 +290,25 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 		//Set up the HUD elements attached to the car
 		Ogre::SceneNode* lapCounterNode = mSceneMgr->getSceneNode(name)->createChildSceneNode();
 		lapCounterNode->translate(0, 0, 20);
-		char lc[128];
-		sprintf_s(lc, 128, "currentWeapon%i", i);
-		Ogre::Entity* lapCounterEnt = mSceneMgr->createEntity(lc,"HUDTile.mesh");
+		char cw[128];
+		sprintf_s(cw, 128, "currentWeapon%i", i);
+		Ogre::Entity* lapCounterEnt = mSceneMgr->createEntity(cw,"HUDTile.mesh");
 		lapCounterEnt->setMaterialName("hud_empty");
 		lapCounterNode->attachObject(lapCounterEnt);
 
 		Ogre::SceneNode* thingNode = mSceneMgr->getSceneNode(name)->createChildSceneNode();
 		thingNode->translate(-5, -1, 20);
-		char lc2[128];
-		sprintf_s(lc2, 128, "playerPostion%i", i);
-		Ogre::Entity* thingEnt = mSceneMgr->createEntity(lc2, "HUDTile.mesh");
+		char pp[128];
+		sprintf_s(pp, 128, "playerPostion%i", i);
+		Ogre::Entity* thingEnt = mSceneMgr->createEntity(pp, "HUDTile.mesh");
 		thingEnt->setMaterialName("hud_lap_1");
 		thingNode->attachObject(thingEnt);
 
 		Ogre::SceneNode* thing2Node = mSceneMgr->getSceneNode(name)->createChildSceneNode();
 		thing2Node->translate(5, -1, 20);
-		char lc3[128];
-		sprintf_s(lc3, 128, "lapCounter%i", i);
-		Ogre::Entity* thing2Ent = mSceneMgr->createEntity(lc3, "HUDTile.mesh");
+		char lc[128];
+		sprintf_s(lc, 128, "lapCounter%i", i);
+		Ogre::Entity* thing2Ent = mSceneMgr->createEntity(lc, "HUDTile.mesh");
 		thing2Ent->setMaterialName("hud_lap_1");
 		thing2Node->attachObject(thing2Ent);
 
@@ -408,8 +408,11 @@ bool GameplayScene::Update()
 						bool test1 = manifold->getBody1() == mItemBoxes[ib]->GetRigidBody() ? true : false;
 						if ((test0 || test1) && mCars[i]->mCurrentItem == IBT_NONE)
 						{
+							mCars[i]->mCurrentItem = mItemBoxes[ib]->GetType();
 
-							mCars[i]->mCurrentItem = mItemBoxes[ib]->getType();
+							char cw[128];
+							sprintf_s(cw, 128, "currentWeapon%i", i);
+							mSceneMgr->getEntity(cw)->setMaterialName(mItemBoxes[ib]->GetItemMaterialName());
 						}
 					}
 
@@ -417,7 +420,7 @@ bool GameplayScene::Update()
 					for (; itr != mActiveWeapons.end(); ++itr){
 						if (manifold->getBody0() == (*itr)->GetRigidBody() || manifold->getBody1() == (*itr)->GetRigidBody()){
 							btVector3 force = (*itr)->GetRigidBody()->getWorldTransform().getOrigin() - mCars[i]->GetRigidBody()->getWorldTransform().getOrigin();
-							mCars[i]->GetRigidBody()->applyCentralForce(force * -5000);
+							mCars[i]->GetRigidBody()->applyCentralForce(force * 5000);
 						}
 					}
 				}
@@ -580,6 +583,10 @@ void GameplayScene::UseItem(int carID)
 		FireMissile(carID);
 	else if (mCars[carID]->mCurrentItem == IBT_DEFENCE)
 		DropMine(carID);
+
+	char cw[128];
+	sprintf_s(cw, 128, "currentWeapon%i", carID);
+	mSceneMgr->getEntity(cw)->setMaterialName("hud_empty");
 
 	mCars[carID]->mCurrentItem = IBT_NONE;
 }

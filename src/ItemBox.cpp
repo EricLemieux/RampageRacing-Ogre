@@ -13,12 +13,15 @@ ItemBox::ItemBox(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager,
 	switch(type)
 	{
 	case IBT_ATTACK:
+		mItemMaterialName = "hud_item_attack";
 		itemBoxEnt->setMaterialName("itemBox_attack");
 		break;
 	case IBT_DEFENCE:
+		mItemMaterialName = "hud_item_defend";
 		itemBoxEnt->setMaterialName("itemBox_defend");
 		break;
 	case IBT_SPEED:
+		mItemMaterialName = "hud_item_speed";
 		itemBoxEnt->setMaterialName("itemBox_speed");
 		break;
 	}

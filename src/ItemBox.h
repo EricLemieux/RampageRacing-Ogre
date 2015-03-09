@@ -18,10 +18,14 @@ public:
 
 	virtual void Update();
 
-	virtual ITEM_BOX_TYPE getType(){ return mType; }
+	virtual ITEM_BOX_TYPE GetType(){ return mType; }
+
+	virtual Ogre::String GetItemMaterialName(){ return mItemMaterialName; }
 
 private:
 	virtual void InitRigidBody();
+
+	Ogre::String mItemMaterialName;
 
 	ITEM_BOX_TYPE mType;
 };

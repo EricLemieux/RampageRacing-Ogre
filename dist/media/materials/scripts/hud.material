@@ -71,3 +71,63 @@ material hud_lap_3
 		}
 	}
 }
+
+material hud_item_attack
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.5 0.5 0.5 0.5
+
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture hud/missile.png
+         		alpha_op_ex source1 src_manual src_texture 0.5 
+			}
+		}
+	}
+}
+
+material hud_item_defend
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.5 0.5 0.5 0.5
+
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture hud/mine.png
+         		alpha_op_ex source1 src_manual src_texture 0.5 
+			}
+		}
+	}
+}
+
+material hud_item_speed
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.5 0.5 0.5 0.5
+
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture hud/speed.png
+         		alpha_op_ex source1 src_manual src_texture 0.5 
+			}
+		}
+	}
+}
