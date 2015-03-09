@@ -73,11 +73,15 @@ void Car::Update(void)
 	}
 
 	float maxSpeed = 100;
+	float maxSpeedb = -50;
 	float currentSpeed = mRigidBody->getLinearVelocity().norm();
 	float speedRatio = 0.01f;
+	float speedRatiob = 0.01f;
 	if (currentSpeed != 0){
 		speedRatio = currentSpeed / maxSpeed;
+		speedRatiob = currentSpeed / maxSpeedb;
 	}
+	
 
 	//Move the car if the button is down
 	if (mCanMoveForward != 0.0f && !mFinishedRace)
@@ -91,8 +95,8 @@ void Car::Update(void)
 	{
 		if (mCanMoveBackward > 1.0f)
 			mCanMoveBackward = 1.0f;
-		engineForce = (10000) * mCanMoveBackward;
-		brakeForce = 100;
+		engineForce = (-5000.f/speedRatiob) * mCanMoveBackward;
+		brakeForce = 50;
 	}
 	else 
 	{
