@@ -13,9 +13,11 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	Ogre::Vector3 forward = Ogre::Vector3(t[2][0], t[2][1], t[2][2]);
 	
 	Ogre::Vector3 pos = Ogre::Vector3(t[0][3], t[1][3], t[2][3]);
-	pos += forward.normalisedCopy() * (ID * 20.0f);
+	pos += forward.normalisedCopy() * ((ID+1) * -40.0f);
 	pos.y += 5;
 	mSceneNode->translate(pos);
+
+	mSceneNode->setOrientation(mSceneManager->getSceneNode("triggerFinishLine")->getOrientation());
 
 	world = mWorld;
 
@@ -150,7 +152,7 @@ void Car::InitRigidBody()
 	ghost->setWorldTransform(transform);
 	
 
-	btCollisionShape* boxShape = new btBoxShape(btVector3(20, 5, 20));
+	btCollisionShape* boxShape = new btBoxShape(btVector3(10, 5, 15));
 	btCompoundShape* compound = new btCompoundShape();
 	mCollisionShapes.push_back(boxShape);
 	mCollisionShapes.push_back(compound);
@@ -192,13 +194,13 @@ void Car::InitRigidBody()
 	world->addVehicle(m_vehicle);
 
 	m_vehicle->setCoordinateSystem(rightIndex, upIndex, forwardIndex);
-	btVector3 connectionPoint((10.f - 0.3f*wheelWidth), connectionHeight, (10.f - wheelRadius));
+	btVector3 connectionPoint((10.f - wheelWidth), connectionHeight, (10.f - wheelRadius));
 	m_vehicle->addWheel(connectionPoint, wheelDirection, wheelAxle, suspensionRestLength, wheelRadius, m_tuning, isFrontWheel);
-	connectionPoint = btVector3((-10.f - 0.3f*wheelWidth), connectionHeight, (10.f - wheelRadius));
+	connectionPoint = btVector3((-10.f - wheelWidth), connectionHeight, (10.f - wheelRadius));
 	m_vehicle->addWheel(connectionPoint, wheelDirection, wheelAxle, suspensionRestLength, wheelRadius, m_tuning, isFrontWheel);
-	connectionPoint = btVector3((-10.f - 0.3f*wheelWidth), connectionHeight, (-10.f - wheelRadius));
+	connectionPoint = btVector3((-10.f - wheelWidth), connectionHeight, (-10.f - wheelRadius));
 	m_vehicle->addWheel(connectionPoint, wheelDirection, wheelAxle, suspensionRestLength, wheelRadius, m_tuning, false);
-	connectionPoint = btVector3((10.f - 0.3f*wheelWidth), connectionHeight, (-10.f - wheelRadius));
+	connectionPoint = btVector3((10.f - wheelWidth), connectionHeight, (-10.f - wheelRadius));
 	m_vehicle->addWheel(connectionPoint, wheelDirection, wheelAxle, suspensionRestLength, wheelRadius, m_tuning, false);
 
 	float   wheelFriction = 2000;
