@@ -40,6 +40,8 @@ public:
 
 	ITEM_BOX_TYPE mCurrentItem;
 
+	bool mFinishedRace = false;
+
 private:
 	float speed = 0.0f;
 	float turnSpeed = 0.3f;

@@ -151,6 +151,8 @@ private:
 
 	std::list<std::shared_ptr<GameObject>> mActiveWeapons;
 	std::vector<std::shared_ptr<ItemBox>> mItemBoxes;
+
+	int mNumPlayersCompletedRace = 0;
 };
 
 class MenuScene : public Scene

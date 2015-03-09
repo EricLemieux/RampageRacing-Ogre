@@ -297,15 +297,17 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 		lapCounterNode->attachObject(lapCounterEnt);
 
 		Ogre::SceneNode* thingNode = mSceneMgr->getSceneNode(name)->createChildSceneNode();
-		thingNode->translate(-5, -1, 20);
+		thingNode->translate(-3, -1.2, 20);
+		thingNode->scale(0.6, 0.6, 0.6);
 		char pp[128];
 		sprintf_s(pp, 128, "playerPostion%i", i);
 		Ogre::Entity* thingEnt = mSceneMgr->createEntity(pp, "HUDTile.mesh");
-		thingEnt->setMaterialName("hud_lap_1");
+		thingEnt->setMaterialName("hud_empty");
 		thingNode->attachObject(thingEnt);
 
 		Ogre::SceneNode* thing2Node = mSceneMgr->getSceneNode(name)->createChildSceneNode();
-		thing2Node->translate(5, -1, 20);
+		thing2Node->translate(3, -1.2, 20);
+		thing2Node->scale(0.6, 0.6, 0.6);
 		char lc[128];
 		sprintf_s(lc, 128, "lapCounter%i", i);
 		Ogre::Entity* thing2Ent = mSceneMgr->createEntity(lc, "HUDTile.mesh");
@@ -401,7 +403,14 @@ bool GameplayScene::Update()
 
 								if (mCars[i]->lapCounter > 2)
 								{
-									SwapToMainMenu();
+									if (mNumPlayersCompletedRace == numLocalPlayers)
+									{
+										SwapToMainMenu();
+									}
+									else
+									{
+										mCars[i]->mFinishedRace = true;
+									}
 								}
 								else
 								{

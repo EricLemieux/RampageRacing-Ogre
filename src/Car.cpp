@@ -64,7 +64,6 @@ void Car::TurnLeft(float value)
 
 void Car::Update(void)
 {
-	world->debugDrawWorld();
 	for (int i = 0; i < m_vehicle->getNumWheels(); ++i){
 		m_vehicle->updateWheelTransform(i, true);
 	}
@@ -77,13 +76,13 @@ void Car::Update(void)
 	}
 
 	//Move the car if the button is down
-	if (mCanMoveForward != 0.0f)
+	if (mCanMoveForward != 0.0f && !mFinishedRace)
 	{
 		if (mCanMoveForward > 1.0f)
 			mCanMoveForward = 1.0f;
 		engineForce = (-2000.0f / speedRatio) * mCanMoveForward;
 	}
-	else if (mCanMoveBackward != 0.0f)
+	else if (mCanMoveBackward != 0.0f && !mFinishedRace)
 	{
 		if (mCanMoveBackward > 1.0f)
 			mCanMoveBackward = 1.0f;
@@ -94,7 +93,7 @@ void Car::Update(void)
 		engineForce = 0;
 	}
 
-	if (mTurning != 0.0f)
+	if (mTurning != 0.0f && !mFinishedRace)
 	{
 		steerValue += (0.002f * mTurning);
 
