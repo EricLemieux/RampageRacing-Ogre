@@ -136,6 +136,7 @@ public:
 
 	void SetUpItemBoxes();
 
+	void UseItem(int carID);
 	void FireMissile(int carID);
 	void DropMine(int carID);
 

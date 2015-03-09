@@ -223,11 +223,7 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 
 	if (arg.key == OIS::KC_SPACE)
 	{
-		FireMissile(0);
-	}
-	if (arg.key == OIS::KC_V)
-	{
-		DropMine(0);
+		UseItem(0);
 	}
 
 	if (arg.key == OIS::KC_P)
@@ -416,6 +412,14 @@ bool GameplayScene::Update()
 							mCars[i]->mCurrentItem = mItemBoxes[ib]->getType();
 						}
 					}
+
+					std::list<std::shared_ptr<GameObject>>::iterator itr = mActiveWeapons.begin();
+					for (; itr != mActiveWeapons.end(); ++itr){
+						if (manifold->getBody0() == (*itr)->GetRigidBody() || manifold->getBody1() == (*itr)->GetRigidBody()){
+							btVector3 force = (*itr)->GetRigidBody()->getWorldTransform().getOrigin() - mCars[i]->GetRigidBody()->getWorldTransform().getOrigin();
+							mCars[i]->GetRigidBody()->applyCentralForce(force * -5000);
+						}
+					}
 				}
 			//}
 		}
@@ -442,34 +446,7 @@ bool GameplayScene::Update()
 			}
 			//}
 		}
-	});
-
-	for (int i = 0; i < mItemBoxes.size(); ++i){
-		world->getDispatcher()->dispatchAllCollisionPairs(mItemBoxes[i]->ghost->getOverlappingPairCache(), world->getDispatchInfo(), world->getDispatcher());
-		//btTransform transform = mCar->ghost->getWorldTransform();
-		btManifoldArray manifoldArray;
-
-		for (int j = 0; j < mItemBoxes[i]->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++j){
-			manifoldArray.resize(0);
-			btBroadphasePair* collisionPair = &(mItemBoxes[i]->ghost->getOverlappingPairCache()->getOverlappingPairArray()[j]);
-			if (collisionPair->m_algorithm)
-				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
-
-			//for (int j = 0; j < manifoldArray.size(); ++j){
-			for (int c = 0; c < numLocalPlayers; c++){
-				if (manifoldArray.size() > 0){
-					btPersistentManifold* manifold = manifoldArray[0];
-					bool test0 = manifold->getBody0() == mItemBoxes[i]->ghost ? true : false;
-					bool test1 = manifold->getBody1() == mCars[c]->GetRigidBody() ? true : false;
-					if (test1)
-						int a = 0;
-				}
-			}
-			//}
-		}
-	}
-
-	
+	});	
 
 	return true;
 }
@@ -595,35 +572,44 @@ void GameplayScene::ControllerInput()
 	}
 }
 
+void GameplayScene::UseItem(int carID)
+{
+	if (mCars[carID]->mCurrentItem == IBT_NONE)
+		return;
+	else if (mCars[carID]->mCurrentItem == IBT_ATTACK)
+		FireMissile(carID);
+	else if (mCars[carID]->mCurrentItem == IBT_DEFENCE)
+		DropMine(carID);
+
+	mCars[carID]->mCurrentItem = IBT_NONE;
+}
 void GameplayScene::FireMissile(int carID)
 {
-	if (mCars[carID]->mCurrentItem == IBT_ATTACK)
-	{
-		std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mCars[carID]->GetSceneNode()));
-
-		mPhysicsWorld->getWorld()->addRigidBody(missile->GetRigidBody());
-		mPhysicsWorld->getWorld()->addCollisionObject(missile->ghost);
-
-		btScalar mat[16];
-		mCars[carID]->GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
-		btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
-		forward *= -500;
-
-		missile->setVelocity(forward.x(), forward.y(), forward.z());
-
-		mActiveWeapons.push_back(missile);
-
-		mCars[carID]->mCurrentItem = IBT_NONE;
-	}
-}
-void GameplayScene::DropMine(int carID)
-{
-	std::shared_ptr<Mine> missile = std::shared_ptr<Mine>(new Mine("mine", mSceneMgr, mCars[carID]->GetSceneNode()));
+	std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mCars[carID]->GetSceneNode()));
 
 	mPhysicsWorld->getWorld()->addRigidBody(missile->GetRigidBody());
 	mPhysicsWorld->getWorld()->addCollisionObject(missile->ghost);
 
+	btScalar mat[16];
+	mCars[carID]->GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
+	btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
+
+	missile->GetRigidBody()->translate(forward * -50);
+
+	forward *= -500;
+
+	missile->setVelocity(forward.x(), forward.y(), forward.z());
+
 	mActiveWeapons.push_back(missile);
+}
+void GameplayScene::DropMine(int carID)
+{
+	std::shared_ptr<Mine> mine = std::shared_ptr<Mine>(new Mine("mine", mSceneMgr, mCars[carID]->GetSceneNode()));
+
+	mPhysicsWorld->getWorld()->addRigidBody(mine->GetRigidBody());
+	mPhysicsWorld->getWorld()->addCollisionObject(mine->ghost);
+
+	mActiveWeapons.push_back(mine);
 }
 
 
