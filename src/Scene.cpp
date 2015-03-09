@@ -398,6 +398,21 @@ bool GameplayScene::Update()
 							else if (mCars[i]->checkPointsHit == 2 && tv == 0){
 								mCars[i]->checkPointsHit = 0;
 								mCars[i]->lapCounter++;
+
+								if (mCars[i]->lapCounter > 2)
+								{
+									SwapToMainMenu();
+								}
+								else
+								{
+									char lc[128];
+									sprintf_s(lc, 128, "lapCounter%i", i);
+
+									char m[128];
+									sprintf_s(m, 128, "hud_lap_%i", mCars[i]->lapCounter+1);
+
+									mSceneMgr->getEntity(lc)->setMaterialName(m);
+								}
 							}
 						}
 					}
