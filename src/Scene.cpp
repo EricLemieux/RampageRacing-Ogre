@@ -410,6 +410,7 @@ bool GameplayScene::Update()
 									else
 									{
 										mCars[i]->mFinishedRace = true;
+										mNumPlayersCompletedRace++;
 									}
 								}
 								else
@@ -444,7 +445,8 @@ bool GameplayScene::Update()
 					for (; itr != mActiveWeapons.end(); ++itr){
 						if (manifold->getBody0() == (*itr)->GetRigidBody() || manifold->getBody1() == (*itr)->GetRigidBody()){
 							btVector3 force = (*itr)->GetRigidBody()->getWorldTransform().getOrigin() - mCars[i]->GetRigidBody()->getWorldTransform().getOrigin();
-							mCars[i]->GetRigidBody()->applyCentralForce(force * -2000);
+							//HOTFIX FOR PRESENTATION
+							//mCars[i]->GetRigidBody()->applyCentralImpulse(force * 1000);
 						}
 					}
 				}
@@ -554,13 +556,9 @@ void GameplayScene::ControllerInput()
 	{
 		if (mControllers[i]->IsConnected())
 		{
-			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
+			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_X)
 			{
-				mCars[i]->mCanMoveForward = 1.0f;
-			}
-			else
-			{
-				mCars[i]->mCanMoveForward = 0.0f;
+				UseItem(i);
 			}
 			
 			//Left joystick for turning
