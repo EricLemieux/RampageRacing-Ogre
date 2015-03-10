@@ -287,6 +287,11 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 		carLightEnt->setDiffuseColour(1, 1, 1);
 		carLight->attachObject(carLightEnt);
 
+		//Attach a test particle to the car
+		Ogre::ParticleSystem* particleSys = mSceneMgr->createParticleSystem("Sparks", "Sparks");
+		Ogre::SceneNode* particleNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Particle");
+		particleNode->attachObject(particleSys);
+
 		//Set up the HUD elements attached to the car
 		Ogre::SceneNode* lapCounterNode = mSceneMgr->getSceneNode(name)->createChildSceneNode();
 		lapCounterNode->translate(0, 0, 20);

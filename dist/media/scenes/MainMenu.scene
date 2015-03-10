@@ -96,7 +96,7 @@
         <node name="bLevel Mountain">
             <position x="-2.5" y="19.2" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
-            <entity name="bLevel_Mountain" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_level_island"></entity>
+            <entity name="bLevel_Mountain" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_level_mountain"></entity>
         </node>
         <node name="bPlay">
             <position x="2.7" y="18.5" z="-5"/>

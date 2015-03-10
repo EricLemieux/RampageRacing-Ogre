@@ -54,6 +54,20 @@ material button_level_roadway
 	}
 }
 
+material button_level_mountain
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/buttonMountain.png
+			}
+		}
+	}
+}
+
 material button_play
 {
 	technique

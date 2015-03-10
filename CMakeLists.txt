@@ -247,6 +247,7 @@ if(WIN32)
 	install(FILES ${OGRE_PLUGIN_DIR_REL}/OgreMain.dll
 		${OGRE_PLUGIN_DIR_REL}/OgreOverlay.dll
 		${OGRE_PLUGIN_DIR_REL}/RenderSystem_GL.dll
+		${OGRE_PLUGIN_DIR_DBG}/Plugin_ParticleFX.dll
 		${OGRE_PLUGIN_DIR_REL}/OIS.dll
 		${RakNet_DLL_RELEASE_PATH}/RakNetDLL.dll
 		${FMOD_API_DIR}/fmodex.dll
@@ -257,6 +258,7 @@ if(WIN32)
 	install(FILES ${OGRE_PLUGIN_DIR_DBG}/OgreOverlay_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
+		${OGRE_PLUGIN_DIR_DBG}/Plugin_ParticleFX_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
 		${RakNet_DLL_DEBUG_PATH}/RakNetDLL.dll
 		${FMOD_API_DIR}/fmodexL.dll
