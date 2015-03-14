@@ -212,6 +212,18 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 		mCar->mCanMoveBackward = 1.0f;
 	}
 
+	if (arg.key == OIS::KC_L)
+	{
+		//Attach a test particle to the car
+		if (mSceneMgr->hasParticleSystem("Sparks"))
+			mSceneMgr->destroyParticleSystem("Sparks");
+		Ogre::ParticleSystem* particleSys = mSceneMgr->createParticleSystem("Sparks", "Sparks");
+		if (mSceneMgr->hasSceneNode("Particle"))
+			mSceneMgr->destroySceneNode("Particle");
+		Ogre::SceneNode* particleNode = mCar->GetSceneNode()->createChildSceneNode("Particle");
+		particleNode->attachObject(particleSys);
+	}
+
 	if (arg.key == OIS::KC_D)
 	{
 		mCar->mTurning = 1.0f;
@@ -286,11 +298,6 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 		Ogre::Light* carLightEnt = mSceneMgr->createLight(l);
 		carLightEnt->setDiffuseColour(1, 1, 1);
 		carLight->attachObject(carLightEnt);
-
-		//Attach a test particle to the car
-		Ogre::ParticleSystem* particleSys = mSceneMgr->createParticleSystem("Sparks", "Sparks");
-		Ogre::SceneNode* particleNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Particle");
-		particleNode->attachObject(particleSys);
 
 		//Set up the HUD elements attached to the car
 		Ogre::SceneNode* lapCounterNode = mSceneMgr->getSceneNode(name)->createChildSceneNode();
@@ -672,6 +679,10 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		}
 		else if (currentSubMenu == sm_LevelSelect)
 		{
+			nextSubMenu = sm_Lobby;
+		}
+		else if (sm_Lobby)
+		{
 			SwapToGameplayLevel(mCurrentSelectedLevel);
 		}
 	}
@@ -741,6 +752,35 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				{
 					sscanf_s(str.c_str(),"%*[^_]_%i",&numLocalPlayers);
 
+					labels.clear();
+
+					//Set up the lobby with the correct number of players
+					for (unsigned int i = 0; i < numLocalPlayers; ++i)
+					{
+						//make the node
+						char name[128];
+						sprintf_s(name, 128, "playerLabel%i", i);
+
+						Ogre::SceneNode* node = mSceneMgr->getRootSceneNode()->createChildSceneNode(name);
+
+						//Make the checkbox ent
+						Ogre::Entity* ent = mSceneMgr->createEntity("button.mesh");
+
+						//Make the text
+						char words[128];
+						sprintf_s(words, 128, "Player %i", i+1);
+
+						Ogre::MovableText* text = new Ogre::MovableText(name, words);
+						text->setTextAlignment(Ogre::MovableText::H_LEFT, Ogre::MovableText::V_CENTER);
+						node->setPosition( 26.5, 21.8 - (i*0.6), -5);
+						node->scale(1, 0.5, 1);
+
+						//Combine it
+						std::shared_ptr<PlayerLabel> p = std::shared_ptr<PlayerLabel>(new PlayerLabel(node, ent, text));
+
+						labels.push_back(p);
+					}
+
 					nextSubMenu = sm_LevelSelect;
 				}
 			}
@@ -763,13 +803,23 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				{
 					if (mCurrentSelectedLevel != "")
 					{
-						SwapToGameplayLevel(mCurrentSelectedLevel);
+						nextSubMenu = sm_Lobby;
 					}
 				}
 
 				else if (itr->movable->getName() == "bHome")
 				{
 					nextSubMenu = sm_Main;
+				}
+			}
+			else if (currentSubMenu == sm_Lobby)
+			{
+				if (itr->movable->getName() == "bForceStart")
+				{
+					if (mCurrentSelectedLevel != "")
+					{
+						SwapToGameplayLevel(mCurrentSelectedLevel);
+					}
 				}
 			}
 
@@ -784,8 +834,6 @@ bool MenuScene::Update()
 	timeStep += clock.getTimeSeconds();
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
-
-	ControllerInput();
 
 	GetSceneManager()->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 
@@ -814,6 +862,8 @@ bool MenuScene::Update()
 			deltaT = 0.0f;
 		}
 	}
+
+	ControllerInput();
 
 	return true;
 }
@@ -854,7 +904,33 @@ Ogre::Vector3 MenuScene::GetCamTargetFromSubMenu(int subMenu)
 }
 void MenuScene::ControllerInput()
 {
+	for (unsigned int i = 0; i < numLocalPlayers; ++i)
+	{
+		if (mControllers[i]->IsConnected())
+		{
+			if (currentSubMenu == sm_Lobby)
+			{
+				if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START)
+				{
+					labels[i]->SetReadyToPlay(!labels[i]->GetReadyToPlay());
 
+					bool allReady = true;
+
+					//loop through all of the other labels to see if they are ready to play
+					for (unsigned int j = 0; j < labels.size(); ++j)
+					{
+						if (!labels[j]->GetReadyToPlay())
+							allReady = false;
+					}
+
+					if (allReady)
+					{
+						SwapToGameplayLevel(mCurrentSelectedLevel);
+					}
+				}
+			}
+		}
+	}
 }
 
 //Intro Scene

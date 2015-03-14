@@ -1,6 +1,6 @@
 particle_system Sparks
  {
-    material        Sand
+    material        Spark
     particle_width  20
     particle_height 20
     cull_each       false
@@ -9,9 +9,9 @@ particle_system Sparks
  
     emitter Point
     {
-       angle           180
+       angle           10000
        duration    1    // This controls the duration of the emitter in seconds (1 second)
-           emission_rate   100    // This controls how many particles are emitted per second - just 1
+           emission_rate   10    // This controls how many particles are emitted per second - just 1
            time_to_live    1    // Each particle lives this many seconds - just 1 second
     }
  

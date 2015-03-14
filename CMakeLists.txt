@@ -124,6 +124,8 @@ set(HDRS
 	./src/Controller.h
 	./src/Mine.h
 	./src/ItemBox.h
+	./src/MovableText.h
+	./src/PlayerLabel.h
 )
  
 set(SRCS
@@ -142,6 +144,8 @@ set(SRCS
 	./src/Controller.cpp
 	./src/Mine.cpp
 	./src/ItemBox.cpp
+	./src/MovableText.cpp
+	./src/PlayerLabel.cpp
 )
  
 include_directories( ${OIS_INCLUDE_DIRS}

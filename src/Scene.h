@@ -13,6 +13,8 @@
 #include <OgreRenderWindow.h>
 #include <OgreConfigFile.h>
 
+#include "MovableText.h"
+
 #include <OISEvents.h>
 #include <OISInputManager.h>
 #include <OISKeyboard.h>
@@ -40,6 +42,8 @@
 
 #include <OgreOverlayContainer.h>
 #include <OgreOverlayManager.h>
+
+#include "PlayerLabel.h"
 
 //Bad practice but works
 static unsigned int numLocalPlayers = 1;
@@ -178,7 +182,8 @@ private:
 	{
 		sm_Main = 0,
 		sm_PlayerCount,
-		sm_LevelSelect
+		sm_LevelSelect,
+		sm_Lobby
 	};
 
 	subMenus currentSubMenu;
@@ -190,6 +195,8 @@ private:
 	Ogre::Vector3 GetCamTargetFromSubMenu(int subMenu);
 
 	Ogre::String mCurrentSelectedLevel;
+
+	std::vector<std::shared_ptr<PlayerLabel>> labels;
 };
 
 class IntroScene : public Scene

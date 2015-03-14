@@ -119,6 +119,27 @@
                 <colourSpecular r="0.5" g="0.5" b="0.5" />
             </light>
         </node>
+
+        <!--Lobby, where people select cars and ready up-->
+        <node name="camPos3">
+            <position x="30" y="20" z="0"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+        </node>
+        <node name="camTar3">
+            <position x="30" y="20" z="-1"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+        </node>
+         <node name="bForceStart">
+            <position x="32.7" y="18.5" z="-5"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+            <scale x="0.7" y="0.7" z="0.7" />
+            <entity name="bForceStart" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_play"></entity>
+        </node>
+        <!--<node name="lobbySpot0">
+            <position x="27.4" y="21.5" z="-5"/>
+            <entity name="thing" meshFile="button.mesh"></entity>
+        </node>-->
+
         <!--Menu minis
         They all start behind the camera and then we move them in front when selected-->
         <node name="IslandMenuMini">
