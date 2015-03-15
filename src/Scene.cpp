@@ -662,6 +662,14 @@ MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_p
 	deltaT = 0.0f;
 
 	SetUpViewports();
+
+	//Give the lobby a title so the players know to ready up
+	Ogre::SceneNode* n = mSceneMgr->getRootSceneNode()->createChildSceneNode("lobbyTitle");
+	Ogre::MovableText* t = new Ogre::MovableText("lobbyTitle", "Press Start to Ready Up");
+	t->setTextAlignment(Ogre::MovableText::H_LEFT, Ogre::MovableText::V_CENTER);
+	n->setPosition(26.2, 21.8, -5);
+	n->scale(0.25, 0.25, 1);
+	n->attachObject(t);
 }
 MenuScene::~MenuScene(){}
 
@@ -753,7 +761,7 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 					sscanf_s(str.c_str(),"%*[^_]_%i",&numLocalPlayers);
 
 					labels.clear();
-
+					
 					//Set up the lobby with the correct number of players
 					for (unsigned int i = 0; i < numLocalPlayers; ++i)
 					{
@@ -764,7 +772,7 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 						Ogre::SceneNode* node = mSceneMgr->getRootSceneNode()->createChildSceneNode(name);
 
 						//Make the checkbox ent
-						Ogre::Entity* ent = mSceneMgr->createEntity("button.mesh");
+						Ogre::Entity* ent = mSceneMgr->createEntity("checkBox.mesh");
 
 						//Make the text
 						char words[128];
@@ -772,7 +780,7 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 
 						Ogre::MovableText* text = new Ogre::MovableText(name, words);
 						text->setTextAlignment(Ogre::MovableText::H_LEFT, Ogre::MovableText::V_CENTER);
-						node->setPosition( 26.5, 21.8 - (i*0.6), -5);
+						node->setPosition( 26.5, 21.3 - (i*0.6), -5);
 						node->scale(1, 0.5, 1);
 
 						//Combine it

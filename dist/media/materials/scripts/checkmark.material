@@ -1,0 +1,32 @@
+material checkmark
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture buttons/checkmark.png
+			}
+		}
+	}
+}
+
+material controllerLayout
+{
+	technique
+	{
+		pass
+		{
+			depth_write off
+
+			texture_unit
+			{
+				texture buttons/controllerLayout.png
+			}
+		}
+	}
+}
