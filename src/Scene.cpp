@@ -281,7 +281,7 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 		sprintf_s(name, 128, "mCar%i",i);
 
 		//Create a game object thing
-		mCars[i] = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), "BoltCar.mesh", i));
+		mCars[i] = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), selectedCarTypes[i], i));
 
 		Ogre::SceneNode* camNode = GetSceneManager()->getSceneNode(name)->createChildSceneNode();
 		camNode->attachObject(mCameras[i].get());
@@ -677,6 +677,13 @@ MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_p
 	carMeshes[2] = "ViperCar.mesh";
 	carMeshes[3] = "NeonCar.mesh";
 	carMeshes[4] = "CitoCar.mesh";
+
+	carSelectionTitleNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("carSelectionTitleNode");
+	carSelectionTitle = new Ogre::MovableText("carSelectionTitle", "Player 1 Select");
+	carSelectionTitle->setTextAlignment(Ogre::MovableText::H_LEFT, Ogre::MovableText::V_CENTER);
+	carSelectionTitleNode->setPosition(-33, 21.6, -5);
+	carSelectionTitleNode->scale(1, 0.5, 1);
+	carSelectionTitleNode->attachObject(carSelectionTitle);
 }
 MenuScene::~MenuScene(){}
 
@@ -687,6 +694,10 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		if (currentSubMenu == sm_Lobby)
 		{
 			SwapToGameplayLevel(mCurrentSelectedLevel);
+		}
+		else if (currentSubMenu == sm_CarSelect)
+		{
+			ConfirmCarChoice();
 		}
 		else
 		{
@@ -702,6 +713,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		}
 		else
 		{
+			playerSelectingCar = 0;
 			nextSubMenu = sm_Main;
 		}
 	}
@@ -868,7 +880,21 @@ Ogre::Entity* MenuScene::GetNextCarModel(int difference)
 
 	Ogre::Entity* ent = mSceneMgr->createEntity("CarSelector", carMeshes[carIndex]);
 
+	selectedCarTypes[playerSelectingCar] = carMeshes[carIndex];
+
 	return ent;
+}
+
+void MenuScene::ConfirmCarChoice()
+{
+	playerSelectingCar++;
+
+	char words[128];
+	sprintf_s(words, 128, "Player %i Select:", playerSelectingCar+1);
+	carSelectionTitle->setCaption(words);
+
+	if (playerSelectingCar >= numLocalPlayers)
+		nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
 }
 
 bool MenuScene::Update()

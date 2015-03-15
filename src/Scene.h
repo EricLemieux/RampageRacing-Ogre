@@ -48,6 +48,7 @@
 //Bad practice but works
 static unsigned int numLocalPlayers = 1;
 
+static Ogre::String selectedCarTypes[4] = {"BoltCar.mesh","BoltCar.mesh","BoltCar.mesh","BoltCar.mesh"};
 
 class Scene
 {
@@ -205,6 +206,12 @@ private:
 	//Difference should be either -1 or +1
 	Ogre::Entity* GetNextCarModel(int difference = 1);
 	int carIndex=0;
+
+	int playerSelectingCar = 0;
+	void ConfirmCarChoice();
+
+	Ogre::SceneNode* carSelectionTitleNode;
+	Ogre::MovableText* carSelectionTitle;
 };
 
 class IntroScene : public Scene
