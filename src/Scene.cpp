@@ -670,6 +670,13 @@ MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_p
 	n->setPosition(26.2, 21.8, -5);
 	n->scale(0.25, 0.25, 1);
 	n->attachObject(t);
+
+	//Set up the mesh names
+	carMeshes[0] = "BoltCar.mesh";
+	carMeshes[1] = "OnyxCar.mesh";
+	carMeshes[2] = "ViperCar.mesh";
+	carMeshes[3] = "NeonCar.mesh";
+	carMeshes[4] = "CitoCar.mesh";
 }
 MenuScene::~MenuScene(){}
 
@@ -677,21 +684,13 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 {
 	if (arg.key == OIS::KC_SPACE)
 	{
-		if (currentSubMenu == sm_Main)
-		{
-			nextSubMenu = sm_PlayerCount;
-		}
-		else if (currentSubMenu == sm_PlayerCount)
-		{
-			nextSubMenu = sm_LevelSelect;
-		}
-		else if (currentSubMenu == sm_LevelSelect)
-		{
-			nextSubMenu = sm_Lobby;
-		}
-		else if (sm_Lobby)
+		if (currentSubMenu == sm_Lobby)
 		{
 			SwapToGameplayLevel(mCurrentSelectedLevel);
+		}
+		else
+		{
+			nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
 		}
 	}
 
@@ -742,7 +741,7 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 			{
 				if (itr->movable->getName() == "bStartEnt0")
 				{
-					nextSubMenu = sm_PlayerCount;
+					nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
 				}
 				else if (itr->movable->getName() == "bExitEnt0")
 				{
@@ -760,36 +759,9 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				{
 					sscanf_s(str.c_str(),"%*[^_]_%i",&numLocalPlayers);
 
-					labels.clear();
-					
-					//Set up the lobby with the correct number of players
-					for (unsigned int i = 0; i < numLocalPlayers; ++i)
-					{
-						//make the node
-						char name[128];
-						sprintf_s(name, 128, "playerLabel%i", i);
+					SetUpLabelsAndCars();
 
-						Ogre::SceneNode* node = mSceneMgr->getRootSceneNode()->createChildSceneNode(name);
-
-						//Make the checkbox ent
-						Ogre::Entity* ent = mSceneMgr->createEntity("checkBox.mesh");
-
-						//Make the text
-						char words[128];
-						sprintf_s(words, 128, "Player %i", i+1);
-
-						Ogre::MovableText* text = new Ogre::MovableText(name, words);
-						text->setTextAlignment(Ogre::MovableText::H_LEFT, Ogre::MovableText::V_CENTER);
-						node->setPosition( 26.5, 21.3 - (i*0.6), -5);
-						node->scale(1, 0.5, 1);
-
-						//Combine it
-						std::shared_ptr<PlayerLabel> p = std::shared_ptr<PlayerLabel>(new PlayerLabel(node, ent, text));
-
-						labels.push_back(p);
-					}
-
-					nextSubMenu = sm_LevelSelect;
+					nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
 				}
 			}
 			else if (currentSubMenu == sm_LevelSelect)
@@ -811,7 +783,7 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				{
 					if (mCurrentSelectedLevel != "")
 					{
-						nextSubMenu = sm_Lobby;
+						nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
 					}
 				}
 
@@ -819,6 +791,10 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				{
 					nextSubMenu = sm_Main;
 				}
+			}
+			else if (currentSubMenu == sm_CarSelect)
+			{
+				//nextSubmenu = sm_Lobby;
 			}
 			else if (currentSubMenu == sm_Lobby)
 			{
@@ -834,8 +810,66 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 			break;
 		}
 	}
+
+	if (currentSubMenu == sm_CarSelect)
+	{
+		//Remove the current Child
+		mSceneMgr->getSceneNode("CarSelector")->removeAndDestroyAllChildren();
+		mSceneMgr->destroyEntity("CarSelector");
+
+		//attach the new child
+		Ogre::Entity* selectorEnt = GetNextCarModel(1);
+		mSceneMgr->getSceneNode("CarSelector")->attachObject(selectorEnt);
+
+		//nextSubmenu = sm_Lobby;
+	}
 }
 void MenuScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
+
+void MenuScene::SetUpLabelsAndCars()
+{
+	labels.clear();
+
+	//Set up the lobby with the correct number of players
+	for (unsigned int i = 0; i < numLocalPlayers; ++i)
+	{
+		//make the node
+		char name[128];
+		sprintf_s(name, 128, "playerLabel%i", i);
+
+		Ogre::SceneNode* node = mSceneMgr->getRootSceneNode()->createChildSceneNode(name);
+
+		//Make the checkbox ent
+		Ogre::Entity* ent = mSceneMgr->createEntity("checkBox.mesh");
+
+		//Make the text
+		char words[128];
+		sprintf_s(words, 128, "Player %i", i + 1);
+
+		Ogre::MovableText* text = new Ogre::MovableText(name, words);
+		text->setTextAlignment(Ogre::MovableText::H_LEFT, Ogre::MovableText::V_CENTER);
+		node->setPosition(26.5, 21.3 - (i*0.6), -5);
+		node->scale(1, 0.5, 1);
+
+		//Combine it
+		std::shared_ptr<PlayerLabel> p = std::shared_ptr<PlayerLabel>(new PlayerLabel(node, ent, text));
+
+		labels.push_back(p);
+	}
+}
+
+Ogre::Entity* MenuScene::GetNextCarModel(int difference)
+{
+	if ((carIndex + difference) > 4)
+		carIndex = -1;
+	else if ((carIndex + difference) < 0)
+		carIndex = 4;
+	carIndex += difference;
+
+	Ogre::Entity* ent = mSceneMgr->createEntity("CarSelector", carMeshes[carIndex]);
+
+	return ent;
+}
 
 bool MenuScene::Update()
 {
@@ -843,7 +877,8 @@ bool MenuScene::Update()
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
 
-	GetSceneManager()->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
+	mSceneMgr->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
+	mSceneMgr->getSceneNode("CarSelector")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 
 	if (mCurrentSelectedLevel != "")
 	{

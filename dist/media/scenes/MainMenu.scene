@@ -120,12 +120,35 @@
             </light>
         </node>
 
-        <!--Lobby, where people select cars and ready up-->
+        <!--Car selection-->
         <node name="camPos3">
-            <position x="30" y="20" z="0"/>
+            <position x="-30" y="20" z="0"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
         </node>
         <node name="camTar3">
+            <position x="-30" y="20" z="-1"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+        </node>
+        <node name="CarSelector" id="99">
+            <position x="-30" y="20" z="-20"/>
+            <scale x="0.5" y="0.5" z="0.5"/>
+            <entity name="CarSelector" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
+            </entity>
+        </node>
+        <node name="carlight" id="5">
+            <position x="-30" y="30" z="-20"/>
+            <light name="carlight" type="point" intensity="10.0" contrast="0">
+                <colourDiffuse r="0.5" g="0.5" b="0.5" />
+                <colourSpecular r="0.5" g="0.5" b="0.5" />
+            </light>
+        </node>
+
+        <!--Lobby, where people ready up and read the controlls-->
+        <node name="camPos4">
+            <position x="30" y="20" z="0"/>
+            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
+        </node>
+        <node name="camTar4">
             <position x="30" y="20" z="-1"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
         </node>

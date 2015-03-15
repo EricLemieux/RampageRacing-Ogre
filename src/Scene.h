@@ -183,8 +183,11 @@ private:
 		sm_Main = 0,
 		sm_PlayerCount,
 		sm_LevelSelect,
+		sm_CarSelect,
 		sm_Lobby
 	};
+
+	Ogre::String carMeshes[5];
 
 	subMenus currentSubMenu;
 	subMenus nextSubMenu;
@@ -197,6 +200,11 @@ private:
 	Ogre::String mCurrentSelectedLevel;
 
 	std::vector<std::shared_ptr<PlayerLabel>> labels;
+
+	void SetUpLabelsAndCars();
+	//Difference should be either -1 or +1
+	Ogre::Entity* GetNextCarModel(int difference = 1);
+	int carIndex=0;
 };
 
 class IntroScene : public Scene
