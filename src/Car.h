@@ -49,4 +49,5 @@ private:
 	int engineForce;
 	int brakeForce;
 	float steerValue;
+	float rollValue;
 };

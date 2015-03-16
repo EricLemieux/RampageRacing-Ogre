@@ -459,6 +459,10 @@ bool GameplayScene::Update()
 							btVector3 force = (*itr)->GetRigidBody()->getWorldTransform().getOrigin() - mCars[i]->GetRigidBody()->getWorldTransform().getOrigin();
 							//HOTFIX FOR PRESENTATION
 							//mCars[i]->GetRigidBody()->applyCentralImpulse(force * 1000);
+							//if (i != (*itr)->ownerID){
+								
+							//}
+
 						}
 					}
 				}
@@ -480,9 +484,11 @@ bool GameplayScene::Update()
 			//for (int j = 0; j < manifoldArray.size(); ++j){
 			if (manifoldArray.size() > 0){
 				btPersistentManifold* manifold = manifoldArray[0];
-				bool test0 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
-				bool test1 = manifold->getBody1() == mTriggerVolumes[1]->GetRigidBody() ? true : false;
-				if (test1 || test0)
+				bool test1 = manifold->getBody1() == obj->ghost ? true : false;
+				bool test0 = manifold->getBody0() == obj->GetRigidBody() ? true : false;
+				bool test3 = manifold->getBody0() == obj->ownerID ? true : false;
+				//if (obj->ownerID != manifold->getBody0() && obj->ownerID != manifold->getBody1())
+				if ((test0 == false && test1 == true && test3)||obj->lifeTimer > 100)
  					int a = 0;
 			}
 			//}
@@ -626,7 +632,7 @@ void GameplayScene::UseItem(int carID)
 }
 void GameplayScene::FireMissile(int carID)
 {
-	std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mCars[carID]->GetSceneNode()));
+	std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mCars[carID]->GetSceneNode(), mCars[carID]->GetRigidBody()));
 
 	mPhysicsWorld->getWorld()->addRigidBody(missile->GetRigidBody());
 	mPhysicsWorld->getWorld()->addCollisionObject(missile->ghost);
@@ -637,9 +643,10 @@ void GameplayScene::FireMissile(int carID)
 
 	missile->GetRigidBody()->translate(forward * -50);
 
-	forward *= -500;
+	forward *= -5000;
 
-	missile->setVelocity(forward.x(), forward.y(), forward.z());
+	missile->setVelocity(forward.x()/5, forward.y()/5, forward.z()/5);
+	missile->GetRigidBody()->applyCentralForce(btVector3(forward.x(), forward.y(), forward.z()));
 
 	mActiveWeapons.push_back(missile);
 }

@@ -1,6 +1,6 @@
 #include "Missile.h"
 
-Missile::Missile(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::SceneNode* parent)
+Missile::Missile(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::SceneNode* parent, btRigidBody* carID)
 {
 	mName = name;
 
@@ -12,6 +12,9 @@ Missile::Missile(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager,
 
 	mSceneNode->setPosition(parent->getPosition());
 	mSceneNode->setOrientation(parent->getOrientation());
+
+	ownerID = carID;
+	lifeTimer = 0;
 
 	InitRigidBody();
 }
@@ -48,8 +51,8 @@ void Missile::InitRigidBody()
 
 void Missile::Update()
 {
-	mRigidBody->setLinearVelocity(mVelocity);
+	mRigidBody->applyCentralForce(mVelocity);
 	ghost->setWorldTransform(mRigidBody->getWorldTransform());
-
+	lifeTimer++;
 	GameObject::Update();
 }

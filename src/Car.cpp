@@ -26,7 +26,8 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	engineForce = 0;
 	brakeForce = 100;
 
-	steerValue = 0.0f;               
+	steerValue = 0.0f;  
+	rollValue = 0.0f;
 
 	InitRigidBody();
 
@@ -106,25 +107,26 @@ void Car::Update(void)
 
 	if (mTurning != 0.0f && !mFinishedRace)
 	{
+		rollValue += (0.002f * mTurning);
 		steerValue += (0.002f * mTurning);
 
-		if (steerValue > 0){
-			TurnRight(steerValue*10);
-		}
-		else if (steerValue < 0){
-			TurnRight(steerValue * 10);
-		}
+		TurnRight(steerValue * 10);
 
-		if (steerValue > 0.2f){
+		if (rollValue > 0.2f){
+			rollValue = 0.2f;
+		}
+		else if (rollValue < -0.2f){
+			rollValue = -0.2f;
+		}
+		if (steerValue > 0.2f)
 			steerValue = 0.2f;
-		}
-		else if (steerValue < -0.2f){
+		else if (steerValue < -0.2f)
 			steerValue = -0.2f;
-		}
 	}
 	else
 	{
-		steerValue *= 0.97;
+		rollValue *= 0.97;
+		steerValue = 0;
 	}
 	//if (engineForce > 000)
 		//engineForce = 000;
@@ -152,7 +154,7 @@ void Car::Update(void)
 
 	GameObject::Update();
 
-	mSceneNode->roll(Ogre::Radian(-steerValue*2));
+	mSceneNode->roll(Ogre::Radian(-rollValue*2));
 }
 
 void Car::InitRigidBody()
@@ -224,7 +226,7 @@ void Car::InitRigidBody()
 	float   suspensionStiffness = 20.f;
 	float   suspensionDamping = 4.3f;
 	float   suspensionCompression = 10.4f;
-	float   rollInfluence = 0.1f;
+	float   rollInfluence = 0.f;
 
 
 	for (int i = 0; i < m_vehicle->getNumWheels(); ++i){

@@ -27,6 +27,8 @@ public:
 	inline btRigidBody* GetRigidBody(void){return mRigidBody;}
 	virtual void Update(void);
 	btPairCachingGhostObject* ghost;
+	btRigidBody* ownerID;
+	int lifeTimer;
 
 private:
 	virtual void InitRigidBody();
