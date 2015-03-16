@@ -297,6 +297,12 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 		sprintf_s(l, 128, "carLight%i", i);
 		Ogre::Light* carLightEnt = mSceneMgr->createLight(l);
 		carLightEnt->setDiffuseColour(1, 1, 1);
+		if (i==0)
+			carLightEnt->setDiffuseColour(1, 0, 0);
+		else if(i == 1)
+			carLightEnt->setDiffuseColour(0, 1, 0);
+		else if(i == 2)
+			carLightEnt->setDiffuseColour(0, 0, 1);
 		carLight->attachObject(carLightEnt);
 
 		//Set up the HUD elements attached to the car
