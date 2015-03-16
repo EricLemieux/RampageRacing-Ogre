@@ -5,7 +5,7 @@
 class Mine :public GameObject
 {
 public:
-	Mine(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::SceneNode* parent);
+	Mine(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::SceneNode* parent, btRigidBody* ownerBody);
 	~Mine();
 
 	virtual void Update();

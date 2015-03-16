@@ -9,7 +9,7 @@
 
 #include <memory>
 
-enum type{
+enum OBJECT_TYPE{
 	CAR = 0,
 	MISSILE = 1,
 	MINE = 2
@@ -29,6 +29,8 @@ public:
 	btPairCachingGhostObject* ghost;
 	btRigidBody* ownerID;
 	int lifeTimer;
+	OBJECT_TYPE objectType;
+	bool isActive;
 
 private:
 	virtual void InitRigidBody();

@@ -1,6 +1,6 @@
 #include "Mine.h"
 
-Mine::Mine(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::SceneNode* parent)
+Mine::Mine(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre::SceneNode* parent, btRigidBody* ownerBody)
 {
 	mName = name;
 
@@ -12,6 +12,9 @@ Mine::Mine(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, Ogre:
 
 	mSceneNode->setPosition(parent->getPosition());
 	mSceneNode->setOrientation(parent->getOrientation());
+
+	objectType = MINE;
+	ownerID = ownerBody;
 
 	InitRigidBody();
 }

@@ -14,6 +14,7 @@ Missile::Missile(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager,
 	mSceneNode->setOrientation(parent->getOrientation());
 
 	ownerID = carID;
+	objectType = MISSILE;
 	lifeTimer = 0;
 
 	InitRigidBody();

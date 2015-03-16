@@ -26,6 +26,8 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	engineForce = 0;
 	brakeForce = 100;
 
+	objectType = CAR;
+
 	steerValue = 0.0f;  
 	rollValue = 0.0f;
 
@@ -83,50 +85,58 @@ void Car::Update(void)
 		speedRatiob = currentSpeed / maxSpeedb;
 	}
 	
-
-	//Move the car if the button is down
-	if (mCanMoveForward != 0.0f && !mFinishedRace)
-	{
-		if (mCanMoveForward > 1.0f)
-			mCanMoveForward = 1.0f;
-		engineForce = (-5000.0f / speedRatio) * mCanMoveForward;
-		brakeForce = 0;
-	}
-	else if (mCanMoveBackward != 0.0f && !mFinishedRace)
-	{
-		if (mCanMoveBackward > 1.0f)
-			mCanMoveBackward = 1.0f;
-		engineForce = (-5000.f/speedRatiob) * mCanMoveBackward;
-		brakeForce = 50;
-	}
-	else 
-	{
-		engineForce = 0;
-		brakeForce = 50;
-	}
-
-	if (mTurning != 0.0f && !mFinishedRace)
-	{
-		rollValue += (0.002f * mTurning);
-		steerValue += (0.002f * mTurning);
-
-		TurnRight(steerValue * 10);
-
-		if (rollValue > 0.2f){
-			rollValue = 0.2f;
-		}
-		else if (rollValue < -0.2f){
-			rollValue = -0.2f;
-		}
-		if (steerValue > 0.2f)
-			steerValue = 0.2f;
-		else if (steerValue < -0.2f)
-			steerValue = -0.2f;
-	}
-	else
-	{
+	if (stunCounter > 0){
 		rollValue *= 0.97;
 		steerValue = 0;
+		engineForce = 0;
+		brakeForce = 100;
+		--stunCounter;
+	}
+	else {
+		//Move the car if the button is down
+		if (mCanMoveForward != 0.0f && !mFinishedRace)
+		{
+			if (mCanMoveForward > 1.0f)
+				mCanMoveForward = 1.0f;
+			engineForce = (-5000.0f / speedRatio) * mCanMoveForward;
+			brakeForce = 0;
+		}
+		else if (mCanMoveBackward != 0.0f && !mFinishedRace)
+		{
+			if (mCanMoveBackward > 1.0f)
+				mCanMoveBackward = 1.0f;
+			engineForce = (-5000.f / speedRatiob) * mCanMoveBackward;
+			brakeForce = 50;
+		}
+		else
+		{
+			engineForce = 0;
+			brakeForce = 50;
+		}
+
+		if (mTurning != 0.0f && !mFinishedRace)
+		{
+			rollValue += (0.002f * mTurning);
+			steerValue += (0.002f * mTurning);
+
+			TurnRight(steerValue * 10);
+
+			if (rollValue > 0.2f){
+				rollValue = 0.2f;
+			}
+			else if (rollValue < -0.2f){
+				rollValue = -0.2f;
+			}
+			if (steerValue > 0.2f)
+				steerValue = 0.2f;
+			else if (steerValue < -0.2f)
+				steerValue = -0.2f;
+		}
+		else
+		{
+			rollValue *= 0.97;
+			steerValue = 0;
+		}
 	}
 	//if (engineForce > 000)
 		//engineForce = 000;

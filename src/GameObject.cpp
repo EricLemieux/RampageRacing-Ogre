@@ -5,6 +5,7 @@ GameObject::GameObject()
 	mName = "";
 	mSceneManager = NULL;
 	mSceneNode = NULL;
+	isActive = true;
 }
 
 GameObject::GameObject(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager)

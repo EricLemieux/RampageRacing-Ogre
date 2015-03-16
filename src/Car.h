@@ -29,6 +29,8 @@ public:
 	int lapCounter;
 	int checkPointsHit;
 
+	int stunCounter = 0;
+
 	btAlignedObjectArray<btCollisionShape*> mCollisionShapes;
 	btRaycastVehicle::btVehicleTuning       m_tuning;
 	btVehicleRaycaster*     m_vehicleRayCaster;

@@ -462,7 +462,14 @@ bool GameplayScene::Update()
 							//if (i != (*itr)->ownerID){
 								
 							//}
-
+							if ((*itr)->objectType == MISSILE && (*itr)->ownerID != mCars[i]->GetRigidBody()){
+								//disable car controls
+								mCars[i]->stunCounter = 100;
+							}
+							if ((*itr)->objectType == MINE && (*itr)->ownerID != mCars[i]->GetRigidBody()){
+								//apply knockback
+								mCars[i]->GetRigidBody()->setLinearVelocity(mCars[i]->GetRigidBody()->getLinearVelocity()*-0.5f);
+							}
 						}
 					}
 				}
@@ -484,12 +491,23 @@ bool GameplayScene::Update()
 			//for (int j = 0; j < manifoldArray.size(); ++j){
 			if (manifoldArray.size() > 0){
 				btPersistentManifold* manifold = manifoldArray[0];
-				bool test1 = manifold->getBody1() == obj->ghost ? true : false;
-				bool test0 = manifold->getBody0() == obj->GetRigidBody() ? true : false;
-				bool test3 = manifold->getBody0() == obj->ownerID ? true : false;
-				//if (obj->ownerID != manifold->getBody0() && obj->ownerID != manifold->getBody1())
-				if ((test0 == false && test1 == true && test3)||obj->lifeTimer > 100)
- 					int a = 0;
+				bool test1 = manifold->getBody1() == obj->ownerID ? true : false;
+				bool test0 = manifold->getBody0() == obj->ownerID ? true : false;
+				bool test2 = false;
+				bool test3 = false;
+				for (int j = 0; j < numLocalPlayers; ++j){
+					test2 = manifold->getBody0() == mCars[j]->GetRigidBody() ? true : false;
+					test3 = manifold->getBody1() == mCars[j]->GetRigidBody() ? true : false;
+				}
+
+				if (((!test0 && !test1) && (test2 || test3)) || obj->lifeTimer > 500){
+					//deactivate weapon
+					btTransform transform = btTransform(btQuaternion(), btVector3(1000000000000000, 10000000000000, 100000000));
+					obj->GetRigidBody()->setWorldTransform(transform);
+					obj->GetRigidBody()->setDeactivationTime(10000000000000);
+					obj->isActive = false;
+				}
+ 					
 			}
 			//}
 		}
@@ -652,7 +670,7 @@ void GameplayScene::FireMissile(int carID)
 }
 void GameplayScene::DropMine(int carID)
 {
-	std::shared_ptr<Mine> mine = std::shared_ptr<Mine>(new Mine("mine", mSceneMgr, mCars[carID]->GetSceneNode()));
+	std::shared_ptr<Mine> mine = std::shared_ptr<Mine>(new Mine("mine", mSceneMgr, mCars[carID]->GetSceneNode(), mCars[carID]->GetRigidBody()));
 
 	mPhysicsWorld->getWorld()->addRigidBody(mine->GetRigidBody());
 	mPhysicsWorld->getWorld()->addCollisionObject(mine->ghost);
