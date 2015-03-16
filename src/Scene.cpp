@@ -442,6 +442,7 @@ bool GameplayScene::Update()
 									mSceneMgr->getEntity(lc)->setMaterialName(m);
 								}
 							}
+							break;
 						}
 					}
 
@@ -456,6 +457,7 @@ bool GameplayScene::Update()
 							char cw[128];
 							sprintf_s(cw, 128, "currentWeapon%i", i);
 							mSceneMgr->getEntity(cw)->setMaterialName(mItemBoxes[ib]->GetItemMaterialName());
+							break;
 						}
 					}
 
@@ -471,14 +473,26 @@ bool GameplayScene::Update()
 							if ((*itr)->objectType == MISSILE && (*itr)->ownerID != mCars[i]->GetRigidBody()){
 								//disable car controls
 								mCars[i]->stunCounter = 100;
+								break;
 							}
 							if ((*itr)->objectType == MINE && (*itr)->ownerID != mCars[i]->GetRigidBody()){
 								//apply knockback
 								mCars[i]->GetRigidBody()->setLinearVelocity(mCars[i]->GetRigidBody()->getLinearVelocity()*-0.5f);
+								break;
 							}
 						}
 					}
 				}
+				if (mCars[i]->stunCounter > 0){
+					if (mSceneMgr->hasParticleSystem("Sparks"))
+						mSceneMgr->destroyParticleSystem("Sparks");
+					Ogre::ParticleSystem* particleSys = mSceneMgr->createParticleSystem("Sparks", "Sparks");
+					if (mSceneMgr->hasSceneNode("Particle"))
+						mSceneMgr->destroySceneNode("Particle");
+					Ogre::SceneNode* particleNode = mCars[i]->GetSceneNode()->createChildSceneNode("Particle");
+					particleNode->attachObject(particleSys);
+				}
+
 			//}
 		}
 	}
