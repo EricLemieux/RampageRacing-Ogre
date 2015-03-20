@@ -3,11 +3,12 @@
 #include "GameObject.h"
 #include "Missile.h"
 #include "ItemBox.h"
+#include "MovableText.h"
 
 class Car : public GameObject
 {
 public:
-	Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld, Ogre::String carEntName, int ID);
+	Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld, Ogre::String carEntName, int ID, std::shared_ptr<Ogre::Camera> mCameras[4]);
 	~Car();
 
 public:
@@ -43,6 +44,10 @@ public:
 	ITEM_BOX_TYPE mCurrentItem;
 
 	bool mFinishedRace = false;
+
+	Ogre::MovableText* positionText;
+	Ogre::MovableText* positionModText;
+	Ogre::MovableText* lapText;
 
 private:
 	float speed = 0.0f;

@@ -1,6 +1,6 @@
 #include "Car.h"
 
-Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld, Ogre::String carEntName, int ID)
+Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld, Ogre::String carEntName, int ID, std::shared_ptr<Ogre::Camera> mCameras[4])
 {
 	mName = name;
 	mSceneManager = manager;
@@ -34,6 +34,41 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	InitRigidBody();
 
 	mCurrentItem = IBT_NONE;
+
+	//Set up the camera
+	Ogre::SceneNode* camNode = mSceneManager->getSceneNode(name)->createChildSceneNode();
+	camNode->attachObject(mCameras[ID].get());
+
+	camNode->translate(Ogre::Vector3(0.0f, 10.0f, 40.0f));
+
+	mCameras[ID]->lookAt(this->GetSceneNode()->getPosition());
+
+	//Set up the HUD elements attached to the camera
+	Ogre::SceneNode* positionNumNode = camNode->createChildSceneNode();
+	positionNumNode->translate(-5.5, -6, -10);
+	char pp[128];
+	sprintf_s(pp, 128, "playerPostionNum%i", ID);
+	positionText = new Ogre::MovableText(pp, "1");
+	positionText->setVisibilityFlags(RenderOnly[ID]);
+	positionNumNode->scale(Ogre::Vector3(3, 3, 1));
+	positionNumNode->attachObject(positionText);
+
+	Ogre::SceneNode* positionModNode = positionNumNode->createChildSceneNode();
+	positionModNode->translate(-0.2, -0.11, 0);
+	char ppm[128];
+	sprintf_s(ppm, 128, "playerPostionMod%i", ID);
+	positionModText = new Ogre::MovableText(ppm, "st");
+	positionModText->setVisibilityFlags(RenderOnly[ID]);
+	positionModNode->scale(0.3, 0.3, 1);
+	positionModNode->attachObject(positionModText);
+
+	Ogre::SceneNode* lapNode = camNode->createChildSceneNode();
+	lapNode->translate(5.5, -6, -10);
+	char lc[128];
+	sprintf_s(lc, 128, "lapCounter%i", ID);
+	lapText = new Ogre::MovableText(lc, "Lap 1/3");
+	lapText->setVisibilityFlags(RenderOnly[ID]);
+	lapNode->attachObject(lapText);
 }
 
 Car::~Car()

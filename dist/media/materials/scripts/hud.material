@@ -12,69 +12,6 @@ material hud_empty
 	}
 }
 
-material hud_lap_1
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.5 0.5 0.5 0.5 0.5
-			
-			lighting off
-			scene_blend alpha_blend
-			depth_write off
-
-			texture_unit
-			{
-				texture hud/1.png
-         		alpha_op_ex source1 src_manual src_texture 0.8 
-			}
-		}
-	}
-}
-
-material hud_lap_2
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.5 0.5 0.5 0.5
-
-			lighting off
-			scene_blend alpha_blend
-			depth_write off
-
-			texture_unit
-			{
-				texture hud/2.png
-				alpha_op_ex source1 src_manual src_texture 0.8 
-			}
-		}
-	}
-}
-
-material hud_lap_3
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.5 0.5 0.5 0.5
-
-			lighting off
-			scene_blend alpha_blend
-			depth_write off
-
-			texture_unit
-			{
-				texture hud/3.png
-         		alpha_op_ex source1 src_manual src_texture 0.8 
-			}
-		}
-	}
-}
-
 material hud_item_attack
 {
 	technique

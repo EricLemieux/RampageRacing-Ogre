@@ -9,6 +9,9 @@
 
 #include <memory>
 
+static const Ogre::int32 masks[4] = { 0x0000000F, 0x000000F0, 0x00000F00, 0x0000F000 };
+static const Ogre::int32 RenderOnly[4] = { 0x0000000F, 0x000000F0, 0x00000F00, 0x0000F000 };
+
 enum OBJECT_TYPE{
 	CAR = 0,
 	MISSILE = 1,

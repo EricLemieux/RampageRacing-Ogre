@@ -119,15 +119,6 @@ void Scene::ControllerInput()
 //Gameplay scenes
 GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]) : Scene(sceneMgr, client, cameras, window, controllers)
 {
-	masks[0] = 0x0000000F;
-	masks[1] = 0x000000F0;
-	masks[2] = 0x00000F00;
-	masks[3] = 0x0000F000;
-	RenderOnly[0] = 0x0000000F;
-	RenderOnly[1] = 0x000000F0;
-	RenderOnly[2] = 0x00000F00;
-	RenderOnly[3] = 0x0000F000;
-
 	SetUpViewports();
 }
 GameplayScene::~GameplayScene(){}
@@ -290,49 +281,8 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 		sprintf_s(name, 128, "mCar%i",i);
 
 		//Create a game object thing
-		mCars[i] = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), selectedCarTypes[i], i));
-
-		Ogre::SceneNode* camNode = GetSceneManager()->getSceneNode(name)->createChildSceneNode();
-		camNode->attachObject(mCameras[i].get());
-
-		camNode->translate(Ogre::Vector3(0.0f, 10.0f, 40.0f));
-
-		mCameras[i]->lookAt(mCars[i]->GetSceneNode()->getPosition());
-
-		//Attach a light to the car
-		Ogre::SceneNode* carLight = mSceneMgr->getSceneNode(name)->createChildSceneNode();
-		carLight->translate(0, 20, 0);
-		char l[128];
-		sprintf_s(l, 128, "carLight%i", i);
-		Ogre::Light* carLightEnt = mSceneMgr->createLight(l);
-		carLightEnt->setDiffuseColour(1, 1, 1);
-		if (i==0)
-			carLightEnt->setDiffuseColour(1, 0, 0);
-		else if(i == 1)
-			carLightEnt->setDiffuseColour(0, 1, 0);
-		else if(i == 2)
-			carLightEnt->setDiffuseColour(0, 0, 1);
-		carLight->attachObject(carLightEnt);
-
-		//Set up the HUD elements attached to the camera
-		Ogre::SceneNode* positionNode = camNode->createChildSceneNode();
-		positionNode->translate(-5.5, 0.3, -10);
-		char pp[128];
-		sprintf_s(pp, 128, "playerPostion%i", i);
-		Ogre::Entity* positionEnt = mSceneMgr->createEntity(pp, "HUDTile.mesh");
-		positionEnt->setMaterialName("hud_empty");
-		positionEnt->setVisibilityFlags(RenderOnly[i]);
-		positionNode->attachObject(positionEnt);
-
-		Ogre::SceneNode* lapNode = camNode->createChildSceneNode();
-		lapNode->translate(5.5, -6, -10);
-		char lc[128];
-		sprintf_s(lc, 128, "lapCounter%i", i);
-		Ogre::Entity* lapEnt = mSceneMgr->createEntity(lc, "HUDTile.mesh");
-		lapEnt->setMaterialName("hud_lap_1");
-		lapEnt->setVisibilityFlags(RenderOnly[i]);
-		lapNode->attachObject(lapEnt);
-
+		mCars[i] = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), selectedCarTypes[i], i, mCameras));
+		
 		callback = new ContactSensorCallback(*(mCars[i]->GetRigidBody()), *(mCars[i]));
 	}
 
@@ -434,13 +384,9 @@ bool GameplayScene::Update()
 								}
 								else
 								{
-									char lc[128];
-									sprintf_s(lc, 128, "lapCounter%i", i);
-
 									char m[128];
-									sprintf_s(m, 128, "hud_lap_%i", mCars[i]->lapCounter+1);
-
-									mSceneMgr->getEntity(lc)->setMaterialName(m);
+									sprintf_s(m, 128, "Lap %i/3", mCars[i]->lapCounter+1);
+									mCars[i]->lapText->setCaption(m);
 								}
 							}
 							break;
