@@ -119,6 +119,15 @@ void Scene::ControllerInput()
 //Gameplay scenes
 GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]) : Scene(sceneMgr, client, cameras, window, controllers)
 {
+	masks[0] = 0x0000000F;
+	masks[1] = 0x000000F0;
+	masks[2] = 0x00000F00;
+	masks[3] = 0x0000F000;
+	RenderOnly[0] = 0x0000000F;
+	RenderOnly[1] = 0x000000F0;
+	RenderOnly[2] = 0x00000F00;
+	RenderOnly[3] = 0x0000F000;
+
 	SetUpViewports();
 }
 GameplayScene::~GameplayScene(){}
@@ -305,32 +314,24 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 			carLightEnt->setDiffuseColour(0, 0, 1);
 		carLight->attachObject(carLightEnt);
 
-		//Set up the HUD elements attached to the car
-		Ogre::SceneNode* lapCounterNode = mSceneMgr->getSceneNode(name)->createChildSceneNode();
-		lapCounterNode->translate(0, 0, 20);
-		char cw[128];
-		sprintf_s(cw, 128, "currentWeapon%i", i);
-		Ogre::Entity* lapCounterEnt = mSceneMgr->createEntity(cw,"HUDTile.mesh");
-		lapCounterEnt->setMaterialName("hud_empty");
-		lapCounterNode->attachObject(lapCounterEnt);
-
-		Ogre::SceneNode* thingNode = mSceneMgr->getSceneNode(name)->createChildSceneNode();
-		thingNode->translate(-3, -1.2, 20);
-		thingNode->scale(0.6, 0.6, 0.6);
+		//Set up the HUD elements attached to the camera
+		Ogre::SceneNode* positionNode = camNode->createChildSceneNode();
+		positionNode->translate(-5.5, 0.3, -10);
 		char pp[128];
 		sprintf_s(pp, 128, "playerPostion%i", i);
-		Ogre::Entity* thingEnt = mSceneMgr->createEntity(pp, "HUDTile.mesh");
-		thingEnt->setMaterialName("hud_empty");
-		thingNode->attachObject(thingEnt);
+		Ogre::Entity* positionEnt = mSceneMgr->createEntity(pp, "HUDTile.mesh");
+		positionEnt->setMaterialName("hud_empty");
+		positionEnt->setVisibilityFlags(RenderOnly[i]);
+		positionNode->attachObject(positionEnt);
 
-		Ogre::SceneNode* thing2Node = mSceneMgr->getSceneNode(name)->createChildSceneNode();
-		thing2Node->translate(3, -1.2, 20);
-		thing2Node->scale(0.6, 0.6, 0.6);
+		Ogre::SceneNode* lapNode = camNode->createChildSceneNode();
+		lapNode->translate(5.5, -6, -10);
 		char lc[128];
 		sprintf_s(lc, 128, "lapCounter%i", i);
-		Ogre::Entity* thing2Ent = mSceneMgr->createEntity(lc, "HUDTile.mesh");
-		thing2Ent->setMaterialName("hud_lap_1");
-		thing2Node->attachObject(thing2Ent);
+		Ogre::Entity* lapEnt = mSceneMgr->createEntity(lc, "HUDTile.mesh");
+		lapEnt->setMaterialName("hud_lap_1");
+		lapEnt->setVisibilityFlags(RenderOnly[i]);
+		lapNode->attachObject(lapEnt);
 
 		callback = new ContactSensorCallback(*(mCars[i]->GetRigidBody()), *(mCars[i]));
 	}
@@ -453,10 +454,6 @@ bool GameplayScene::Update()
 						if ((test0 || test1) && mCars[i]->mCurrentItem == IBT_NONE)
 						{
 							mCars[i]->mCurrentItem = mItemBoxes[ib]->GetType();
-
-							char cw[128];
-							sprintf_s(cw, 128, "currentWeapon%i", i);
-							mSceneMgr->getEntity(cw)->setMaterialName(mItemBoxes[ib]->GetItemMaterialName());
 							break;
 						}
 					}
@@ -562,11 +559,12 @@ void GameplayScene::SetUpViewports()
 		Ogre::Viewport* vp1 = mWindow->addViewport(mCamera.get());
 		vp1->setDimensions(0, 0, 1, 0.5);
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
-		vp1->setOverlaysEnabled(false);
+		vp1->setVisibilityMask(masks[0]);
 	
 		Ogre::Viewport* vp2 = mWindow->addViewport(mCameras[1].get(), 1);
 		vp2->setDimensions(0, 0.5, 1, 0.5);
 		mCameras[1]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
+		vp2->setVisibilityMask(masks[1]);
 		break;
 	}
 	case 3:
@@ -574,14 +572,17 @@ void GameplayScene::SetUpViewports()
 		Ogre::Viewport* vp1 = mWindow->addViewport(mCamera.get());
 		vp1->setDimensions(0, 0, 0.5, 0.5);
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
+		vp1->setVisibilityMask(masks[0]);
 	
 		Ogre::Viewport* vp2 = mWindow->addViewport(mCameras[1].get(), 1);
 		vp2->setDimensions(0.5, 0, 0.5, 0.5);
 		mCameras[1]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
+		vp2->setVisibilityMask(masks[1]);
 	
 		Ogre::Viewport* vp3 = mWindow->addViewport(mCameras[2].get(), 2);
 		vp3->setDimensions(0, 0.5, 1, 0.5);
 		mCameras[2]->setAspectRatio(Ogre::Real(vp3->getActualWidth()) / Ogre::Real(vp3->getActualHeight()));
+		vp3->setVisibilityMask(masks[2]);
 		break;
 	}
 	case 4:
@@ -589,18 +590,22 @@ void GameplayScene::SetUpViewports()
 		Ogre::Viewport* vp1 = mWindow->addViewport(mCamera.get());
 		vp1->setDimensions(0, 0, 0.5, 0.5);
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
+		vp1->setVisibilityMask(masks[0]);
 	
 		Ogre::Viewport* vp2 = mWindow->addViewport(mCameras[1].get(), 1);
 		vp2->setDimensions(0.5, 0, 0.5, 0.5);
 		mCameras[1]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
+		vp2->setVisibilityMask(masks[1]);
 	
 		Ogre::Viewport* vp3 = mWindow->addViewport(mCameras[2].get(), 2);
 		vp3->setDimensions(0, 0.5, 0.5, 0.5);
 		mCameras[2]->setAspectRatio(Ogre::Real(vp3->getActualWidth()) / Ogre::Real(vp3->getActualHeight()));
+		vp3->setVisibilityMask(masks[2]);
 	
 		Ogre::Viewport* vp4 = mWindow->addViewport(mCameras[3].get(), 3);
 		vp4->setDimensions(0.5, 0.5, 0.5, 0.5);
 		mCameras[3]->setAspectRatio(Ogre::Real(vp4->getActualWidth()) / Ogre::Real(vp4->getActualHeight()));
+		vp4->setVisibilityMask(masks[3]);
 		break;
 	}
 	}
@@ -661,10 +666,6 @@ void GameplayScene::UseItem(int carID)
 		FireMissile(carID);
 	else if (mCars[carID]->mCurrentItem == IBT_DEFENCE)
 		DropMine(carID);
-
-	char cw[128];
-	sprintf_s(cw, 128, "currentWeapon%i", carID);
-	mSceneMgr->getEntity(cw)->setMaterialName("hud_empty");
 
 	mCars[carID]->mCurrentItem = IBT_NONE;
 }

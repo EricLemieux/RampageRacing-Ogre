@@ -158,6 +158,10 @@ private:
 	std::vector<std::shared_ptr<ItemBox>> mItemBoxes;
 
 	int mNumPlayersCompletedRace = 0;
+
+	//Has to start at 1 because when its 0 it doesnt show anything
+	Ogre::int32 masks[4];
+	Ogre::int32 RenderOnly[4];
 };
 
 class MenuScene : public Scene
