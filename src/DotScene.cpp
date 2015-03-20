@@ -15,8 +15,6 @@ void DotSceneLoader::parseDotScene(const String &SceneName, const String &groupN
 	staticObjects.clear();
 	dynamicObjects.clear();
 
-	
-
 	XMLDocument   *XMLDoc = 0;
 	XMLElement   *XMLRoot;
 
@@ -491,6 +489,14 @@ void DotSceneLoader::processNode(XMLElement *XMLNode, SceneNode *pParent)
 		pElement = pElement->NextSiblingElement("plane");
 	}
 
+	// Process Movable Text
+	pElement = XMLNode->FirstChildElement("text");
+	while (pElement)
+	{
+		processMovableText(pElement, pNode);
+		pElement = pElement->NextSiblingElement("text");
+	}
+
 	// Process userDataReference (?)
 	pElement = XMLNode->FirstChildElement("userDataReference");
 	if (pElement)
@@ -655,6 +661,24 @@ void DotSceneLoader::processBillboardSet(XMLElement *XMLNode, SceneNode *pParent
 void DotSceneLoader::processPlane(XMLElement *XMLNode, SceneNode *pParent)
 {
 	//! @todo Implement this
+}
+
+void DotSceneLoader::processMovableText(tinyxml2::XMLElement *XMLNode, SceneNode *pParent)
+{
+	String name = getAttrib(XMLNode, "name");
+	String caption = getAttrib(XMLNode, "caption");
+	String color = getAttrib(XMLNode, "color");
+
+	try
+	{
+		MovableText* pText = new MovableText(name, caption);
+		pText->setTextAlignment(MovableText::H_CENTER, MovableText::V_CENTER);
+		pParent->attachObject(pText);
+	}
+	catch (Ogre::Exception &/*e*/)
+	{
+		LogManager::getSingleton().logMessage("[DotSceneLoader] Error loading MovableText!");
+	}
 }
 
 void DotSceneLoader::processFog(XMLElement *XMLNode)

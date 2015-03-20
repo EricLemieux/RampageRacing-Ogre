@@ -1,3 +1,17 @@
+material button
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/button.png
+			}
+		}
+	}
+}
+
 material button_start
 {
 	technique
@@ -91,62 +105,6 @@ material button_home
 			texture_unit
 			{
 				texture buttons/buttonHome.png
-			}
-		}
-	}
-}
-
-material button_one_player
-{
-	technique
-	{
-		pass
-		{
-			texture_unit
-			{
-				texture buttons/button1Player.png
-			}
-		}
-	}
-}
-
-material button_two_player
-{
-	technique
-	{
-		pass
-		{
-			texture_unit
-			{
-				texture buttons/button2Player.png
-			}
-		}
-	}
-}
-
-material button_three_player
-{
-	technique
-	{
-		pass
-		{
-			texture_unit
-			{
-				texture buttons/button3Player.png
-			}
-		}
-	}
-}
-
-material button_four_player
-{
-	technique
-	{
-		pass
-		{
-			texture_unit
-			{
-				texture buttons/button4Player.png
 			}
 		}
 	}

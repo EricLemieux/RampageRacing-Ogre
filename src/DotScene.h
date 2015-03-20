@@ -5,6 +5,7 @@
 #include <Ogre/OgreString.h>
 #include <Ogre/OgreVector3.h>
 #include <Ogre/OgreQuaternion.h>
+#include "MovableText.h"
 #include <vector>
 
 #include <tinyxml2.h>
@@ -60,6 +61,8 @@ namespace Ogre
 		void processParticleSystem(tinyxml2::XMLElement *XMLNode, SceneNode *pParent);
 		void processBillboardSet(tinyxml2::XMLElement *XMLNode, SceneNode *pParent);
 		void processPlane(tinyxml2::XMLElement *XMLNode, SceneNode *pParent);
+
+		void processMovableText(tinyxml2::XMLElement *XMLNode, SceneNode *pParent);
 
 		void processFog(tinyxml2::XMLElement *XMLNode);
 		void processSkyBox(tinyxml2::XMLElement *XMLNode);

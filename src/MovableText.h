@@ -12,7 +12,6 @@
 #ifndef __include_MovableText_H__
 #define __include_MovableText_H__
 
-#include <windows.h>
 #include "OGRE/Ogre.h"
 #include <OgreFontManager.h>
  
