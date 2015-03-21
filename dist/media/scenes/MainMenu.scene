@@ -172,6 +172,33 @@
             <entity name="CarSelector" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
             </entity>
         </node>
+        <node>
+            <position x="-33" y="18" z="-7"/>
+            <entity name="bPrevCar" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <node>
+                <position x="0.5" y="0" z="1"/>
+                <scale x="0.5" y="0.5" z="1"/>
+                <text name="someText" caption="Previous"><color r="0.7" g="0.7" b="0.7"/></text>
+            </node>
+        </node>
+        <node>
+            <position x="-30" y="18" z="-7"/>
+            <entity name="bSelect" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <node>
+                <position x="0.25" y="0" z="1"/>
+                <scale x="0.5" y="0.5" z="1"/>
+                <text name="someText" caption="Select"><color r="0.7" g="0.7" b="0.7"/></text>
+            </node>
+        </node>
+        <node>
+            <position x="-27" y="18" z="-7"/>
+            <entity name="bNextCar" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <node>
+                <position x="0.0" y="0" z="1"/>
+                <scale x="0.5" y="0.5" z="1"/>
+                <text name="someText" caption="Next"><color r="0.7" g="0.7" b="0.7"/></text>
+            </node>
+        </node>
         <node name="carlight" id="5">
             <position x="-30" y="30" z="-20"/>
             <light name="carlight" type="point" intensity="10.0" contrast="0">
@@ -190,13 +217,13 @@
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
         </node>
          <node name="bForceStart">
-            <position x="32.7" y="18.5" z="-5"/>
+            <position x="32.5" y="18.5" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <scale x="0.7" y="0.7" z="0.7" />
             <entity name="bForceStart" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
             <node>
                 <position x="-0.05" y="0.0" z="1"/>
-                <scale x="0.4" y="0.4" z="1"/>
+                <scale x="0.3" y="0.4" z="1"/>
                 <text name="someText" caption="Force Start"><color r="0.7" g="0.7" b="0.7"/></text>
             </node>
         </node>

@@ -13,6 +13,12 @@
             <scale x="100" y="30" z="2"/>
             <entity name="triggerFinishLine" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh" materialFile="finishline">
             </entity>
+            <node name="startLight">
+                <light name="startLight" type="point" intensity="1.0" contrast="0">
+                    <colourDiffuse r="0.5" g="0.5" b="0.5" />
+                    <colourSpecular r="0.5" g="0.5" b="0.5" />
+                </light>
+            </node>
         </node>
         <node name="triggerCheckpoint1">
             <position x="370" y="0" z="-1920"/>

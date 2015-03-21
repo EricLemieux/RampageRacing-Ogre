@@ -678,7 +678,7 @@ MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_p
 	carSelectionTitleNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("carSelectionTitleNode");
 	carSelectionTitle = new Ogre::MovableText("carSelectionTitle", "Player 1 Select");
 	carSelectionTitle->setTextAlignment(Ogre::MovableText::H_LEFT, Ogre::MovableText::V_CENTER);
-	carSelectionTitleNode->setPosition(-33, 21.6, -5);
+	carSelectionTitleNode->setPosition(-32.3, 21.6, -5);
 	carSelectionTitleNode->scale(1, 0.5, 1);
 	carSelectionTitleNode->attachObject(carSelectionTitle);
 }
@@ -803,7 +803,31 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 			}
 			else if (currentSubMenu == sm_CarSelect)
 			{
-				//nextSubmenu = sm_Lobby;
+				const char* str = itr->movable->getName().c_str();
+				if (!stricmp(str,"bNextCar"))
+				{
+					//Remove the current Child
+					mSceneMgr->getSceneNode("CarSelector")->removeAndDestroyAllChildren();
+					mSceneMgr->destroyEntity("CarSelector");
+
+					//attach the new child
+					Ogre::Entity* selectorEnt = GetNextCarModel(1);
+					mSceneMgr->getSceneNode("CarSelector")->attachObject(selectorEnt);
+				}
+				else if (!stricmp(str, "bPrevCar"))
+				{
+					//Remove the current Child
+					mSceneMgr->getSceneNode("CarSelector")->removeAndDestroyAllChildren();
+					mSceneMgr->destroyEntity("CarSelector");
+
+					//attach the new child
+					Ogre::Entity* selectorEnt = GetNextCarModel(-1);
+					mSceneMgr->getSceneNode("CarSelector")->attachObject(selectorEnt);
+				}
+				else if (!stricmp(str, "bSelect"))
+				{
+					ConfirmCarChoice();
+				}
 			}
 			else if (currentSubMenu == sm_Lobby)
 			{
@@ -818,19 +842,6 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 
 			break;
 		}
-	}
-
-	if (currentSubMenu == sm_CarSelect)
-	{
-		//Remove the current Child
-		mSceneMgr->getSceneNode("CarSelector")->removeAndDestroyAllChildren();
-		mSceneMgr->destroyEntity("CarSelector");
-
-		//attach the new child
-		Ogre::Entity* selectorEnt = GetNextCarModel(1);
-		mSceneMgr->getSceneNode("CarSelector")->attachObject(selectorEnt);
-
-		//nextSubmenu = sm_Lobby;
 	}
 }
 void MenuScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
@@ -887,7 +898,7 @@ void MenuScene::ConfirmCarChoice()
 	playerSelectingCar++;
 
 	char words[128];
-	sprintf_s(words, 128, "Player %i Select:", playerSelectingCar+1);
+	sprintf_s(words, 128, "Player %i Select", playerSelectingCar+1);
 	carSelectionTitle->setCaption(words);
 
 	if (playerSelectingCar >= numLocalPlayers)

@@ -17,8 +17,6 @@ PlayerLabel::PlayerLabel(Ogre::SceneNode* sceneNode, Ogre::Entity* checkBoxEnt, 
 
 PlayerLabel::~PlayerLabel()
 {
-	mSceneNode->removeAndDestroyAllChildren();
-	mSceneNode->getParentSceneNode()->removeAndDestroyChild(mSceneNode->getName());
 }
 
 void PlayerLabel::SetReadyToPlay(bool ready)
