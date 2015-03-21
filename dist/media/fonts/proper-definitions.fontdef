@@ -33,7 +33,7 @@ BlueHighway-12
 Player
 {
 	type 		truetype
-	source 		bluehigh.ttf
+	source 		HATTEN.ttf
 	size 		10
 	resolution 	1200
 }

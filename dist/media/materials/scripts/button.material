@@ -6,7 +6,7 @@ material button
 		{
 			texture_unit
 			{
-				texture buttons/button.png
+				texture buttons/ButtonBackground.png
 			}
 		}
 	}

@@ -50,11 +50,11 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	sprintf_s(pp, 128, "playerPostionNum%i", ID);
 	positionText = new Ogre::MovableText(pp, "1");
 	positionText->setVisibilityFlags(RenderOnly[ID]);
-	positionNumNode->scale(Ogre::Vector3(3, 3, 1));
+	positionNumNode->scale(Ogre::Vector3(2, 2, 1));
 	positionNumNode->attachObject(positionText);
 
 	Ogre::SceneNode* positionModNode = positionNumNode->createChildSceneNode();
-	positionModNode->translate(-0.2, -0.11, 0);
+	positionModNode->translate(-0.1, -0.2, 0);
 	char ppm[128];
 	sprintf_s(ppm, 128, "playerPostionMod%i", ID);
 	positionModText = new Ogre::MovableText(ppm, "st");

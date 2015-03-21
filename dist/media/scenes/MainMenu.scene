@@ -61,7 +61,7 @@
         <node>
             <position x="28.3" y="0.8" z="-4.3"/>
             <scale x="0.5" y="0.5" z="1"/>
-            <text name="someText" caption="1 Player"></text>
+            <text name="someText" caption="1 Player"><color r="0.7" g="0.7" b="0.7"/></text>
         </node>
          <node name="bPlayers_2">
             <position x="32" y="1" z="-5"/>
@@ -71,7 +71,7 @@
         <node>
             <position x="32.2" y="0.8" z="-4.3"/>
             <scale x="0.5" y="0.5" z="1"/>
-            <text name="someText" caption="2 Players"></text>
+            <text name="someText" caption="2 Players"><color r="0.7" g="0.7" b="0.7"/></text>
         </node>
         <node name="bPlayers_3">
             <position x="28" y="-1" z="-5"/>
@@ -81,7 +81,7 @@
         <node>
             <position x="28.3" y="-1.1" z="-4.3"/>
             <scale x="0.5" y="0.5" z="1"/>
-            <text name="someText" caption="3 Players"></text>
+            <text name="someText" caption="3 Players"><color r="0.7" g="0.7" b="0.7"/></text>
         </node>
          <node name="bPlayers_4">
             <position x="32" y="-1" z="-5"/>
@@ -91,7 +91,7 @@
         <node>
             <position x="32.2" y="-1.1" z="-4.3"/>
             <scale x="0.5" y="0.5" z="1"/>
-            <text name="someText" caption="4 Players"></text>
+            <text name="someText" caption="4 Players"><color r="0.7" g="0.7" b="0.7"/></text>
         </node>
 
         <!--Level Select-->

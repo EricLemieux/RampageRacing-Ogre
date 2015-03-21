@@ -667,11 +667,14 @@ void DotSceneLoader::processMovableText(tinyxml2::XMLElement *XMLNode, SceneNode
 {
 	String name = getAttrib(XMLNode, "name");
 	String caption = getAttrib(XMLNode, "caption");
-	String color = getAttrib(XMLNode, "color");
+
+	XMLElement* color = XMLNode->FirstChildElement("color");
 
 	try
 	{
 		MovableText* pText = new MovableText(name, caption);
+		if (color)
+			pText->setColor(parseColour(color));
 		pText->setTextAlignment(MovableText::H_CENTER, MovableText::V_CENTER);
 		pParent->attachObject(pText);
 	}
