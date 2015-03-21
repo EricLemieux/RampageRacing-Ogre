@@ -26,13 +26,21 @@
         </node>
 		<node name="bStart" id="10">
             <position x="-2" y="0.75" z="-5"/>
-            <rotation qx="0" qy="0.3" qz="0" qw="1"/>
-            <entity name="bStartEnt0" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_start"></entity>
-        </node>
+            <entity name="bStartEnt0" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <node>
+                <position x="0.4" y="-0.2" z="1"/>
+                <scale x="0.5" y="0.5" z="1"/>
+                <text name="someText" caption="Start"><color r="0.7" g="0.7" b="0.7"/></text>
+            </node>
+        </node>       
 		<node name="bExit" id="10">
             <position x="-2" y="-0.75" z="-5"/>
-            <rotation qx="0" qy="0.3" qz="0" qw="1"/>
-            <entity name="bExitEnt0" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_quit"></entity>
+            <entity name="bExitEnt0" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <node>
+                <position x="0.4" y="-0.1" z="1"/>
+                <scale x="0.5" y="0.5" z="1"/>
+                <text name="someText" caption="Quit"><color r="0.7" g="0.7" b="0.7"/></text>
+            </node>
         </node>
 		<node name="Omni01" id="5">
             <position x="0" y="0" z="0" />
@@ -57,41 +65,41 @@
             <position x="28" y="1" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <entity name="bPlayers_1" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button"></entity>
+            <node>
+                <position x="0.4" y="-0.3" z="1"/>
+                <scale x="0.5" y="0.5" z="1"/>
+                <text name="someText" caption="1 Player"><color r="0.7" g="0.7" b="0.7"/></text>
+            </node>
         </node>
-        <node>
-            <position x="28.3" y="0.8" z="-4.3"/>
-            <scale x="0.5" y="0.5" z="1"/>
-            <text name="someText" caption="1 Player"><color r="0.7" g="0.7" b="0.7"/></text>
-        </node>
-         <node name="bPlayers_2">
+        <node name="bPlayers_2">
             <position x="32" y="1" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <entity name="bPlayers_2" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button"></entity>
-        </node>
-        <node>
-            <position x="32.2" y="0.8" z="-4.3"/>
-            <scale x="0.5" y="0.5" z="1"/>
-            <text name="someText" caption="2 Players"><color r="0.7" g="0.7" b="0.7"/></text>
+            <node>
+                <position x="0.1" y="-0.3" z="1"/>
+                <scale x="0.5" y="0.5" z="1"/>
+                <text name="someText" caption="2 Player"><color r="0.7" g="0.7" b="0.7"/></text>
+            </node>
         </node>
         <node name="bPlayers_3">
             <position x="28" y="-1" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <entity name="bPlayers_3" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button"></entity>
-        </node>
-        <node>
-            <position x="28.3" y="-1.1" z="-4.3"/>
-            <scale x="0.5" y="0.5" z="1"/>
-            <text name="someText" caption="3 Players"><color r="0.7" g="0.7" b="0.7"/></text>
+            <node>
+                <position x="0.4" y="-0.1" z="1"/>
+                <scale x="0.5" y="0.5" z="1"/>
+                <text name="someText" caption="3 Player"><color r="0.7" g="0.7" b="0.7"/></text>
+            </node>
         </node>
          <node name="bPlayers_4">
             <position x="32" y="-1" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <entity name="bPlayers_4" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button"></entity>
-        </node>
-        <node>
-            <position x="32.2" y="-1.1" z="-4.3"/>
-            <scale x="0.5" y="0.5" z="1"/>
-            <text name="someText" caption="4 Players"><color r="0.7" g="0.7" b="0.7"/></text>
+            <node>
+                <position x="0.1" y="-0.1" z="1"/>
+                <scale x="0.5" y="0.5" z="1"/>
+                <text name="someText" caption="4 Player"><color r="0.7" g="0.7" b="0.7"/></text>
+            </node>
         </node>
 
         <!--Level Select-->
@@ -120,15 +128,24 @@
         </node>
         <node name="bPlay">
             <position x="2.7" y="18.5" z="-5"/>
-            <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <scale x="0.7" y="0.7" z="0.7" />
-            <entity name="bPlay" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_play"></entity>
+            <entity name="bPlay" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <node>
+                <position x="-0.0" y="0" z="1"/>
+                <scale x="0.5" y="0.5" z="1"/>
+                <text name="someText" caption="Select"><color r="0.7" g="0.7" b="0.7"/></text>
+            </node>
         </node>
         <node name="bHome">
             <position x="-3" y="18.3" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <scale x="0.5" y="0.5" z="0.5" />
-            <entity name="bHome" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_home"></entity>
+            <entity name="bHome" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <node>
+                <position x="0.6" y="0" z="1"/>
+                <scale x="0.5" y="0.5" z="1"/>
+                <text name="someText" caption="Home"><color r="0.7" g="0.7" b="0.7"/></text>
+            </node>
         </node>
         <node name="Omni" id="5">
             <position x="20" y="0" z="0" />
@@ -176,7 +193,12 @@
             <position x="32.7" y="18.5" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <scale x="0.7" y="0.7" z="0.7" />
-            <entity name="bForceStart" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_play"></entity>
+            <entity name="bForceStart" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
+            <node>
+                <position x="-0.05" y="0.0" z="1"/>
+                <scale x="0.4" y="0.4" z="1"/>
+                <text name="someText" caption="Force Start"><color r="0.7" g="0.7" b="0.7"/></text>
+            </node>
         </node>
         <node name="controllerLayout">
             <position x="31.5" y="20.4" z="-5"/>
