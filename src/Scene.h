@@ -57,6 +57,7 @@ public:
 	~Scene();
 
 	virtual bool Update();
+	virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt);
 
 	void ClearScene();
 
@@ -167,6 +168,7 @@ public:
 	~MenuScene();
 
 	virtual bool Update();
+	virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt);
 
 	virtual void KeyPressed(const OIS::KeyEvent &arg);
 	virtual void KeyReleased(const OIS::KeyEvent &arg);
@@ -212,6 +214,8 @@ private:
 
 	Ogre::SceneNode* carSelectionTitleNode;
 	Ogre::MovableText* carSelectionTitle;
+
+	Ogre::AnimationState* animationState;
 };
 
 class IntroScene : public Scene

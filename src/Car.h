@@ -57,4 +57,10 @@ private:
 	int brakeForce;
 	float steerValue;
 	float rollValue;
+
+	Ogre::SceneNode* mCountdownNode;
+	Ogre::MovableText* mCountdownText;
+	float countdownTime = 0.0f;
+
+	Ogre::SceneNode* mCamera;
 };

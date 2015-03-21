@@ -17,11 +17,11 @@
             <position x="0" y="0" z="-1"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
         </node>
-		<node name="Car" id="99">
+		<node name="Robot" id="99">
             <position x="5" y="0" z="-20"/>
             <rotation qx="0" qy="0" qz="0" qw="1"/>
             <scale x="0.5" y="0.5" z="0.5"/>
-            <entity name="Car" castShadows="true" receiveShadows="true" meshFile="BoltCar.mesh">
+            <entity name="Robot" castShadows="true" receiveShadows="true" meshFile="AnimatedNPC.mesh">
             </entity>
         </node>
 		<node name="bStart" id="10">

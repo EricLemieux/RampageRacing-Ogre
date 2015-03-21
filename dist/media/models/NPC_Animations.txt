@@ -1,0 +1,10 @@
+Animations
+===========
+[x] Frames 0-60: IDLE
+[x] Frames 61-120: IDLE TO POINT UP
+[x] Frames 121-180: POINTING UP & IDLE
+[X] Frames 181-240: POINT UP TO POINT LOW
+[X] Frames 241-300: POINTING LOW & IDLE
+[X] Frames 301-360: POINT LOW TO POINT UP
+[X] Frames 361-420: IDLE TO POINT LOW
+

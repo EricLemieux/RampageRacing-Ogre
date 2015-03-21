@@ -50,6 +50,11 @@ bool Scene::Update()
 	return true;
 }
 
+bool Scene::frameRenderingQueued(const Ogre::FrameEvent &evt)
+{
+	return true;
+}
+
 void Scene::ClearScene()
 {
 	//mSceneMgr->clearScene();
@@ -228,7 +233,7 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 	{
 		mCar->mTurning = 1.0f;
 	}
-	else if (arg.key == OIS::KC_A)
+	if (arg.key == OIS::KC_A)
 	{
 		mCar->mTurning = -1.0f;
 	}
@@ -895,7 +900,6 @@ bool MenuScene::Update()
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
 
-	mSceneMgr->getSceneNode("Car")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 	mSceneMgr->getSceneNode("CarSelector")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 
 	if (mCurrentSelectedLevel != "")
@@ -929,6 +933,13 @@ bool MenuScene::Update()
 	return true;
 }
 
+bool MenuScene::frameRenderingQueued(const Ogre::FrameEvent &evt)
+{
+	animationState->addTime(evt.timeSinceLastFrame);
+
+	return true;
+}
+
 void MenuScene::LoadLevel(Ogre::String levelName)
 {
 	//Do the base scene stuff
@@ -941,6 +952,14 @@ void MenuScene::LoadLevel(Ogre::String levelName)
 	//Set the default level
 	mCurrentSelectedLevel = "Roadway";
 	GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->setPosition(0.5, 20, -5);
+
+	Ogre::Animation::setDefaultInterpolationMode(Ogre::Animation::IM_LINEAR);
+	Ogre::Animation::setDefaultRotationInterpolationMode(Ogre::Animation::RIM_LINEAR);
+
+	mSceneMgr->getEntity("Robot")->getAllAnimationStates()->createAnimationState("Idle", 0, 1000);
+	animationState = mSceneMgr->getEntity("Robot")->getAnimationState("Idle");
+	animationState->setLoop(true);
+	animationState->setEnabled(true);
 }
 
 Ogre::Vector3 MenuScene::GetCamPosFromSubMenu(int subMenu)

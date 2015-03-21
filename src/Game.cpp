@@ -80,6 +80,12 @@ bool Game::Update()
 
 	return true;
 }
+
+bool Game::frameRenderingQueued(const Ogre::FrameEvent &evt)
+{
+	mCurrentScene->frameRenderingQueued(evt);
+	return BaseApplication::frameRenderingQueued(evt);
+}
  
  
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32

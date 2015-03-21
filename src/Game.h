@@ -24,6 +24,7 @@ protected:
     virtual void createScene(void);
 
 	virtual bool Update();
+	virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt);
 
 	virtual bool keyPressed( const OIS::KeyEvent &arg );
 	virtual bool keyReleased( const OIS::KeyEvent &arg );

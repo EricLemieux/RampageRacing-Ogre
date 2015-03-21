@@ -42,6 +42,7 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	camNode->translate(Ogre::Vector3(0.0f, 10.0f, 40.0f));
 
 	mCameras[ID]->lookAt(this->GetSceneNode()->getPosition());
+	this->mCamera = camNode;
 
 	//Set up the HUD elements attached to the camera
 	Ogre::SceneNode* positionNumNode = camNode->createChildSceneNode();
@@ -69,6 +70,13 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	lapText = new Ogre::MovableText(lc, "Lap 1/3");
 	lapText->setVisibilityFlags(RenderOnly[ID]);
 	lapNode->attachObject(lapText);
+
+	//Set up the countdown for the start of the race
+	mCountdownNode = mSceneNode->createChildSceneNode();
+	mCountdownNode->scale(10, 10, 1);
+	mCountdownText = new Ogre::MovableText("countdown", "3");
+	mCountdownText->setVisibilityFlags(RenderOnly[ID]);
+	mCountdownNode->attachObject(mCountdownText);
 }
 
 Car::~Car()
@@ -106,96 +114,103 @@ void Car::TurnLeft(float value)
 
 void Car::Update(void)
 {
-	for (int i = 0; i < m_vehicle->getNumWheels(); ++i){
-		m_vehicle->updateWheelTransform(i, true);
+	if (countdownTime < 4.0f)
+	{
+		countdownTime += 1.0f / 120.0f;
+
+		float rem = float((int)countdownTime) - countdownTime;
+
+		char str[8];
+		sprintf_s(str,8,"%i",3-(int)countdownTime);
+		mCountdownText->setCaption(str);
+
+		mCountdownNode->setPosition(Ogre::Math::lerp(mCamera->getPosition() + Ogre::Vector3(2, 0, 10), mCamera->getPosition() + Ogre::Vector3(1, 5, 50), rem));
 	}
-
-	float maxSpeed = 100;
-	float maxSpeedb = -50;
-	float currentSpeed = mRigidBody->getLinearVelocity().norm();
-	float speedRatio = 0.01f;
-	float speedRatiob = 0.01f;
-	if (currentSpeed != 0){
-		speedRatio = currentSpeed / maxSpeed;
-		speedRatiob = currentSpeed / maxSpeedb;
-	}
-	
-	if (stunCounter > 0){
-		rollValue *= 0.97;
-		steerValue = 0;
-		engineForce = 0;
-		brakeForce = 100;
-		--stunCounter;
-	}
-	else {
-		//Move the car if the button is down
-		if (mCanMoveForward != 0.0f && !mFinishedRace)
-		{
-			if (mCanMoveForward > 1.0f)
-				mCanMoveForward = 1.0f;
-			engineForce = (-5000.0f / speedRatio) * mCanMoveForward;
-			brakeForce = 0;
-		}
-		else if (mCanMoveBackward != 0.0f && !mFinishedRace)
-		{
-			if (mCanMoveBackward > 1.0f)
-				mCanMoveBackward = 1.0f;
-			engineForce = (-5000.f / speedRatiob) * mCanMoveBackward;
-			brakeForce = 50;
-		}
-		else
-		{
-			engineForce = 0;
-			brakeForce = 50;
+	else	//Only let the car move when the countdown is done
+	{
+		for (int i = 0; i < m_vehicle->getNumWheels(); ++i){
+			m_vehicle->updateWheelTransform(i, true);
 		}
 
-		if (mTurning != 0.0f && !mFinishedRace)
-		{
-			rollValue += (0.002f * mTurning);
-			steerValue += (0.002f * mTurning);
-
-			TurnRight(steerValue * 10);
-
-			if (rollValue > 0.2f){
-				rollValue = 0.2f;
-			}
-			else if (rollValue < -0.2f){
-				rollValue = -0.2f;
-			}
-			if (steerValue > 0.2f)
-				steerValue = 0.2f;
-			else if (steerValue < -0.2f)
-				steerValue = -0.2f;
+		float maxSpeed = 100;
+		float maxSpeedb = -50;
+		float currentSpeed = mRigidBody->getLinearVelocity().norm();
+		float speedRatio = 0.01f;
+		float speedRatiob = 0.01f;
+		if (currentSpeed != 0){
+			speedRatio = currentSpeed / maxSpeed;
+			speedRatiob = currentSpeed / maxSpeedb;
 		}
-		else
-		{
+
+		if (stunCounter > 0){
 			rollValue *= 0.97;
 			steerValue = 0;
+			engineForce = 0;
+			brakeForce = 100;
+			--stunCounter;
 		}
+		else {
+			//Move the car if the button is down
+			if (mCanMoveForward != 0.0f && !mFinishedRace)
+			{
+				if (mCanMoveForward > 1.0f)
+					mCanMoveForward = 1.0f;
+				engineForce = (-5000.0f / speedRatio) * mCanMoveForward;
+				brakeForce = 0;
+			}
+			else if (mCanMoveBackward != 0.0f && !mFinishedRace)
+			{
+				if (mCanMoveBackward > 1.0f)
+					mCanMoveBackward = 1.0f;
+				engineForce = (-5000.f / speedRatiob) * mCanMoveBackward;
+				brakeForce = 50;
+			}
+			else
+			{
+				engineForce = 0;
+				brakeForce = 50;
+			}
+
+			if (mTurning != 0.0f && !mFinishedRace)
+			{
+				rollValue += (0.002f * mTurning);
+				steerValue += (0.002f * mTurning);
+
+				TurnRight(steerValue * 10);
+
+				if (rollValue > 0.2f){
+					rollValue = 0.2f;
+				}
+				else if (rollValue < -0.2f){
+					rollValue = -0.2f;
+				}
+				if (steerValue > 0.2f)
+					steerValue = 0.2f;
+				else if (steerValue < -0.2f)
+					steerValue = -0.2f;
+			}
+			else
+			{
+				rollValue *= 0.97;
+				steerValue = 0;
+			}
+		}
+
+		int wheelIndex = 0;
+		m_vehicle->setBrake(brakeForce, wheelIndex);
+		wheelIndex = 1;
+		m_vehicle->setBrake(brakeForce, wheelIndex);
+
+		btScalar mat[16];
+		mRigidBody->getWorldTransform().getOpenGLMatrix(mat);
+		btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
+		mRigidBody->applyCentralForce(forward * engineForce);
+
+		wheelIndex = 3;
+		wheelIndex = 2;
+
+		ghost->setWorldTransform(mRigidBody->getWorldTransform());
 	}
-	//if (engineForce > 000)
-		//engineForce = 000;
-
-	int wheelIndex = 0;
-	//m_vehicle->applyEngineForce(engineForce, wheelIndex);
-	m_vehicle->setBrake(brakeForce, wheelIndex);
-	wheelIndex = 1;
-	//m_vehicle->applyEngineForce(engineForce, wheelIndex);
-	m_vehicle->setBrake(brakeForce, wheelIndex);
-
-	btScalar mat[16];
-	mRigidBody->getWorldTransform().getOpenGLMatrix(mat);
-	btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
-	mRigidBody->applyCentralForce(forward * engineForce);
-
-	wheelIndex = 3;
-	//m_vehicle->applyEngineForce(engineForce, wheelIndex);
-	//m_vehicle->setBrake(100, wheelIndex);
-	wheelIndex = 2;
-	//m_vehicle->applyEngineForce(engineForce, wheelIndex);
-	//m_vehicle->setBrake(100, wheelIndex);
-
-	ghost->setWorldTransform(mRigidBody->getWorldTransform());
 
 	GameObject::Update();
 
