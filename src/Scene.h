@@ -45,6 +45,8 @@
 
 #include "PlayerLabel.h"
 
+#include "Sound.h"
+
 //Bad practice but works
 static unsigned int numLocalPlayers = 1;
 
@@ -89,6 +91,8 @@ protected:
 
 	btClock clock;
 	float timeStep;
+
+	Sound soundSys;
 
 	bool swapToTheNewScene = false;
 	std::shared_ptr<Scene> newScene;
@@ -150,6 +154,8 @@ private:
 	std::shared_ptr<Car> mCars[4];
 	std::shared_ptr<Car> mCar;
 	btRigidBody* body;
+
+
 
 	ContactSensorCallback* callback;
 	//currently 3 because 2 checkpoints and 1 finish line
