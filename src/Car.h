@@ -63,4 +63,5 @@ private:
 	float countdownTime = 0.0f;
 
 	Ogre::SceneNode* mCamera;
+	Ogre::Vector3 mCameraMin, mCameraMax;
 };

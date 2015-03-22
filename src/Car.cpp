@@ -40,7 +40,9 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	Ogre::SceneNode* camNode = mSceneManager->getSceneNode(name)->createChildSceneNode();
 	camNode->attachObject(mCameras[ID].get());
 
-	camNode->translate(Ogre::Vector3(0.0f, 10.0f, 40.0f));
+	mCameraMin = Ogre::Vector3(0.0f, 10.0f, 40.0f);
+	mCameraMax = Ogre::Vector3(0.0f, 9.5f, 42.0f);
+	camNode->translate(mCameraMin);
 
 	mCameras[ID]->lookAt(this->GetSceneNode()->getPosition());
 	this->mCamera = camNode;
@@ -129,6 +131,8 @@ void Car::Update(void)
 	}
 	else	//Only let the car move when the countdown is done
 	{
+		mCountdownNode->setPosition(0, -300, 0);
+
 		for (int i = 0; i < m_vehicle->getNumWheels(); ++i){
 			m_vehicle->updateWheelTransform(i, true);
 		}
@@ -141,6 +145,10 @@ void Car::Update(void)
 		if (currentSpeed != 0){
 			speedRatio = currentSpeed / maxSpeed;
 			speedRatiob = currentSpeed / maxSpeedb;
+
+			//Move the camera based on the speed ratio
+			//mCamera->translate(Ogre::Vector3(0,0,speedRatio * 0.01f));
+			mCamera->setPosition(Ogre::Math::lerp(mCameraMin, mCameraMax, speedRatio));
 		}
 
 		if (stunCounter > 0){
