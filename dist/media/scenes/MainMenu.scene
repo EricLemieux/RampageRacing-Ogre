@@ -64,7 +64,7 @@
         <node name="bPlayers_1">
             <position x="28" y="1" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
-            <entity name="bPlayers_1" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button"></entity>
+            <entity name="bPlayers_1" castShadows="true" receiveShadows="true" meshFile="button.mesh" materialFile="button_1Players"></entity>
             <node>
                 <position x="0.4" y="-0.3" z="1"/>
                 <scale x="0.5" y="0.5" z="1"/>

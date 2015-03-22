@@ -20,7 +20,7 @@ material button_start
 		{
 			texture_unit
 			{
-				texture buttons/buttonStartTex.png
+				texture buttons/StartState1.png
 			}
 		}
 	}
@@ -34,7 +34,21 @@ material button_quit
 		{
 			texture_unit
 			{
-				texture buttons/buttonExitTex.png
+				texture buttons/ExitState1.png
+			}
+		}
+	}
+}
+
+material button_1Players
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/PlayerOneImage.png
 			}
 		}
 	}
