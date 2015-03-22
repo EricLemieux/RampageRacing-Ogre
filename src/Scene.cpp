@@ -102,7 +102,6 @@ void Scene::SwapToGameplayLevel(Ogre::String levelName)
 	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers));
 	newScene->LoadLevel(levelName);
 	newScene->AddCarToScene("myCar");
-	newScene->AddTriggerVolumesToScene();
 	swapToTheNewScene = true;
 }
 
@@ -162,14 +161,14 @@ void GameplayScene::LoadLevel(Ogre::String levelName)
 		}
 	}
 
+	AddTriggerVolumesToScene();
 	SetUpItemBoxes();
 }
 
 void GameplayScene::SetUpItemBoxes()
 {
-	//should be replaced with the number of checkpoints, currently its only 3 so whatever
-	//TODO
-	for (unsigned int i = 1; i < 3; ++i)
+	unsigned int count = mTriggerVolumes.size();
+	for (unsigned int i = 1; i < count; ++i)
 	{
 		for (unsigned int j = 0; j < 3; ++j)
 		{
@@ -180,7 +179,7 @@ void GameplayScene::SetUpItemBoxes()
 			Ogre::Quaternion rot;
 
 			char checkpointName[128];
-			sprintf_s(checkpointName, 128, "triggerCheckpoint%i", i);
+			sprintf_s(checkpointName, 128, "checkpoint%i", i);
 			Ogre::Matrix4 m = mSceneMgr->getSceneNode(checkpointName)->_getFullTransform();
 			Ogre::Vector3 rightVector = Ogre::Vector3(m[0][0], m[0][1], m[0][2]).normalisedCopy();
 
@@ -229,6 +228,16 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 			mSceneMgr->destroySceneNode("Particle");
 		Ogre::SceneNode* particleNode = mCar->GetSceneNode()->createChildSceneNode("Particle");
 		particleNode->attachObject(particleSys);
+	}
+
+	if (arg.key == OIS::KC_T)
+	{
+		char name[32];
+		sprintf_s(name, 32, "checkpoint%i",mCar->lastCheckpoint);
+
+		//The physics doesnt really like this but it works, so its fine for now
+		btTransform trans(OgreToBtQuaternion(mSceneMgr->getSceneNode(name)->getOrientation()), OgreToBtVector3(mSceneMgr->getSceneNode(name)->getPosition()));
+		mCar->GetRigidBody()->setWorldTransform(trans);
 	}
 
 	if (arg.key == OIS::KC_D)
@@ -302,15 +311,21 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 
 void GameplayScene::AddTriggerVolumesToScene()
 {
-	//Temp only one trigger volume
-	mTriggerVolumes[0] = new TriggerVolume("triggerFinishLine", GetSceneManager());
-	GetPhysicsWorld()->addBodyToWorld(mTriggerVolumes[0]->GetRigidBody());
+	//Create each checkpoint
+	unsigned int count = 99;
+	for (unsigned int i = 0; i < count; ++i)
+	{
+		char name[32];
+		sprintf_s(name, 32, "checkpoint%i",i);
 
-	mTriggerVolumes[1] = new TriggerVolume("triggerCheckpoint1", GetSceneManager());
-	GetPhysicsWorld()->addBodyToWorld(mTriggerVolumes[1]->GetRigidBody());
-
-	mTriggerVolumes[2] = new TriggerVolume("triggerCheckpoint2", GetSceneManager());
-	GetPhysicsWorld()->addBodyToWorld(mTriggerVolumes[2]->GetRigidBody());
+		if (mSceneMgr->hasSceneNode(name))
+		{
+			mTriggerVolumes.push_back(std::shared_ptr<TriggerVolume>(new TriggerVolume(name, GetSceneManager())));
+			mPhysicsWorld->addBodyToWorld(mTriggerVolumes[i]->GetRigidBody());
+		}
+		else
+			break;
+	}
 }
 
 bool GameplayScene::Update()
@@ -332,11 +347,10 @@ bool GameplayScene::Update()
 		if (bounce >= 1.0f || bounce <= -1.0f)
 			goingUp = !goingUp;
 
-		mCars[i]->GetSceneNode()->translate(0,bounce,0);
+		mCars[i]->GetSceneNode()->translate(0,bounce+2.0f,0);
 		
 		char shadowName[32];
 		sprintf_s(shadowName, 32, "shadow%i", i);
-		float shadowSize = bounce + 2.0f;
 		mSceneMgr->getSceneNode(shadowName)->setPosition(0, (-1.0f * (bounce*0.3f)) - 1.7f, 0);
 	}
 
@@ -382,16 +396,15 @@ bool GameplayScene::Update()
 				if (manifoldArray.size() > 0){
 					btPersistentManifold* manifold = manifoldArray[0];
 
-					//HARD CODED CHECK POINT NUMBERS, FIX THIS AT SOME POINT
-					for (unsigned int tv = 0; tv < 3; ++tv){
-						if (manifold->getBody1() == mTriggerVolumes[tv]->GetRigidBody()){
-							if (mCars[i]->checkPointsHit == 0 && tv == 1){
+					unsigned int count = mTriggerVolumes.size();
+					for (unsigned int tv = 0; tv < count; ++tv){
+						if (tv != mCars[i]->lastCheckpoint && (manifold->getBody0() == mTriggerVolumes[tv]->GetRigidBody() || manifold->getBody1() == mTriggerVolumes[tv]->GetRigidBody())){
+							mCars[i]->lastCheckpoint = tv;
+							if (tv != 0)
+							{
 								mCars[i]->checkPointsHit++;
 							}
-							else if (mCars[i]->checkPointsHit == 1 && tv == 2){
-								mCars[i]->checkPointsHit++;
-							}
-							else if (mCars[i]->checkPointsHit == 2 && tv == 0){
+							else if (mCars[i]->checkPointsHit > (count/2) && tv == 0){
 								mCars[i]->checkPointsHit = 0;
 								mCars[i]->lapCounter++;
 
@@ -593,6 +606,18 @@ void GameplayScene::ControllerInput()
 			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_X)
 			{
 				UseItem(i);
+			}
+
+			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_BACK)
+			{
+				char name[32];
+				sprintf_s(name, 32, "checkpoint%i", mCars[i]->lastCheckpoint);
+
+				//The physics doesnt really like this but it works, so its fine for now
+				btTransform trans(OgreToBtQuaternion(mSceneMgr->getSceneNode(name)->getOrientation()), OgreToBtVector3(mSceneMgr->getSceneNode(name)->getPosition()));
+				mCars[i]->GetRigidBody()->setWorldTransform(trans);
+
+				mCars[i]->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
 			}
 			
 			//Left joystick for turning

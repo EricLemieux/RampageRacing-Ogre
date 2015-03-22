@@ -10,7 +10,7 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	someEnt->setCastShadows(true);
 	mSceneNode->attachObject(someEnt);
 
-	Ogre::Matrix4 t = mSceneManager->getSceneNode("triggerFinishLine")->_getFullTransform();
+	Ogre::Matrix4 t = mSceneManager->getSceneNode("checkpoint0")->_getFullTransform();
 	Ogre::Vector3 forward = Ogre::Vector3(t[2][0], t[2][1], t[2][2]);
 	
 	Ogre::Vector3 pos = Ogre::Vector3(t[0][3], t[1][3], t[2][3]);
@@ -18,7 +18,7 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	pos.y += 5;
 	mSceneNode->translate(pos);
 
-	mSceneNode->setOrientation(mSceneManager->getSceneNode("triggerFinishLine")->getOrientation());
+	mSceneNode->setOrientation(mSceneManager->getSceneNode("checkpoint0")->getOrientation());
 
 	world = mWorld;
 
@@ -155,7 +155,6 @@ void Car::Update(void)
 			speedRatiob = currentSpeed / maxSpeedb;
 
 			//Move the camera based on the speed ratio
-			//mCamera->translate(Ogre::Vector3(0,0,speedRatio * 0.01f));
 			mCamera->setPosition(Ogre::Math::lerp(mCameraMin, mCameraMax, speedRatio));
 		}
 
@@ -231,7 +230,7 @@ void Car::Update(void)
 
 	GameObject::Update();
 
-	mSceneNode->roll(Ogre::Radian(-rollValue*2));
+	mSceneNode->roll(Ogre::Radian(-rollValue*1.5f));
 }
 
 void Car::InitRigidBody()

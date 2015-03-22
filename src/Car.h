@@ -49,6 +49,8 @@ public:
 	Ogre::MovableText* positionModText;
 	Ogre::MovableText* lapText;
 
+	unsigned int lastCheckpoint=0;
+
 private:
 	float speed = 0.0f;
 	float turnSpeed = 0.3f;

@@ -1,134 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scene formatVersion="1.0" upAxis="y" unitsPerMeter="1" unitType="centimeters" minOgreVersion="1.9" ogreMaxVersion="2.6.4" author="OgreMax Scene Exporter (www.ogremax.com)" application="Maya">
     <environment>
+        <colourAmbient r="1.0" g="1.0" b="1.0"/>
         <colourBackground r="0" g="0" b="0"/>
         <clipping near="0" far="1000"/>
     </environment>
     <nodes>
         <!--Trigger Volumes-->
     	<node name="triggerFinishLine">
-            <position x="647.085" y="0" z="96.3794"/>
-            <rotation qx="0" qy="0.688714" qz="0" qw="0.725033"/>
+            <position x="-90" y="0" z="-95"/>
+            <rotation qx="0" qy="-1.0" qz="0" qw="1"/>
             <scale x="100" y="30" z="2"/>
-            <entity name="triggerFinishLine" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh" materialFile="finishline">
+            <entity name="triggerFinishLine" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
             </entity>
-            
         </node>
-        <!--<node name="startLight">
-            <position x="647.085" y="40" z="96.3794"/>
-            <light name="startLight" type="point" intensity="1.0" contrast="0" castShadows="true">
-                <colourDiffuse r="1" g="1" b="1" />
-                <colourSpecular r="1" g="1" b="1" />
-            </light>
-        </node>-->
         <node name="triggerCheckpoint1">
-            <position x="370" y="0" z="-1920"/>
+            <position x="2100" y="0" z="-590"/>
             <rotation qx="0" qy="-1.0" qz="0" qw="1"/>
             <scale x="100" y="30" z="2"/>
             <entity name="triggerCheckpoint1" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
             </entity>
         </node>
         <node name="triggerCheckpoint2">
-            <position x="721.578" y="0" z="-737.359"/>
-            <rotation qx="0" qy="0.165192" qz="0" qw="0.986261"/>
+            <position x="370" y="0" z="-1920"/>
+            <rotation qx="0" qy="-1.0" qz="0" qw="1"/>
             <scale x="100" y="30" z="2"/>
             <entity name="triggerCheckpoint2" castShadows="false" receiveShadows="false" meshFile="triggerVolume.mesh">
             </entity>
         </node>
 
 		<!--Lights-->
-		<node name="light1">
-			<position x="-206" y="75" z="-245"/>
+		<node name="sun">
+			<position x="0" y="250" z="0"/>
 			<rotation qx="0" qy="0" qz="0" qw="1"/>
-			<light name="light1" type="point" contrast="0" castShadows="true">
+			<light name="sunLight" type="point" intensity="10.0" contrast="0">
 				<colourDiffuse r="0.5" g="0.5" b="0.5" />
 				<colourSpecular r="0.5" g="0.5" b="0.5" />
 			</light>
 		</node>
-        <node name="light2">
-            <position x="2005" y="75" z="-1565"/>
-            <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <light name="light2" type="point" contrast="0" castShadows="true">
-                <colourDiffuse r="0.5" g="0.5" b="0.5" />
-                <colourSpecular r="0.5" g="0.5" b="0.5" />
-            </light>
-        </node>
-        <node name="light3">
-            <position x="220" y="75" z="-1845"/>
-            <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <light name="light3" type="point" contrast="0" castShadows="true">
-                <colourDiffuse r="0.5" g="0.5" b="0.5" />
-                <colourSpecular r="0.5" g="0.5" b="0.5" />
-            </light>
-        </node>
-        <node name="light4">
-            <position x="2350" y="75" z="-655"/>
-            <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <light name="light4" type="point" contrast="0" castShadows="true">
-                <colourDiffuse r="0.5" g="0.5" b="0.5" />
-                <colourSpecular r="0.5" g="0.5" b="0.5" />
-            </light>
-        </node>
-        <node name="light5">
-            <position x="790" y="75" z="-1128"/>
-            <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <light name="light5" type="point" contrast="0" castShadows="true">
-                <colourDiffuse r="0.5" g="0.5" b="0.5" />
-                <colourSpecular r="0.5" g="0.5" b="0.5" />
-            </light>
-        </node>
-        <node name="light6">
-            <position x="1715" y="75" z="-280"/>
-            <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <light name="light6" type="point" contrast="0" castShadows="true">
-                <colourDiffuse r="0.5" g="0.5" b="0.5" />
-                <colourSpecular r="0.5" g="0.5" b="0.5" />
-            </light>
-        </node>
-        <node name="light7">
-            <position x="1850" y="75" z="330"/>
-            <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <light name="light7" type="point" contrast="0" castShadows="true">
-                <colourDiffuse r="0.5" g="0.5" b="0.5" />
-                <colourSpecular r="0.5" g="0.5" b="0.5" />
-            </light>
-        </node>
-        <node name="light8">
-            <position x="950" y="75" z="135"/>
-            <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <light name="light8" type="point" contrast="0" castShadows="true">
-                <colourDiffuse r="0.5" g="0.5" b="0.5" />
-                <colourSpecular r="0.5" g="0.5" b="0.5" />
-            </light>
-        </node>
 
 		<!--World-->
 		<node name="path">
             <position x="0" y="0" z="0"/>
             <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <entity name="path" castShadows="false" receiveShadows="true" meshFile="RoadwayPath.mesh" static="true" materialFile="roadway_road">
+            <entity name="path" castShadows="true" receiveShadows="true" meshFile="RoadwayPath.mesh" static="true" materialFile="roadway_road">
             </entity>
         </node>
         <node name="ground">
             <position x="0" y="0" z="0"/>
             <rotation qx="0" qy="0" qz="0" qw="1"/>
-            <entity name="ground" castShadows="false" receiveShadows="true" meshFile="RoadwayGround.mesh" static="true" materialFile="roadway_grass">
+            <entity name="ground" castShadows="true" receiveShadows="true" meshFile="RoadwayGround.mesh" static="true" materialFile="roadway_grass">
             </entity>
         </node>
         <node name="tunnel">
-            <entity name="tunnel" castShadows="false" receiveShadows="true" meshFile="RoadwayTunnel.mesh" static="true">
+            <entity name="tunnel" castShadows="true" receiveShadows="true" meshFile="RoadwayTunnel.mesh" static="true">
             </entity>
         </node>
         <node name="insideWall">
-            <entity name="insideWall" castShadows="false" receiveShadows="true" meshFile="RoadwayInsideWall.mesh" static="true">
+            <entity name="insideWall" castShadows="true" receiveShadows="true" meshFile="RoadwayInsideWall.mesh" static="true">
             </entity>
         </node>
         <node name="outsideWall">
-            <entity name="outsideWall" castShadows="false" receiveShadows="true" meshFile="RoadwayOutsideWall.mesh" static="true">
+            <entity name="outsideWall" castShadows="true" receiveShadows="true" meshFile="RoadwayOutsideWall.mesh" static="true">
             </entity>
         </node>
         <node name="buidings">
-            <entity name="buidings" castShadows="false" receiveShadows="true" meshFile="Roadway/Buildings.mesh" static="true">
+            <entity name="buidings" castShadows="true" receiveShadows="true" meshFile="Roadway/Buildings.mesh" static="true">
             </entity>
         </node>
     </nodes>
