@@ -232,6 +232,7 @@ if(WIN32)
 		CONFIGURATIONS All)
 
 	install(FILES 
+		${CMAKE_SOURCE_DIR}/copy/ogre.cfg
 		${CMAKE_SOURCE_DIR}/copy/plugins.cfg
 		${CMAKE_SOURCE_DIR}/copy/plugins_d.cfg
 		${CMAKE_SOURCE_DIR}/copy/resources.cfg
