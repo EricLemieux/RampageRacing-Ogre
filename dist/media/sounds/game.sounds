@@ -1,0 +1,4 @@
+#This file stores all of the sounds for the game.
+#File format
+#filepath looping
+meow.mp3 0

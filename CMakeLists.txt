@@ -230,6 +230,16 @@ if(WIN32)
 	install(TARGETS OgreApp
 		RUNTIME DESTINATION bin
 		CONFIGURATIONS All)
+
+	install(FILES 
+		${CMAKE_SOURCE_DIR}/copy/ogre.cfg
+		${CMAKE_SOURCE_DIR}/copy/plugins.cfg
+		${CMAKE_SOURCE_DIR}/copy/plugins_d.cfg
+		${CMAKE_SOURCE_DIR}/copy/resources.cfg
+		${CMAKE_SOURCE_DIR}/copy/resources_d.cfg
+		DESTINATION ../
+		CONFIGURATIONS Release RelWithDebInfo Debug
+	)
  
 	install(DIRECTORY ${CMAKE_SOURCE_DIR}/dist/Media
 		DESTINATION ./
