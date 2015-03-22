@@ -14,11 +14,13 @@
 #include <OgreRenderWindow.h>
 #include <OgreConfigFile.h>
 
-class Sound
+#include <vector>
+
+class SoundSystem
 {
 public:
-	Sound();
-	~Sound();
+	SoundSystem();
+	~SoundSystem();
 
 	void initSound();
 
@@ -27,11 +29,16 @@ public:
 	void playSound();
 	void pauseSound();
 
+	struct Sound
+	{
+		FMOD::Sound* sound;
+		int channel;
+	};
 
 private:
 	FMOD::System     *system;
-	FMOD::Sound      *sound1, *sound2, *sound3;
-	FMOD::Channel    *channel = 0;
+	std::vector<Sound> sounds;
+	std::vector<FMOD::Channel*> channels;
 	FMOD_RESULT       result;
 	unsigned int      version;
 	void             *extradriverdata = 0;

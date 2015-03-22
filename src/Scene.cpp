@@ -1,15 +1,15 @@
 #include "Scene.h"
 
-Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4])
+Scene::Scene(SceneArguments args)
 {
-	mSceneMgr = sceneMgr;
+	mSceneMgr = args.sceneMgr;
 
-	mCamera = cameras[0];
+	mCamera = args.cameras[0];
 
 	for (unsigned int i = 0; i < 4; ++i)
 	{
-		mCameras[i] = cameras[i];
-		mControllers[i] = controllers[i];
+		mCameras[i] = args.cameras[i];
+		mControllers[i] = args.controllers[i];
 	}
 
 	ResetCamera();
@@ -18,13 +18,13 @@ Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Clien
 	mPhysicsWorld = std::shared_ptr<PhysicsWorld>(new PhysicsWorld);
 	mPhysicsWorld->initWorld();
 
-	mWindow = window;
+	mWindow = args.window;
 
 	mWindow->setActive(true);
 
 	//mCarEnt = std::shared_ptr<Ogre::Entity>(mSceneMgr->createEntity("BoltCar", "BoltCar.mesh"));
 
-	mGameClient = client;
+	mGameClient = args.client;
 	timeStep = 0;
 	clock.reset();
 
@@ -91,7 +91,7 @@ void Scene::ResetCamera()
 void Scene::SwapToMainMenu()
 {
 	GetSceneManager()->clearScene();
-	newScene = std::shared_ptr<MenuScene>(new MenuScene(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers));
+	newScene = std::shared_ptr<MenuScene>(new MenuScene(SceneArguments(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers)));
 	newScene->LoadLevel("MainMenu");
 	swapToTheNewScene = true;
 }
@@ -99,7 +99,7 @@ void Scene::SwapToMainMenu()
 void Scene::SwapToGameplayLevel(Ogre::String levelName)
 {
 	GetSceneManager()->clearScene();
-	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers));
+	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(SceneArguments(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers)));
 	newScene->LoadLevel(levelName);
 	newScene->AddCarToScene("myCar");
 	swapToTheNewScene = true;
@@ -123,7 +123,7 @@ void Scene::ControllerInput()
 
 
 //Gameplay scenes
-GameplayScene::GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]) : Scene(sceneMgr, client, cameras, window, controllers)
+GameplayScene::GameplayScene(SceneArguments args) : Scene(args)
 {
 	SetUpViewports();
 }
@@ -699,7 +699,7 @@ void GameplayScene::DropMine(int carID)
 
 
 //Menu Scene
-MenuScene::MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]) : Scene(sceneMgr, client, cameras, window, controllers)
+MenuScene::MenuScene(SceneArguments args) : Scene(args)
 {
 	currentSubMenu = nextSubMenu = sm_Main;
 
@@ -1072,7 +1072,7 @@ void MenuScene::ControllerInput()
 }
 
 //Intro Scene
-IntroScene::IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]) : Scene(sceneMgr, client, cameras, window, controllers)
+IntroScene::IntroScene(SceneArguments args) : Scene(args)
 {
 	SetUpViewports();
 }

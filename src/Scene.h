@@ -52,10 +52,31 @@ static unsigned int numLocalPlayers = 1;
 
 static Ogre::String selectedCarTypes[4] = {"BoltCar.mesh","BoltCar.mesh","BoltCar.mesh","BoltCar.mesh"};
 
+struct SceneArguments
+{
+	SceneArguments(std::shared_ptr<Ogre::SceneManager> sm, std::shared_ptr<Client> c, std::shared_ptr<Ogre::Camera> cam[4], std::shared_ptr<Ogre::RenderWindow> win, std::shared_ptr<Controller> con[4])
+	{
+		sceneMgr = sm;
+		client = c;
+		window = win;
+		for (unsigned int i = 0; i < 4; ++i)
+		{
+			cameras[i] = cam[i];
+			controllers[i] = con[i];
+		}
+		
+	}
+	std::shared_ptr<Ogre::SceneManager> sceneMgr;
+	std::shared_ptr<Client> client;
+	std::shared_ptr<Ogre::Camera> cameras[4];
+	std::shared_ptr<Ogre::RenderWindow> window;
+	std::shared_ptr<Controller> controllers[4];
+};
+
 class Scene
 {
 public:
-	Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]);
+	Scene(SceneArguments args);
 	~Scene();
 
 	virtual bool Update();
@@ -92,7 +113,7 @@ protected:
 	btClock clock;
 	float timeStep;
 
-	Sound soundSys;
+	SoundSystem soundSys;
 
 	bool swapToTheNewScene = false;
 	std::shared_ptr<Scene> newScene;
@@ -121,7 +142,7 @@ protected:
 class GameplayScene : public Scene
 {
 public:
-	GameplayScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]);
+	GameplayScene(SceneArguments args);
 	~GameplayScene();
 
 	virtual bool Update();
@@ -173,7 +194,7 @@ private:
 class MenuScene : public Scene
 {
 public:
-	MenuScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]);
+	MenuScene(SceneArguments args);
 	~MenuScene();
 
 	virtual bool Update();
@@ -230,7 +251,7 @@ private:
 class IntroScene : public Scene
 {
 public:
-	IntroScene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Client> client, std::shared_ptr<Ogre::Camera> cameras[4], std::shared_ptr<Ogre::RenderWindow> window, std::shared_ptr<Controller> controllers[4]);
+	IntroScene(SceneArguments args);
 	~IntroScene();
 
 	virtual bool Update();
