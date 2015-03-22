@@ -327,6 +327,11 @@ bool GameplayScene::Update()
 			goingUp = !goingUp;
 
 		mCars[i]->GetSceneNode()->translate(0,bounce,0);
+		
+		char shadowName[32];
+		sprintf_s(shadowName, 32, "shadow%i", i);
+		float shadowSize = bounce + 2.0f;
+		mSceneMgr->getSceneNode(shadowName)->setPosition(0, (-1.0f * (bounce*0.3f)) - 1.7f, 0);
 	}
 
 	//update the active weapons

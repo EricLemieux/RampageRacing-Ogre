@@ -36,6 +36,14 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 
 	mCurrentItem = IBT_NONE;
 
+	//Set up the fake shadow
+	char shadowName[32];
+	sprintf_s(shadowName, 32, "shadow%i",ID);
+	Ogre::SceneNode* shadowNode = mSceneNode->createChildSceneNode(shadowName);
+	Ogre::Entity* shadowPlane = mSceneManager->createEntity("shadow.mesh");
+	shadowNode->setPosition(0, -2, 0.5);
+	shadowNode->attachObject(shadowPlane);
+
 	//Set up the camera
 	Ogre::SceneNode* camNode = mSceneManager->getSceneNode(name)->createChildSceneNode();
 	camNode->attachObject(mCameras[ID].get());
