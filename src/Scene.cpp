@@ -181,7 +181,7 @@ void GameplayScene::SetUpItemBoxes()
 			char checkpointName[128];
 			sprintf_s(checkpointName, 128, "checkpoint%i", i);
 			Ogre::Matrix4 m = mSceneMgr->getSceneNode(checkpointName)->_getFullTransform();
-			Ogre::Vector3 rightVector = Ogre::Vector3(m[0][0], m[0][1], m[0][2]).normalisedCopy();
+			Ogre::Vector3 rightVector = Ogre::Vector3(m[0][0], m[1][0], m[2][0]).normalisedCopy();
 
 			pos = mSceneMgr->getSceneNode(checkpointName)->getPosition();
 			pos += rightVector * (30 - j * 30.0f);
