@@ -318,6 +318,15 @@ bool GameplayScene::Update()
 	for (unsigned int i = 0; i < numLocalPlayers; ++i)
 	{
 		mCars[i]->Update();
+
+		if (goingUp)
+			bounce += 0.01f;
+		else
+			bounce -= 0.01f;
+		if (bounce >= 1.0f || bounce <= -1.0f)
+			goingUp = !goingUp;
+
+		mCars[i]->GetSceneNode()->translate(0,bounce,0);
 	}
 
 	//update the active weapons

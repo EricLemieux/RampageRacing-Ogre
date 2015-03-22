@@ -7,6 +7,7 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	
 	mSceneNode = mSceneManager->getRootSceneNode()->createChildSceneNode(name);
 	Ogre::Entity* someEnt = mSceneManager->createEntity(carEntName);
+	someEnt->setCastShadows(true);
 	mSceneNode->attachObject(someEnt);
 
 	Ogre::Matrix4 t = mSceneManager->getSceneNode("triggerFinishLine")->_getFullTransform();

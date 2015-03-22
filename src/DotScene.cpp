@@ -11,6 +11,7 @@ void DotSceneLoader::parseDotScene(const String &SceneName, const String &groupN
 	// set up shared object values
 	m_sGroupName = groupName;
 	mSceneMgr = yourSceneMgr;
+	mSceneMgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_TEXTURE_ADDITIVE);
 	m_sPrependNode = sPrependNode;
 	staticObjects.clear();
 	dynamicObjects.clear();

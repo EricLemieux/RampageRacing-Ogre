@@ -159,6 +159,9 @@ private:
 	std::vector<std::shared_ptr<ItemBox>> mItemBoxes;
 
 	int mNumPlayersCompletedRace = 0;
+
+	bool goingUp = true;
+	float bounce = 0.0f;
 };
 
 class MenuScene : public Scene
