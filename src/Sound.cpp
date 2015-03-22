@@ -47,7 +47,7 @@ void SoundSystem::initSound(){
 
 			//Looping?
 			
-			result = sounds[soundCount].sound->setMode(FMOD_LOOP_NORMAL);
+			result = sounds[soundCount].sound->setMode(FMOD_LOOP_OFF);
 
 			soundCount++;
 		}
