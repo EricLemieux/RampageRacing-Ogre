@@ -153,7 +153,7 @@ private:
 
 	ContactSensorCallback* callback;
 	//currently 3 because 2 checkpoints and 1 finish line
-	TriggerVolume* mTriggerVolumes[3];
+	std::vector<std::shared_ptr<TriggerVolume>> mTriggerVolumes;
 
 	std::list<std::shared_ptr<GameObject>> mActiveWeapons;
 	std::vector<std::shared_ptr<ItemBox>> mItemBoxes;
