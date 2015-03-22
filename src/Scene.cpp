@@ -27,6 +27,8 @@ Scene::Scene(std::shared_ptr<Ogre::SceneManager> sceneMgr, std::shared_ptr<Clien
 	mGameClient = client;
 	timeStep = 0;
 	clock.reset();
+
+	soundSys.initSound();
 }
 
 Scene::~Scene()
@@ -261,6 +263,10 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 	{
 		SwapToMainMenu();
 	}
+
+	if (arg.key == OIS::KC_M){
+		soundSys.playSound();
+	}
 }
 void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
 {
@@ -454,7 +460,7 @@ bool GameplayScene::Update()
 								//apply knockback
 								mCars[i]->GetRigidBody()->setLinearVelocity(mCars[i]->GetRigidBody()->getLinearVelocity()*-0.5f);
 								break;
-							}
+								}
 						}
 					}
 				}
@@ -507,6 +513,8 @@ bool GameplayScene::Update()
 			//}
 		}
 	});	
+
+	soundSys.update();
 
 	return true;
 }
