@@ -1,4 +1,4 @@
-material blinn22
+material AnnouncerMat
 {
 	technique
 	{

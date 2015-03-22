@@ -4,8 +4,11 @@ material Minelambert33SG
 	{
 		pass
 		{
+			texture_unit
+			{
+				texture Default_Material_Mine_Diffuse.png
+			}
 		}
-
 	}
 
 }

@@ -4,8 +4,11 @@ material Missilelambert34SG
 	{
 		pass
 		{
+			texture_unit
+			{
+				texture Default_Material_Missile_Diffuse.png
+			}
 		}
-
 	}
 
 }

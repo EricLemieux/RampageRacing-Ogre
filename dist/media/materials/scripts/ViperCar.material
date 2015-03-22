@@ -1,0 +1,18 @@
+material ViperCarmat
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture Viper_Car_Material_Viper_Car_Diffuse.png
+			}
+		}
+
+	}
+
+}
