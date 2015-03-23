@@ -11,6 +11,19 @@ material button
 		}
 	}
 }
+material button_highlighted
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture buttons/ButtonBackgroundHighlighted.png
+			}
+		}
+	}
+}
 
 material button_level_island
 {

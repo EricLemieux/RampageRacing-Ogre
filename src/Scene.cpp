@@ -779,7 +779,37 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 }
 void MenuScene::KeyReleased(const OIS::KeyEvent &arg){}
 
-void MenuScene::mouseMoved(const OIS::MouseEvent &arg){}
+void MenuScene::mouseMoved(const OIS::MouseEvent &arg)
+{
+	Ogre::RaySceneQuery *q = GetSceneManager()->createRayQuery(Ogre::Ray());
+
+	float x = arg.state.X.abs / float(mWindow->getWidth()), y = arg.state.Y.abs / float(mWindow->getHeight());
+
+	Ogre::Ray ray = GetCamera()->getCameraToViewportRay(x, y);
+
+	q->setRay(ray);
+	q->setSortByDistance(true);
+
+	Ogre::RaySceneQueryResult res = q->execute();
+	Ogre::RaySceneQueryResult::iterator itr = res.begin();
+
+	static Ogre::String lastSelected = "";
+
+	if (lastSelected != "")
+	{
+		mSceneMgr->getEntity(lastSelected)->setMaterialName("button");
+	}
+
+	//Loop to select the object
+	for (itr; itr != res.end(); itr++)
+	{
+		if (itr->movable && itr->movable->getName()[0] == 'b')
+		{
+			mSceneMgr->getEntity(itr->movable->getName())->setMaterialName("button_highlighted");
+			lastSelected = itr->movable->getName();
+		}
+	}
+}
 void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
 	Ogre::RaySceneQuery *q = GetSceneManager()->createRayQuery(Ogre::Ray());
