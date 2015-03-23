@@ -88,6 +88,8 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	mCountdownText = new Ogre::MovableText("countdown", "3");
 	mCountdownText->setVisibilityFlags(RenderOnly[ID]);
 	mCountdownNode->attachObject(mCountdownText);
+
+	itemNode = mSceneNode->createChildSceneNode();
 }
 
 Car::~Car()
@@ -316,4 +318,24 @@ void Car::InitRigidBody()
 		wheel.m_rollInfluence = rollInfluence;
 	}
 	
+}
+
+void Car::SetItem(ITEM_BOX_TYPE type)
+{
+	mCurrentItem = type;
+
+	itemNode->detachAllObjects();
+
+	//Attach a dummy ent to show the item
+	if (type == IBT_ATTACK)
+	{
+		itemEnt = mSceneManager->createEntity("Missile.mesh");
+		itemNode->attachObject(itemEnt);
+	}
+	else if (type == IBT_DEFENCE)
+	{
+		itemEnt = mSceneManager->createEntity("Mine.mesh");
+		itemNode->attachObject(itemEnt);
+	}
+		
 }

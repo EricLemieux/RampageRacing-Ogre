@@ -16,6 +16,23 @@
 
 #include <vector>
 
+enum SOUND_TYPE{
+	MEOW = 0,
+	B_RETURN,
+	B_SELECT,
+	COUNTDOWN,
+	CAR_ACCEL,
+	CAR_STEADY,
+};
+
+enum CHANNEL_TYPE{
+	P1 = 0,
+	P2,
+	P3,
+	P4,
+	BG,
+};
+
 class SoundSystem
 {
 public:
@@ -26,7 +43,7 @@ public:
 
 	void update();
 
-	void playSound();
+	void playSound(SOUND_TYPE soundType, CHANNEL_TYPE chanType);
 	void pauseSound();
 
 	struct Sound

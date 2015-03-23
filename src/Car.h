@@ -44,6 +44,7 @@ public:
 
 	ITEM_BOX_TYPE mCurrentItem;
 
+	bool isAccelerating = false;
 	bool mFinishedRace = false;
 
 	Ogre::MovableText* positionText;
@@ -52,6 +53,8 @@ public:
 
 	unsigned int lastCheckpoint=0;
 	unsigned int lastItemBoxCheckpoint = 0;
+
+	void SetItem(ITEM_BOX_TYPE type);
 
 private:
 	float speed = 0.0f;
@@ -68,4 +71,7 @@ private:
 
 	Ogre::SceneNode* mCamera;
 	Ogre::Vector3 mCameraMin, mCameraMax;
+
+	Ogre::SceneNode* itemNode;
+	Ogre::Entity* itemEnt;
 };

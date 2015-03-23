@@ -1,3 +1,19 @@
+material itemBox_none
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend
+			depth_write off
+			
+			ambient 0 0 0 0
+			diffuse 0 0 0 0
+			specular 0 0 0 0
+		}
+	}
+}
+
 material itemBox_attack
 {
 	technique
