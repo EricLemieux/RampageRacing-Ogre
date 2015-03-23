@@ -50,6 +50,7 @@ public:
 	Ogre::MovableText* lapText;
 
 	unsigned int lastCheckpoint=0;
+	unsigned int lastItemBoxCheckpoint = 0;
 
 private:
 	float speed = 0.0f;

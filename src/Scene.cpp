@@ -431,14 +431,20 @@ bool GameplayScene::Update()
 						}
 					}
 
-					for (unsigned int ib = 0; ib < mItemBoxes.size(); ++ib)
+					if (mCars[i]->lastCheckpoint != 0 && mCars[i]->lastCheckpoint != mCars[i]->lastItemBoxCheckpoint)
 					{
-						bool test0 = manifold->getBody0() == mItemBoxes[ib]->GetRigidBody() ? true : false;
-						bool test1 = manifold->getBody1() == mItemBoxes[ib]->GetRigidBody() ? true : false;
-						if ((test0 || test1) && mCars[i]->mCurrentItem == IBT_NONE)
+						for (unsigned int ib = 0; ib < 3; ++ib)
 						{
-							mCars[i]->mCurrentItem = mItemBoxes[ib]->GetType();
-							break;
+							unsigned int boxID = (mCars[i]->lastCheckpoint * 3) - 3 + ib;
+
+							bool test0 = manifold->getBody0() == mItemBoxes[boxID]->GetRigidBody() ? true : false;
+							bool test1 = manifold->getBody1() == mItemBoxes[boxID]->GetRigidBody() ? true : false;
+							if ((test0 || test1) && mCars[i]->mCurrentItem == IBT_NONE)
+							{
+								mCars[i]->mCurrentItem = mItemBoxes[boxID]->GetType();
+								mCars[i]->lastItemBoxCheckpoint = mCars[i]->lastCheckpoint;
+								break;
+							}
 						}
 					}
 

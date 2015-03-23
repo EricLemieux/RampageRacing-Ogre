@@ -7,10 +7,12 @@ TriggerVolume::TriggerVolume(Ogre::String name, std::shared_ptr<Ogre::SceneManag
 	mSceneNode = mSceneManager->getSceneNode(name);
 
 	btTransform transform = btTransform(OgreToBtQuaternion(mSceneNode->getOrientation()), OgreToBtVector3(mSceneNode->getPosition()));
-	btCollisionShape* boxShape = new btBoxShape(OgreToBtVector3(mSceneNode->getScale()));
+
+	OBJ physMesh("triggerVolume.obj");
+	btCollisionShape* boxShape = new btBvhTriangleMeshShape(physMesh.mTriMesh, false);
+			
 	btDefaultMotionState* boxMotionState = new btDefaultMotionState(transform);
 	btVector3 boxInertia(0, 0, 0);
-	boxShape->calculateLocalInertia(0, boxInertia);
 	btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(0, boxMotionState, boxShape, boxInertia);
 	mRigidBody = new btRigidBody(boxRigidBodyCI);
 	mRigidBody->setCollisionFlags(btRigidBody::CF_NO_CONTACT_RESPONSE);
