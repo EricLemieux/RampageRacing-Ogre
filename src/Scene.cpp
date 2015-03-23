@@ -173,7 +173,6 @@ void GameplayScene::LoadLevel(Ogre::String levelName)
 void GameplayScene::SetUpItemBoxes()
 {
 	srand(time(NULL));
-	unsigned int val = rand() % 3;
 
 	unsigned int count = mTriggerVolumes.size();
 	for (unsigned int i = 1; i < count; ++i)
@@ -197,12 +196,15 @@ void GameplayScene::SetUpItemBoxes()
 			rot = mSceneMgr->getSceneNode(checkpointName)->getOrientation();
 
 			ITEM_BOX_TYPE boxType = IBT_NONE;
+			unsigned int val = rand() % 4;
 			if (val == 0)
 				boxType = IBT_ATTACK;
 			else if (val == 1)
 				boxType = IBT_DEFENCE;
 			else if (val == 2)
 				boxType = IBT_SPEED;
+			else
+				boxType = IBT_NONE;
 
 			std::shared_ptr<ItemBox> box = std::shared_ptr<ItemBox>(new ItemBox(name, mSceneMgr, boxType, pos, rot));
 			mPhysicsWorld->getWorld()->addRigidBody(box->GetRigidBody());
@@ -212,9 +214,6 @@ void GameplayScene::SetUpItemBoxes()
 
 			
 		}
-		val++;
-		if (val >= 3)
-			val = 0;
 	}
 }
 
@@ -464,7 +463,7 @@ bool GameplayScene::Update()
 									bool test1 = manifold->getBody1() == mItemBoxes[boxID]->GetRigidBody() ? true : false;
 									if ((test0 || test1) && mCars[i]->mCurrentItem == IBT_NONE)
 									{
-										mCars[i]->mCurrentItem = mItemBoxes[boxID]->GetType();
+										mCars[i]->SetItem(mItemBoxes[boxID]->GetType());
 										mCars[i]->lastItemBoxCheckpoint = mCars[i]->lastCheckpoint;
 										break;
 									}
@@ -722,7 +721,7 @@ void GameplayScene::UseItem(int carID)
 	else if (mCars[carID]->mCurrentItem == IBT_DEFENCE)
 		DropMine(carID);
 
-	mCars[carID]->mCurrentItem = IBT_NONE;
+	mCars[carID]->SetItem(IBT_NONE);
 }
 void GameplayScene::FireMissile(int carID)
 {
@@ -1150,22 +1149,34 @@ void MenuScene::ControllerInput()
 			{
 				if ((mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START) || (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A))
 				{
-					labels[i]->SetReadyToPlay(!labels[i]->GetReadyToPlay());
-
-					bool allReady = true;
-
-					//loop through all of the other labels to see if they are ready to play
-					for (unsigned int j = 0; j < labels.size(); ++j)
+					if (buttonAWaited)
 					{
-						if (!labels[j]->GetReadyToPlay())
-							allReady = false;
-					}
+						labels[i]->SetReadyToPlay(!labels[i]->GetReadyToPlay());
+
+						bool allReady = true;
+
+						//loop through all of the other labels to see if they are ready to play
+						for (unsigned int j = 0; j < labels.size(); ++j)
+						{
+							if (!labels[j]->GetReadyToPlay())
+								allReady = false;
+						}
+
 
 					if (allReady)
 					{
 						SwapToGameplayLevel(mCurrentSelectedLevel);
-						soundSys.playSound(B_RETURN, BG);
 					}
+						if (allReady)
+						{
+							SwapToGameplayLevel(mCurrentSelectedLevel);
+						}
+						buttonAWaited = false;
+					}					
+				}
+				else
+				{
+					buttonAWaited = true;
 				}
 			}
 
