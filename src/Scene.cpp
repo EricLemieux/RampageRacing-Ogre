@@ -342,13 +342,23 @@ void GameplayScene::AddTriggerVolumesToScene()
 bool GameplayScene::Update()
 {
 	timeStep = clock.getTimeSeconds();
+	int timeForCars = clock.getTimeMilliseconds();
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
 
 	ControllerInput();
+
+	bool allDoneLooking = true;
 	
 	for (unsigned int i = 0; i < numLocalPlayers; ++i)
 	{
+		if (!mCars[i]->mFinishedRace)
+			mCars[i]->raceTime += int(timeForCars);
+		
+		if (!mCars[i]->doneLookingAtResults)
+			allDoneLooking = false;
+		
+
 		mCars[i]->Update();
 
 		if (goingUp)
@@ -430,13 +440,14 @@ bool GameplayScene::Update()
 
 										if (mCars[i]->lapCounter > 2)
 										{
-											if (mNumPlayersCompletedRace == numLocalPlayers - 1)
+											if (mNumPlayersCompletedRace == numLocalPlayers) //-1?
 											{
-												SwapToMainMenu();
+												//TODO FIX
 											}
 											else
 											{
 												mCars[i]->mFinishedRace = true;
+												mCars[i]->DisplayResults();
 												mNumPlayersCompletedRace++;
 											}
 										}
@@ -569,6 +580,9 @@ bool GameplayScene::Update()
 	}
 
 	soundSys.update();
+
+	if (allDoneLooking)
+		SwapToMainMenu();
 
 	return true;
 }
@@ -705,6 +719,14 @@ void GameplayScene::ControllerInput()
 			else
 			{
 				mCars[i]->mCanMoveBackward = 0.0f;
+			}
+
+			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START)
+			{
+				if (mCars[i]->mFinishedRace == true)
+				{
+					mCars[i]->doneLookingAtResults = true;
+				}
 			}
 		}
 	}

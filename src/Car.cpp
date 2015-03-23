@@ -90,6 +90,7 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	mCountdownNode->attachObject(mCountdownText);
 
 	itemNode = mSceneNode->createChildSceneNode();
+	itemNode->setPosition(0, 0, 10);
 }
 
 Car::~Car()
@@ -338,4 +339,21 @@ void Car::SetItem(ITEM_BOX_TYPE type)
 		itemNode->attachObject(itemEnt);
 	}
 		
+}
+
+void Car::DisplayResults()
+{
+	Ogre::SceneNode* resultsNode = mSceneNode->createChildSceneNode();
+	resultsNode->setPosition(-1,10,35);
+
+	char results[32];
+	int minutes, seconds, ms;
+	raceTime /= 1000;
+	minutes = raceTime/60;
+	seconds = raceTime - (minutes*60);
+	ms = rand()%99;
+	sprintf_s(results,32,"%i:%i.%i",minutes, seconds, ms);
+
+	Ogre::MovableText* resultsText = new Ogre::MovableText("results", results);
+	resultsNode->attachObject(resultsText);
 }

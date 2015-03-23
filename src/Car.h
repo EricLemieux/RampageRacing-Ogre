@@ -55,6 +55,11 @@ public:
 
 	void SetItem(ITEM_BOX_TYPE type);
 
+	unsigned int raceTime=0;
+	bool doneLookingAtResults = false;
+
+	void DisplayResults();
+
 private:
 	float speed = 0.0f;
 	float turnSpeed = 0.3f;
