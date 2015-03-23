@@ -22,6 +22,7 @@ public:
 
 protected:
     virtual void createScene(void);
+	virtual void initSound(void);
 
 	virtual bool Update();
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt);
@@ -40,4 +41,5 @@ private:
 
 public:
 	std::shared_ptr<Scene> mCurrentScene;
+	std::shared_ptr<SoundSystem> mSoundSys;
 };

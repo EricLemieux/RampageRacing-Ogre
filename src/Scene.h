@@ -54,7 +54,9 @@ static Ogre::String selectedCarTypes[4] = {"BoltCar.mesh","BoltCar.mesh","BoltCa
 
 struct SceneArguments
 {
-	SceneArguments(std::shared_ptr<Ogre::SceneManager> sm, std::shared_ptr<Client> c, std::shared_ptr<Ogre::Camera> cam[4], std::shared_ptr<Ogre::RenderWindow> win, std::shared_ptr<Controller> con[4])
+	SceneArguments(std::shared_ptr<Ogre::SceneManager> sm, std::shared_ptr<Client> c, 
+		std::shared_ptr<Ogre::Camera> cam[4], std::shared_ptr<Ogre::RenderWindow> win, 
+		std::shared_ptr<Controller> con[4], std::shared_ptr<SoundSystem> ss)
 	{
 		sceneMgr = sm;
 		client = c;
@@ -64,13 +66,14 @@ struct SceneArguments
 			cameras[i] = cam[i];
 			controllers[i] = con[i];
 		}
-		
+		soundSys = ss;
 	}
 	std::shared_ptr<Ogre::SceneManager> sceneMgr;
 	std::shared_ptr<Client> client;
 	std::shared_ptr<Ogre::Camera> cameras[4];
 	std::shared_ptr<Ogre::RenderWindow> window;
 	std::shared_ptr<Controller> controllers[4];
+	std::shared_ptr<SoundSystem> soundSys;
 };
 
 class Scene
@@ -105,7 +108,7 @@ public:
 	inline std::shared_ptr<PhysicsWorld> GetPhysicsWorld(){ return mPhysicsWorld; }
 
 	inline bool GetIfShouldSwapScenes(){ return swapToTheNewScene; }
-	//Don't fucking call this unless you know what you are doing... yeah, you...
+	//Don't fucking call this unless you know what you are doing... yeah, you...imma do it you can't stop me
 	inline std::shared_ptr<Scene> GetNewScene(){ swapToTheNewScene = false; return newScene; }
 
 protected:
@@ -132,6 +135,8 @@ protected:
 	std::vector<GameObject*> mObjects;
 
 	std::shared_ptr<Controller> mControllers[4];
+
+	std::shared_ptr<SoundSystem> mSoundSys;
 
 	void ResetCamera(void);
 

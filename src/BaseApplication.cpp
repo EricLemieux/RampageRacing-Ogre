@@ -217,6 +217,8 @@ bool BaseApplication::setup(void)
     // Load resources
     loadResources();
 
+	initSound();
+
     // Create the scene
     createScene();
 

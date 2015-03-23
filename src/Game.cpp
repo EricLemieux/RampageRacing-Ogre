@@ -11,6 +11,8 @@ Game::Game(void) : BaseApplication()
 	{
 		mControllers[i] = std::shared_ptr<Controller>(new Controller(i));
 	}
+
+	mSoundSys = std::shared_ptr<SoundSystem>(new SoundSystem());
 }
  
 Game::~Game(void)
@@ -21,9 +23,13 @@ Game::~Game(void)
 void Game::createScene(void)
 {
 	//Set up the current scene
-	mCurrentScene = std::unique_ptr<IntroScene>(new IntroScene(SceneArguments(mSceneMgr, mGameClient, mCameras, mWindow, mControllers)));
+	mCurrentScene = std::unique_ptr<IntroScene>(new IntroScene(SceneArguments(mSceneMgr, mGameClient, mCameras, mWindow, mControllers,mSoundSys)));
 
 	mCurrentScene->LoadLevel("Intro");
+}
+
+void Game::initSound(void){
+	mSoundSys->initSound();
 }
 
 bool Game::keyPressed( const OIS::KeyEvent &arg )

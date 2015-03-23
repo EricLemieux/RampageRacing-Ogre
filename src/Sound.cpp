@@ -37,24 +37,27 @@ void SoundSystem::initSound(){
 		//Ignore comments
 		if (data.c_str()[0] != '#')
 		{
-			char soundFile[256];
-			int loop;
-			sscanf_s(data.c_str(), "%s %i", soundFile, 256, loop);
+			char soundFile[256] = "";
+			int loop = 0;
+			sscanf_s(data.c_str(), "%s %i", &soundFile, 256, &loop);
 
 			sounds.push_back(Sound());
 
 			result = system->createSound(soundFile, FMOD_DEFAULT, 0, &sounds[soundCount].sound);
 
 			//Looping?
-			
-			result = sounds[soundCount].sound->setMode(FMOD_LOOP_OFF);
-
+			if (loop == 0){
+				result = sounds[soundCount].sound->setMode(FMOD_LOOP_OFF);
+			} else {
+				result = sounds[soundCount].sound->setMode(FMOD_LOOP_NORMAL);
+			}
 			soundCount++;
 		}
 
 
 		data = pStream->getLine();
-	}		
+	}
+	int a = 0;
 }
 void SoundSystem::update(){
 	result = system->update();
