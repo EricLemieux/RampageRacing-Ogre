@@ -256,8 +256,8 @@ private:
 	Ogre::AnimationState* animationState;
 
 	void SelectButton(Ogre::String bName);
-	bool lThumbWaited = true;
-	bool buttonAWaited = true;
+
+	int timeBetweenControllerInput = 0;
 };
 
 class IntroScene : public Scene

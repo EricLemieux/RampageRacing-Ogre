@@ -1000,6 +1000,8 @@ void MenuScene::ConfirmCarChoice()
 
 bool MenuScene::Update()
 {
+	timeBetweenControllerInput += 1;
+
 	timeStep += clock.getTimeSeconds();
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
@@ -1089,6 +1091,8 @@ Ogre::Vector3 MenuScene::GetCamTargetFromSubMenu(int subMenu)
 }
 void MenuScene::ControllerInput()
 {
+	if (timeBetweenControllerInput <= 50)
+		return;
 	for (unsigned int i = 0; i < numLocalPlayers; ++i)
 	{
 		if (lastSelected != "")
@@ -1102,11 +1106,13 @@ void MenuScene::ControllerInput()
 				{
 					lastSelected = "bExit";
 					mSoundSys->playSound(B_SELECT, BG);
+					timeBetweenControllerInput = 0;
 				}
 				else if (lsy > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 				{
 					lastSelected = "bStart";
 					mSoundSys->playSound(B_SELECT, BG);
+					timeBetweenControllerInput = 0;
 				}
 			}
 			else if (currentSubMenu == sm_PlayerCount)
@@ -1119,6 +1125,7 @@ void MenuScene::ControllerInput()
 					else if (lastSelected == "bPlayers_2")
 						lastSelected = "bPlayers_4";
 					mSoundSys->playSound(B_SELECT, BG);
+					timeBetweenControllerInput = 0;
 				}
 				else if (lsy > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 				{
@@ -1127,6 +1134,7 @@ void MenuScene::ControllerInput()
 					else if (lastSelected == "bPlayers_4")
 						lastSelected = "bPlayers_2";
 					mSoundSys->playSound(B_SELECT, BG);
+					timeBetweenControllerInput = 0;
 				}
 
 				float lsx = mControllers[i]->GetState().Gamepad.sThumbLX;
@@ -1137,6 +1145,7 @@ void MenuScene::ControllerInput()
 					else if (lastSelected == "bPlayers_4")
 						lastSelected = "bPlayers_3";
 					mSoundSys->playSound(B_SELECT, BG);
+					timeBetweenControllerInput = 0;
 				}
 				else if (lsx > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 				{
@@ -1145,6 +1154,7 @@ void MenuScene::ControllerInput()
 					else if (lastSelected == "bPlayers_3")
 						lastSelected = "bPlayers_4";
 					mSoundSys->playSound(B_SELECT, BG);
+					timeBetweenControllerInput = 0;
 				}
 			}
 			else if (currentSubMenu == sm_LevelSelect)
@@ -1156,78 +1166,57 @@ void MenuScene::ControllerInput()
 				float lsx = mControllers[i]->GetState().Gamepad.sThumbLX;
 				if (lsx < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 				{
-					if (lThumbWaited)
-					{
-						if (lastSelected == "bNextCar")
-							lastSelected = "bSelect";
-						else if (lastSelected == "bSelect")
-							lastSelected = "bPrevCar";
-						mSoundSys->playSound(B_SELECT, BG);
-					}
-					lThumbWaited = false;
+					if (lastSelected == "bNextCar")
+						lastSelected = "bSelect";
+					else if (lastSelected == "bSelect")
+						lastSelected = "bPrevCar";
+					mSoundSys->playSound(B_SELECT, BG);
+					timeBetweenControllerInput = 0;
 				}
 				else if (lsx > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 				{
-					if (lThumbWaited)
-					{
-						if (lastSelected == "bPrevCar")
-							lastSelected = "bSelect";
-						else if (lastSelected == "bSelect")
-							lastSelected = "bNextCar";
-						mSoundSys->playSound(B_SELECT, BG);
-					}
-					lThumbWaited = false;
-				}
-				else
-				{
-					lThumbWaited = true;
+					if (lastSelected == "bPrevCar")
+						lastSelected = "bSelect";
+					else if (lastSelected == "bSelect")
+						lastSelected = "bNextCar";
+					mSoundSys->playSound(B_SELECT, BG);
+					timeBetweenControllerInput = 0;
 				}
 			}
 			else if (currentSubMenu == sm_Lobby)
 			{
 				if ((mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START) || (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A))
 				{
-					if (buttonAWaited)
+					timeBetweenControllerInput = 0;
+					labels[i]->SetReadyToPlay(!labels[i]->GetReadyToPlay());
+
+					bool allReady = true;
+
+					//loop through all of the other labels to see if they are ready to play
+					for (unsigned int j = 0; j < labels.size(); ++j)
 					{
-						labels[i]->SetReadyToPlay(!labels[i]->GetReadyToPlay());
-
-						bool allReady = true;
-
-						//loop through all of the other labels to see if they are ready to play
-						for (unsigned int j = 0; j < labels.size(); ++j)
-						{
-							if (!labels[j]->GetReadyToPlay())
-								allReady = false;
-						}
+						if (!labels[j]->GetReadyToPlay())
+							allReady = false;
+					}
 
 
-						if (allReady)
-						{
-							mSoundSys->playSound(B_RETURN, BG);
-							SwapToGameplayLevel(mCurrentSelectedLevel);
-						}
-						buttonAWaited = false;
-					}					
-				}
-				else
-				{
-					buttonAWaited = true;
+					if (allReady)
+					{
+						mSoundSys->playSound(B_RETURN, BG);
+						SwapToGameplayLevel(mCurrentSelectedLevel);
+					}			
 				}
 			}
 
 			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
 			{
-				if (buttonAWaited)
-					SelectButton(lastSelected);
-				buttonAWaited = false;
+				timeBetweenControllerInput = 0;
+				SelectButton(lastSelected);
 				mSoundSys->playSound(B_RETURN, BG);
-			}
-			else
-			{
-				buttonAWaited = true;
 			}
 			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B)
 			{
+				timeBetweenControllerInput = 0;
 				nextSubMenu = sm_Main;
 				lastSelected = "bStart";
 				mSoundSys->playSound(B_RETURN, BG);
