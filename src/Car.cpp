@@ -247,7 +247,9 @@ void Car::InitRigidBody()
 	ghost->setWorldTransform(transform);
 	
 
-	btCollisionShape* boxShape = new btBoxShape(btVector3(10, 5, 15));
+	OBJ physMesh("carRigidBody.obj");
+	btCollisionShape* boxShape = new btConvexHullShape(physMesh.mVerts[0], physMesh.mVerts.size());
+
 	btCompoundShape* compound = new btCompoundShape();
 	mCollisionShapes.push_back(boxShape);
 	mCollisionShapes.push_back(compound);

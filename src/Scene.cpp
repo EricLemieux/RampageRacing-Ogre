@@ -172,6 +172,9 @@ void GameplayScene::LoadLevel(Ogre::String levelName)
 
 void GameplayScene::SetUpItemBoxes()
 {
+	srand(time(NULL));
+	unsigned int val = rand() % 3;
+
 	unsigned int count = mTriggerVolumes.size();
 	for (unsigned int i = 1; i < count; ++i)
 	{
@@ -194,11 +197,11 @@ void GameplayScene::SetUpItemBoxes()
 			rot = mSceneMgr->getSceneNode(checkpointName)->getOrientation();
 
 			ITEM_BOX_TYPE boxType = IBT_NONE;
-			if (j == 0)
+			if (val == 0)
 				boxType = IBT_ATTACK;
-			else if (j == 1)
+			else if (val == 1)
 				boxType = IBT_DEFENCE;
-			else if (j == 2)
+			else if (val == 2)
 				boxType = IBT_SPEED;
 
 			std::shared_ptr<ItemBox> box = std::shared_ptr<ItemBox>(new ItemBox(name, mSceneMgr, boxType, pos, rot));
@@ -209,6 +212,9 @@ void GameplayScene::SetUpItemBoxes()
 
 			
 		}
+		val++;
+		if (val >= 3)
+			val = 0;
 	}
 }
 
@@ -404,7 +410,7 @@ bool GameplayScene::Update()
 
 					unsigned int count = mTriggerVolumes.size();
 					for (unsigned int tv = 0; tv < count; ++tv){
-						if (tv != mCars[i]->lastCheckpoint && (manifold->getBody0() == mTriggerVolumes[tv]->GetRigidBody() || manifold->getBody1() == mTriggerVolumes[tv]->GetRigidBody())){
+						if (tv != mCars[i]->lastCheckpoint && ((manifold->getBody0() == mTriggerVolumes[tv]->GetRigidBody() || manifold->getBody1() == mTriggerVolumes[tv]->GetRigidBody()) && (manifold->getBody0() == mCars[i]->ghost || manifold->getBody1() == mCars[i]->ghost))){
 							mCars[i]->lastCheckpoint = tv;
 							if (tv != 0)
 							{

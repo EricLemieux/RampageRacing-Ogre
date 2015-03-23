@@ -4,6 +4,7 @@
 #include "Missile.h"
 #include "ItemBox.h"
 #include "MovableText.h"
+#include "OBJ.h"
 
 class Car : public GameObject
 {
