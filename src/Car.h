@@ -44,6 +44,7 @@ public:
 
 	ITEM_BOX_TYPE mCurrentItem;
 
+	bool isAccelerating = false;
 	bool mFinishedRace = false;
 
 	Ogre::MovableText* positionText;

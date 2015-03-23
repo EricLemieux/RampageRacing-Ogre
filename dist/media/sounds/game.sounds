@@ -1,0 +1,10 @@
+#This file stores all of the sounds for the game.
+#File format
+#filepath looping
+..\dist\media\sounds\meow.mp3 0
+..\dist\media\sounds\button_return.mp3 0
+..\dist\media\sounds\button_select.mp3 0
+..\dist\media\sounds\countdown.mp3 0
+..\dist\media\sounds\car_accel.mp3 0
+..\dist\media\sounds\car_steady.mp3 1
+filler

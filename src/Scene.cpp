@@ -222,10 +222,12 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 	if (arg.key == OIS::KC_W)
 	{
 		mCar->mCanMoveForward = 1.0f;
+		soundSys.playSound(CAR_ACCEL, P1);
 	}
 	else if (arg.key == OIS::KC_S)
 	{
 		mCar->mCanMoveBackward = 1.0f;
+		soundSys.playSound(CAR_ACCEL, P1);
 	}
 
 	if (arg.key == OIS::KC_L)
@@ -275,7 +277,7 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 	}
 
 	if (arg.key == OIS::KC_M){
-		soundSys.playSound();
+		soundSys.playSound(MEOW, BG);
 	}
 }
 void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
@@ -814,6 +816,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		if (currentSubMenu == sm_Lobby)
 		{
 			SwapToGameplayLevel(mCurrentSelectedLevel);
+			
 		}
 		else if (currentSubMenu == sm_CarSelect)
 		{
@@ -823,6 +826,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		{
 			nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
 		}
+		soundSys.playSound(B_SELECT, BG);
 	}
 
 	if (arg.key == OIS::KC_ESCAPE)
@@ -836,6 +840,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 			playerSelectingCar = 0;
 			nextSubMenu = sm_Main;
 		}
+		soundSys.playSound(B_RETURN, BG);
 	}
 
 	if (arg.key == OIS::KC_1)
@@ -908,7 +913,7 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 					}
 				}
 			}
-
+			soundSys.playSound(B_SELECT, BG);
 			break;
 		}
 	}
@@ -1080,10 +1085,12 @@ void MenuScene::ControllerInput()
 				if (lsy < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 				{
 					lastSelected = "bExit";
+					soundSys.playSound(B_SELECT, BG);
 				}
 				else if (lsy > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 				{
 					lastSelected = "bStart";
+					soundSys.playSound(B_SELECT, BG);
 				}
 			}
 			else if (currentSubMenu == sm_PlayerCount)
@@ -1095,6 +1102,7 @@ void MenuScene::ControllerInput()
 						lastSelected = "bPlayers_3";
 					else if (lastSelected == "bPlayers_2")
 						lastSelected = "bPlayers_4";
+					soundSys.playSound(B_SELECT, BG);
 				}
 				else if (lsy > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 				{
@@ -1102,6 +1110,7 @@ void MenuScene::ControllerInput()
 						lastSelected = "bPlayers_1";
 					else if (lastSelected == "bPlayers_4")
 						lastSelected = "bPlayers_2";
+					soundSys.playSound(B_SELECT, BG);
 				}
 
 				float lsx = mControllers[i]->GetState().Gamepad.sThumbLX;
@@ -1111,6 +1120,7 @@ void MenuScene::ControllerInput()
 						lastSelected = "bPlayers_1";
 					else if (lastSelected == "bPlayers_4")
 						lastSelected = "bPlayers_3";
+					soundSys.playSound(B_SELECT, BG);
 				}
 				else if (lsx > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 				{
@@ -1118,6 +1128,7 @@ void MenuScene::ControllerInput()
 						lastSelected = "bPlayers_2";
 					else if (lastSelected == "bPlayers_3")
 						lastSelected = "bPlayers_4";
+					soundSys.playSound(B_SELECT, BG);
 				}
 			}
 			else if (currentSubMenu == sm_LevelSelect)
@@ -1135,6 +1146,7 @@ void MenuScene::ControllerInput()
 							lastSelected = "bSelect";
 						else if (lastSelected == "bSelect")
 							lastSelected = "bPrevCar";
+						soundSys.playSound(B_SELECT, BG);
 					}
 					lThumbWaited = false;
 				}
@@ -1146,6 +1158,7 @@ void MenuScene::ControllerInput()
 							lastSelected = "bSelect";
 						else if (lastSelected == "bSelect")
 							lastSelected = "bNextCar";
+						soundSys.playSound(B_SELECT, BG);
 					}
 					lThumbWaited = false;
 				}
@@ -1171,8 +1184,10 @@ void MenuScene::ControllerInput()
 								allReady = false;
 						}
 
+
 						if (allReady)
 						{
+							soundSys.playSound(B_RETURN, BG);
 							SwapToGameplayLevel(mCurrentSelectedLevel);
 						}
 						buttonAWaited = false;
@@ -1189,6 +1204,7 @@ void MenuScene::ControllerInput()
 				if (buttonAWaited)
 					SelectButton(lastSelected);
 				buttonAWaited = false;
+				soundSys.playSound(B_RETURN, BG);
 			}
 			else
 			{
@@ -1198,6 +1214,7 @@ void MenuScene::ControllerInput()
 			{
 				nextSubMenu = sm_Main;
 				lastSelected = "bStart";
+				soundSys.playSound(B_RETURN, BG);
 			}
 		}
 		if (lastSelected != "")
