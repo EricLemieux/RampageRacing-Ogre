@@ -1163,12 +1163,9 @@ void MenuScene::ControllerInput()
 						}
 
 
-					if (allReady)
-					{
-						SwapToGameplayLevel(mCurrentSelectedLevel);
-					}
 						if (allReady)
 						{
+							soundSys.playSound(B_RETURN, BG);
 							SwapToGameplayLevel(mCurrentSelectedLevel);
 						}
 						buttonAWaited = false;
