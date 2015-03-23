@@ -541,28 +541,38 @@ bool GameplayScene::Update()
 			if (collisionPair->m_algorithm)
 				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
 
-			//for (int j = 0; j < manifoldArray.size(); ++j){
-			if (manifoldArray.size() > 0){
-				btPersistentManifold* manifold = manifoldArray[0];
-				bool test1 = manifold->getBody1() == obj->ownerID ? true : false;
-				bool test0 = manifold->getBody0() == obj->ownerID ? true : false;
-				bool test2 = false;
-				bool test3 = false;
-				for (int j = 0; j < numLocalPlayers; ++j){
-					test2 = manifold->getBody0() == mCars[j]->GetRigidBody() ? true : false;
-					test3 = manifold->getBody1() == mCars[j]->GetRigidBody() ? true : false;
-				}
+			for (int j = 0; j < manifoldArray.size(); ++j){
 
-				if (((!test0 && !test1) && (test2 || test3)) || obj->lifeTimer > 500){
-					//deactivate weapon
-					btTransform transform = btTransform(btQuaternion(), btVector3(1000000000000000, 10000000000000, 100000000));
-					obj->GetRigidBody()->setWorldTransform(transform);
-					obj->GetRigidBody()->setDeactivationTime(10000000000000);
-					obj->isActive = false;
+				btPersistentManifold* manifold = manifoldArray[j];
+				int numContacts = manifold->getNumContacts();
+				for (int mi = 0; mi < numContacts; ++mi){
+					const btManifoldPoint&pt = manifold->getContactPoint(mi);
+					if (pt.getDistance() < 0.f)
+					{
+						const btVector3& ptA = pt.getPositionWorldOnA();
+						const btVector3& ptB = pt.getPositionWorldOnB();
+						const btVector3& normalOnB = pt.m_normalWorldOnB;
+						/// work here
+						bool test1 = manifold->getBody1() == obj->ownerID ? true : false;
+						bool test0 = manifold->getBody0() == obj->ownerID ? true : false;
+						bool test2 = false;
+						bool test3 = false;
+						for (int j = 0; j < numLocalPlayers; ++j){
+							test2 = manifold->getBody0() == mCars[j]->GetRigidBody() ? true : false;
+							test3 = manifold->getBody1() == mCars[j]->GetRigidBody() ? true : false;
+						}
+
+						if (((!test0 && !test1) && (test2 || test3)) || obj->lifeTimer > 500){
+							//deactivate weapon
+							btTransform transform = btTransform(btQuaternion(), btVector3(1000000000000000, 10000000000000, 100000000));
+							obj->GetRigidBody()->setWorldTransform(transform);
+							obj->GetRigidBody()->setDeactivationTime(10000000000000);
+							obj->isActive = false;
+						}
+
+					}
 				}
- 					
 			}
-			//}
 		}
 	});
 
