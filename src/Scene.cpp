@@ -132,6 +132,7 @@ GameplayScene::~GameplayScene(){}
 
 void GameplayScene::LoadLevel(Ogre::String levelName)
 {
+	soundSys.playSound(BGM, BM);
 	Scene::LoadLevel(levelName);
 
 	Ogre::String basename, path;
@@ -168,6 +169,8 @@ void GameplayScene::LoadLevel(Ogre::String levelName)
 	//Add the items so that they are already loaded into memory
 	Ogre::Entity* dummyMissile = mSceneMgr->createEntity("Missile.mesh");
 	Ogre::Entity* dummyMine = mSceneMgr->createEntity("Mine.mesh");
+
+	
 }
 
 void GameplayScene::SetUpItemBoxes()
@@ -273,6 +276,7 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 
 	if (arg.key == OIS::KC_ESCAPE)
 	{
+		soundSys.pauseSound(BM);
 		SwapToMainMenu();
 	}
 
@@ -285,6 +289,7 @@ void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
 	if (arg.key == OIS::KC_W)
 	{
 		mCar->mCanMoveForward = 0.0f;
+		soundSys.pauseSound(P1);
 	}
 	if (arg.key == OIS::KC_S)
 	{
@@ -343,6 +348,7 @@ void GameplayScene::AddTriggerVolumesToScene()
 
 bool GameplayScene::Update()
 {
+	soundSys.playSound(BGM, BM);
 	timeStep = clock.getTimeSeconds();
 	int timeForCars = clock.getTimeMilliseconds();
 	clock.reset();
@@ -476,6 +482,7 @@ bool GameplayScene::Update()
 									{
 										mCars[i]->SetItem(mItemBoxes[boxID]->GetType());
 										mCars[i]->lastItemBoxCheckpoint = mCars[i]->lastCheckpoint;
+										soundSys.playSound(ITEM_PICKUP, BG);
 										break;
 									}
 								}
@@ -511,11 +518,15 @@ bool GameplayScene::Update()
 									mSceneMgr->destroySceneNode("Particle");
 								Ogre::SceneNode* particleNode = mCars[i]->GetSceneNode()->createChildSceneNode("Particle");
 								particleNode->attachObject(particleSys);
+								soundSys.playSound(ITEM_EXPLODE, BG);
 							}
 						}
 					}
 			}
 
+		}
+		if (mCars[i]->isAccelerating > 0){
+			soundSys.playSound(CAR_STEADY, (CHANNEL_TYPE)i);
 		}
 	}
 
@@ -706,10 +717,14 @@ void GameplayScene::ControllerInput()
 			if (rt >  XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
 			{
 				mCars[i]->mCanMoveForward = 1.0f;
+				soundSys.playSound(CAR_ACCEL, (CHANNEL_TYPE)i);
+				mCars[i]->isAccelerating++;
 			}
 			else
 			{
 				mCars[i]->mCanMoveForward = 0.0f;
+				soundSys.pauseSound((CHANNEL_TYPE)i);
+				mCars[i]->isAccelerating = 0;
 			}
 
 			//Left trigger for reversing
@@ -909,11 +924,12 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				{
 					if (mCurrentSelectedLevel != "")
 					{
+						soundSys.playSound(B_SELECT, BG);
 						SwapToGameplayLevel(mCurrentSelectedLevel);
 					}
 				}
 			}
-			soundSys.playSound(B_SELECT, BG);
+			
 			break;
 		}
 	}

@@ -23,6 +23,9 @@ enum SOUND_TYPE{
 	COUNTDOWN,
 	CAR_ACCEL,
 	CAR_STEADY,
+	ITEM_EXPLODE,
+	ITEM_PICKUP,
+	BGM,
 };
 
 enum CHANNEL_TYPE{
@@ -31,6 +34,7 @@ enum CHANNEL_TYPE{
 	P3,
 	P4,
 	BG,
+	BM,
 };
 
 class SoundSystem
@@ -44,7 +48,7 @@ public:
 	void update();
 
 	void playSound(SOUND_TYPE soundType, CHANNEL_TYPE chanType);
-	void pauseSound();
+	void pauseSound(CHANNEL_TYPE chanType);
 
 	struct Sound
 	{
