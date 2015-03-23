@@ -257,7 +257,7 @@ void Car::InitRigidBody()
 	ghost->setCollisionShape(boxShape);
 	ghost->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
 
-	btTransform t = btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 3, 0));
+	btTransform t = btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 7, 0));//fix this hard coded garbage
 	compound->addChildShape(t, boxShape);
 
 	btDefaultMotionState* boxMotionState = new btDefaultMotionState(transform);
