@@ -1,0 +1,18 @@
+material skyscraper
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			specular 0.5 0.5 0.5 1 89.6
+
+			texture_unit
+			{
+				texture SkyscraperTex.png
+			}
+		}
+
+	}
+
+}

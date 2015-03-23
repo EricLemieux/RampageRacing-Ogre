@@ -109,6 +109,10 @@
         </node>
 
 		<!--World-->
+        <node name="skyscraper">
+            <entity name="skyscraper" castShadows="false" receiveShadows="true" meshFile="skyscraper.mesh" static="true">
+            </entity>
+        </node>
 		<node name="path">
             <position x="0" y="0" z="0"/>
             <rotation qx="0" qy="0" qz="0" qw="1"/>
