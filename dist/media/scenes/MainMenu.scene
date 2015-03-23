@@ -61,8 +61,16 @@
             <position x="30" y="0" z="-1"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
         </node>
+        <node name="playerSelection">
+            <position x="30.2" y="1.3" z="-5"/>
+            <node>
+                <position x="0.0" y="0.0" z="1"/>
+                <scale x="0.5" y="0.5" z="1"/>
+                <text name="playerSelection" caption="Number of Players"><color r="1" g="1" b="1"/></text>
+            </node>
+        </node>
         <node name="bPlayers_1">
-            <position x="28" y="1" z="-5"/>
+            <position x="28.5" y="0.6" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <entity name="bPlayers_1" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
             <node>
@@ -72,7 +80,7 @@
             </node>
         </node>
         <node name="bPlayers_2">
-            <position x="32" y="1" z="-5"/>
+            <position x="31.5" y="0.6" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <entity name="bPlayers_2" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
             <node>
@@ -82,7 +90,7 @@
             </node>
         </node>
         <node name="bPlayers_3">
-            <position x="28" y="-1" z="-5"/>
+            <position x="28.5" y="-1" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <entity name="bPlayers_3" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
             <node>
@@ -92,7 +100,7 @@
             </node>
         </node>
          <node name="bPlayers_4">
-            <position x="32" y="-1" z="-5"/>
+            <position x="31.5" y="-1" z="-5"/>
             <rotation qx="0" qy="0.0" qz="0" qw="1"/>
             <entity name="bPlayers_4" castShadows="true" receiveShadows="true" meshFile="button.mesh"></entity>
             <node>

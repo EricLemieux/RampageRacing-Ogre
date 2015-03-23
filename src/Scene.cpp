@@ -99,6 +99,7 @@ void Scene::SwapToMainMenu()
 void Scene::SwapToGameplayLevel(Ogre::String levelName)
 {
 	GetSceneManager()->clearScene();
+	lastSelected = "";
 	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(SceneArguments(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers)));
 	newScene->LoadLevel(levelName);
 	newScene->AddCarToScene("myCar");
@@ -163,6 +164,10 @@ void GameplayScene::LoadLevel(Ogre::String levelName)
 
 	AddTriggerVolumesToScene();
 	SetUpItemBoxes();
+
+	//Add the items so that they are already loaded into memory
+	Ogre::Entity* dummyMissile = mSceneMgr->createEntity("Missile.mesh");
+	Ogre::Entity* dummyMine = mSceneMgr->createEntity("Mine.mesh");
 }
 
 void GameplayScene::SetUpItemBoxes()
@@ -302,6 +307,7 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 
 		//Create a game object thing
 		mCars[i] = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), selectedCarTypes[i], i, mCameras));
+		mCarRankings[i] = mCars[i];
 		
 		callback = new ContactSensorCallback(*(mCars[i]->GetRigidBody()), *(mCars[i]));
 	}
@@ -470,7 +476,7 @@ bool GameplayScene::Update()
 						}
 					}
 				}
-				if (mCars[i]->stunCounter > 0){
+				if (mCars[i]->stunCounter == 100){
 					if (mSceneMgr->hasParticleSystem("Sparks"))
 						mSceneMgr->destroyParticleSystem("Sparks");
 					Ogre::ParticleSystem* particleSys = mSceneMgr->createParticleSystem("Sparks", "Sparks");
@@ -518,7 +524,33 @@ bool GameplayScene::Update()
 			}
 			//}
 		}
-	});	
+	});
+
+	for (unsigned int r = 0; r < numLocalPlayers; ++r)
+	{
+		unsigned int nextCheckpoint = mCarRankings[r]->lastCheckpoint + 1;
+		if (nextCheckpoint >= mTriggerVolumes.size())
+			nextCheckpoint = 0;
+		if (r != 0)
+		{
+			//Compare ahead
+			if ((mCarRankings[r]->lastCheckpoint > mCarRankings[r - 1]->lastCheckpoint && mCarRankings[r - 1]->lastCheckpoint != 0) ||
+				((mCarRankings[r]->lastCheckpoint == mCarRankings[r - 1]->lastCheckpoint) && (mCarRankings[r]->GetSceneNode()->getPosition().squaredDistance(mTriggerVolumes[nextCheckpoint]->GetSceneNode()->getPosition()) < mCarRankings[r - 1]->GetSceneNode()->getPosition().squaredDistance(mTriggerVolumes[nextCheckpoint]->GetSceneNode()->getPosition()))))
+			{
+				//Swap the place
+				std::shared_ptr<Car> temp = mCarRankings[r];
+				mCarRankings[r] = mCarRankings[r - 1];
+				mCarRankings[r - 1] = temp;
+			}
+		}
+	}
+	//Set the rankings for the screen
+	for (unsigned int r = 0; r < numLocalPlayers; ++r)
+	{
+		char pos[8];
+		sprintf_s(pos,8,"%i",r+1);
+		mCarRankings[r]->positionText->setCaption(pos);
+	}
 
 	soundSys.update();
 
@@ -792,8 +824,6 @@ void MenuScene::mouseMoved(const OIS::MouseEvent &arg)
 
 	Ogre::RaySceneQueryResult res = q->execute();
 	Ogre::RaySceneQueryResult::iterator itr = res.begin();
-
-	static Ogre::String lastSelected = "";
 
 	if (lastSelected != "")
 	{

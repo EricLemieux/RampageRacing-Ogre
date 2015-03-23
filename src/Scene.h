@@ -137,6 +137,8 @@ protected:
 
 	void SwapToMainMenu();
 	void SwapToGameplayLevel(Ogre::String levelName);
+
+	Ogre::String lastSelected = "";
 };
 
 class GameplayScene : public Scene
@@ -174,6 +176,7 @@ public:
 private:
 	std::shared_ptr<Car> mCars[4];
 	std::shared_ptr<Car> mCar;
+	std::shared_ptr<Car> mCarRankings[4];
 	btRigidBody* body;
 
 
