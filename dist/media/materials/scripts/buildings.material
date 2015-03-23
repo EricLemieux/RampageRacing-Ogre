@@ -1,107 +1,139 @@
-material blinn1
+material BoxBuilding1
 {
 	technique
 	{
 		pass
 		{
-			ambient 0 0 0 1
-			diffuse 0.145924 0.20693 0.382 1
-			specular 0.5 0.5 0.5 1 89.6
+			texture_unit
+			{
+				texture BoxBuilding1Tex.png
+			}
 		}
-
 	}
-
 }
 
-
-material blinn2
+material BoxBuilding2
 {
 	technique
 	{
 		pass
 		{
-			ambient 0 0 0 1
-			diffuse 0.68 0.11832 0.11832 1
-			specular 0.5 0.5 0.5 1 89.6
+			texture_unit
+			{
+				texture BoxBuilding2Tex.png
+			}
 		}
-
 	}
-
 }
 
-
-material blinn3
+material BoxBuilding3
 {
 	technique
 	{
 		pass
 		{
-			ambient 0 0 0 1
-			diffuse 0.5 0.5 0.5 1
-			specular 0.5 0.5 0.5 1 89.6
+			texture_unit
+			{
+				texture BoxBuilding3Tex.png
+			}
 		}
-
 	}
-
 }
 
-
-material blinn5
+material BoxBuilding4
 {
 	technique
 	{
 		pass
 		{
-			ambient 0 0 0 1
-			diffuse 0 0.348 0.0664738 1
-			specular 0.5 0.5 0.5 1 89.6
+			texture_unit
+			{
+				texture BoxBuilding4Tex.png
+			}
 		}
-
 	}
-
 }
 
-
-material lambert1
+material BoxBuilding5
 {
 	technique
 	{
 		pass
 		{
-			ambient 0 0 0 1
-			diffuse 0.404 0.404 0.404 1
+			texture_unit
+			{
+				texture BoxBuilding5Tex.png
+			}
 		}
-
 	}
-
 }
 
-
-material lambert3
+material BoxBuilding6
 {
 	technique
 	{
 		pass
 		{
-			ambient 0 0 0 1
-			diffuse 0.517 0 0.418244 1
+			texture_unit
+			{
+				texture BoxBuilding6Tex.png
+			}
 		}
-
 	}
-
 }
 
-
-material lambert4
+material OddLowBuilding
 {
 	technique
 	{
 		pass
 		{
-			ambient 0 0 0 1
-			diffuse 0.980392 0.94567 0 1
+			texture_unit
+			{
+				texture OddLowBuildingTex.png
+			}
 		}
-
 	}
+}
 
+material LowBuilding1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture LowBuilding1Tex.png
+			}
+		}
+	}
+}
+
+material LowBuilding2
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture LowBuilding2Tex.png
+			}
+		}
+	}
+}
+
+material CentralBuilding
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CenterBuildingTex.png
+			}
+		}
+	}
 }

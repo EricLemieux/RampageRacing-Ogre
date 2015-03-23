@@ -118,7 +118,6 @@
             <entity name="Coliseum" castShadows="false" receiveShadows="true" meshFile="ColeseunBuilding.mesh" static="true"></entity>
         </node>
         <node name="Coliseum2">
-            <position x="-2978.361" y="0" z="1368.033"/>
             <entity name="Coliseum2" castShadows="false" receiveShadows="true" meshFile="Coliseum2.mesh" static="true"></entity>
         </node>
         <node name="Skyscraper2">
@@ -132,6 +131,36 @@
         </node>
         <node name="Pyramid2">
             <entity name="Pyramid2" castShadows="false" receiveShadows="true" meshFile="PyramidBuilding2.mesh" static="true"></entity>
+        </node>
+        <node name="BoxBuilding1">
+            <entity name="BoxBuilding1" castShadows="false" receiveShadows="true" meshFile="BoxBuilding1.mesh" static="true"></entity>
+        </node>
+        <node name="BoxBuilding2">
+            <entity name="BoxBuilding2" castShadows="false" receiveShadows="true" meshFile="BoxBuilding2.mesh" static="true"></entity>
+        </node>
+        <node name="BoxBuilding3">
+            <entity name="BoxBuilding3" castShadows="false" receiveShadows="true" meshFile="BoxBuilding3.mesh" static="true"></entity>
+        </node>
+        <node name="BoxBuilding4">
+            <entity name="BoxBuilding4" castShadows="false" receiveShadows="true" meshFile="BoxBuilding4.mesh" static="true"></entity>
+        </node>
+        <node name="BoxBuilding5">
+            <entity name="BoxBuilding5" castShadows="false" receiveShadows="true" meshFile="BoxBuilding5.mesh" static="true"></entity>
+        </node>
+        <node name="BoxBuilding6">
+            <entity name="BoxBuilding6" castShadows="false" receiveShadows="true" meshFile="BoxBuilding6.mesh" static="true"></entity>
+        </node>
+        <node name="OddLowBuilding">
+            <entity name="OddLowBuilding" castShadows="false" receiveShadows="true" meshFile="OddLowBuilding.mesh" static="true"></entity>
+        </node>
+        <node name="LowBuilding1">
+            <entity name="LowBuilding1" castShadows="false" receiveShadows="true" meshFile="LowBuilding1.mesh" static="true"></entity>
+        </node>
+        <node name="LowBuilding2">
+            <entity name="LowBuilding2" castShadows="false" receiveShadows="true" meshFile="LowBuilding2.mesh" static="true"></entity>
+        </node>
+        <node name="CentralBuilding">
+            <entity name="CentralBuilding" castShadows="false" receiveShadows="true" meshFile="CentralBuilding.mesh" static="true"></entity>
         </node>
 		<node name="path">
             <position x="0" y="0" z="0"/>
