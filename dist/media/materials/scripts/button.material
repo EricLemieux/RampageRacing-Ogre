@@ -12,48 +12,6 @@ material button
 	}
 }
 
-material button_start
-{
-	technique
-	{
-		pass
-		{
-			texture_unit
-			{
-				texture buttons/StartState1.png
-			}
-		}
-	}
-}
-
-material button_quit
-{
-	technique
-	{
-		pass
-		{
-			texture_unit
-			{
-				texture buttons/ExitState1.png
-			}
-		}
-	}
-}
-
-material button_1Players
-{
-	technique
-	{
-		pass
-		{
-			texture_unit
-			{
-				texture buttons/PlayerOneImage.png
-			}
-		}
-	}
-}
-
 material button_level_island
 {
 	technique
@@ -67,7 +25,6 @@ material button_level_island
 		}
 	}
 }
-
 material button_level_roadway
 {
 	technique
@@ -81,7 +38,6 @@ material button_level_roadway
 		}
 	}
 }
-
 material button_level_mountain
 {
 	technique
@@ -96,29 +52,66 @@ material button_level_mountain
 	}
 }
 
-material button_play
+material 1Player
 {
 	technique
 	{
 		pass
 		{
+			scene_blend alpha_blend
+			depth_write off
+
 			texture_unit
 			{
-				texture buttons/buttonPlay.png
+				texture buttons/PlayerOneImage.png
 			}
 		}
 	}
 }
-
-material button_home
+material 2Player
 {
 	technique
 	{
 		pass
 		{
+			scene_blend alpha_blend
+			depth_write off
+
 			texture_unit
 			{
-				texture buttons/buttonHome.png
+				texture buttons/PlayerTwoImage.png
+			}
+		}
+	}
+}
+material 3Player
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture buttons/PlayerThreeImage.png
+			}
+		}
+	}
+}
+material 4Player
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture buttons/PlayerFourImage.png
 			}
 		}
 	}
