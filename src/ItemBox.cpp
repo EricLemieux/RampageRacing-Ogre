@@ -24,6 +24,9 @@ ItemBox::ItemBox(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager,
 		mItemMaterialName = "hud_item_speed";
 		itemBoxEnt->setMaterialName("itemBox_speed");
 		break;
+	default:
+		itemBoxEnt->setMaterialName("itemBox_none");
+		break;
 	}
 	mSceneNode->attachObject(itemBoxEnt);
 

@@ -7,11 +7,9 @@ material checkpoint
 			scene_blend alpha_blend
 			depth_write off
 			
-			texture_unit
-			{
-				colour_op_ex source1 src_manual src_current 1 1 1
-         		alpha_op_ex source1 src_manual src_current 0
-			}
+			ambient 0 0 0 0
+			diffuse 0 0 0 0
+			specular 0 0 0 0
 		}
 
 	}
@@ -29,8 +27,7 @@ material finishline
 
 			texture_unit
 			{
-				colour_op_ex source1 src_manual src_current 1 0 0
-         		alpha_op_ex source1 src_manual src_current 0.5
+				texture finishLineTex.png
 			}
 		}
 
