@@ -91,7 +91,7 @@ void Scene::ResetCamera()
 void Scene::SwapToMainMenu()
 {
 	GetSceneManager()->clearScene();
-	newScene = std::shared_ptr<MenuScene>(new MenuScene(SceneArguments(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers)));
+	newScene = std::shared_ptr<MenuScene>(new MenuScene(SceneArguments(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers, mSoundSys)));
 	newScene->LoadLevel("MainMenu");
 	swapToTheNewScene = true;
 }
@@ -100,7 +100,7 @@ void Scene::SwapToGameplayLevel(Ogre::String levelName)
 {
 	GetSceneManager()->clearScene();
 	lastSelected = "";
-	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(SceneArguments(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers)));
+	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(SceneArguments(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers, mSoundSys)));
 	newScene->LoadLevel(levelName);
 	newScene->AddCarToScene("myCar");
 	swapToTheNewScene = true;
@@ -865,90 +865,8 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 	{
 		if (itr->movable && itr->movable->getName()[0] == 'b')
 		{
-			if (currentSubMenu == sm_Main)
-			{
-				if (itr->movable->getName() == "bStartEnt0")
-				{
-					nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
-				}
-				else if (itr->movable->getName() == "bExitEnt0")
-				{
-					//exit the game
-
-					exit(1);
-				}
-			}
-			else if (currentSubMenu == sm_PlayerCount)
-			{
-				Ogre::String str = itr->movable->getName();
-				char buttonType[256];
-				sscanf_s(str.c_str(), "%8s", &buttonType, 256);
-				if (!stricmp(buttonType, "bPlayers"))
-				{
-					sscanf_s(str.c_str(),"%*[^_]_%i",&numLocalPlayers);
-
-					SetUpLabelsAndCars();
-
-					nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
-				}
-			}
-			else if (currentSubMenu == sm_LevelSelect)
-			{
-				Ogre::String str = itr->movable->getName();
-				char buttonType[256], levelName[256];
-				sscanf_s(str.c_str(), "%6s", &buttonType, 256);
-				if (!stricmp(buttonType, "bLevel"))
-				{
-					//Move the current Selection back
-					GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->setPosition(0.5, 20, 50);
-
-					sscanf_s(str.c_str(),"%*[^_]_%s",&levelName,256);
-					mCurrentSelectedLevel = levelName;
-					GetSceneManager()->getSceneNode(Ogre::String(levelName) + "MenuMini")->setPosition(0.5, 20, -5);
-				}
-
-				else if (itr->movable->getName() == "bPlay")
-				{
-					if (mCurrentSelectedLevel != "")
-					{
-						nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
-					}
-				}
-
-				else if (itr->movable->getName() == "bHome")
-				{
-					nextSubMenu = sm_Main;
-				}
-			}
-			else if (currentSubMenu == sm_CarSelect)
-			{
-				const char* str = itr->movable->getName().c_str();
-				if (!stricmp(str,"bNextCar"))
-				{
-					//Remove the current Child
-					mSceneMgr->getSceneNode("CarSelector")->removeAndDestroyAllChildren();
-					mSceneMgr->destroyEntity("CarSelector");
-
-					//attach the new child
-					Ogre::Entity* selectorEnt = GetNextCarModel(1);
-					mSceneMgr->getSceneNode("CarSelector")->attachObject(selectorEnt);
-				}
-				else if (!stricmp(str, "bPrevCar"))
-				{
-					//Remove the current Child
-					mSceneMgr->getSceneNode("CarSelector")->removeAndDestroyAllChildren();
-					mSceneMgr->destroyEntity("CarSelector");
-
-					//attach the new child
-					Ogre::Entity* selectorEnt = GetNextCarModel(-1);
-					mSceneMgr->getSceneNode("CarSelector")->attachObject(selectorEnt);
-				}
-				else if (!stricmp(str, "bSelect"))
-				{
-					ConfirmCarChoice();
-				}
-			}
-			else if (currentSubMenu == sm_Lobby)
+			SelectButton(itr->movable->getName());
+			if (currentSubMenu == sm_Lobby)
 			{
 				if (itr->movable->getName() == "bForceStart")
 				{
@@ -975,6 +893,9 @@ void MenuScene::SetUpLabelsAndCars()
 		//make the node
 		char name[128];
 		sprintf_s(name, 128, "playerLabel%i", i);
+
+		if (mSceneMgr->hasSceneNode(name))
+			mSceneMgr->destroySceneNode(name);
 
 		Ogre::SceneNode* node = mSceneMgr->getRootSceneNode()->createChildSceneNode(name);
 
@@ -1065,7 +986,8 @@ bool MenuScene::Update()
 
 bool MenuScene::frameRenderingQueued(const Ogre::FrameEvent &evt)
 {
-	animationState->addTime(evt.timeSinceLastFrame);
+	if (!this->swapToTheNewScene)
+		animationState->addTime(evt.timeSinceLastFrame);
 
 	return true;
 }
@@ -1116,11 +1038,93 @@ void MenuScene::ControllerInput()
 {
 	for (unsigned int i = 0; i < numLocalPlayers; ++i)
 	{
+		if (lastSelected != "")
+			mSceneMgr->getEntity(lastSelected)->setMaterialName("button");
 		if (mControllers[i]->IsConnected())
 		{
-			if (currentSubMenu == sm_Lobby)
+			if (currentSubMenu == sm_Main)
 			{
-				if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START)
+				float lsy = mControllers[i]->GetState().Gamepad.sThumbLY;
+				if (lsy < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					lastSelected = "bExit";
+				}
+				else if (lsy > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					lastSelected = "bStart";
+				}
+			}
+			else if (currentSubMenu == sm_PlayerCount)
+			{
+				float lsy = mControllers[i]->GetState().Gamepad.sThumbLY;
+				if (lsy < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					if (lastSelected == "bPlayers_1")
+						lastSelected = "bPlayers_3";
+					else if (lastSelected == "bPlayers_2")
+						lastSelected = "bPlayers_4";
+				}
+				else if (lsy > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					if (lastSelected == "bPlayers_3")
+						lastSelected = "bPlayers_1";
+					else if (lastSelected == "bPlayers_4")
+						lastSelected = "bPlayers_2";
+				}
+
+				float lsx = mControllers[i]->GetState().Gamepad.sThumbLX;
+				if (lsx < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					if (lastSelected == "bPlayers_2")
+						lastSelected = "bPlayers_1";
+					else if (lastSelected == "bPlayers_4")
+						lastSelected = "bPlayers_3";
+				}
+				else if (lsx > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					if (lastSelected == "bPlayers_1")
+						lastSelected = "bPlayers_2";
+					else if (lastSelected == "bPlayers_3")
+						lastSelected = "bPlayers_4";
+				}
+			}
+			else if (currentSubMenu == sm_LevelSelect)
+			{
+				//TODO
+			}
+			else if (currentSubMenu == sm_CarSelect)
+			{
+				float lsx = mControllers[i]->GetState().Gamepad.sThumbLX;
+				if (lsx < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					if (lThumbWaited)
+					{
+						if (lastSelected == "bNextCar")
+							lastSelected = "bSelect";
+						else if (lastSelected == "bSelect")
+							lastSelected = "bPrevCar";
+					}
+					lThumbWaited = false;
+				}
+				else if (lsx > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+				{
+					if (lThumbWaited)
+					{
+						if (lastSelected == "bPrevCar")
+							lastSelected = "bSelect";
+						else if (lastSelected == "bSelect")
+							lastSelected = "bNextCar";
+					}
+					lThumbWaited = false;
+				}
+				else
+				{
+					lThumbWaited = true;
+				}
+			}
+			else if (currentSubMenu == sm_Lobby)
+			{
+				if ((mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START) || (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A))
 				{
 					labels[i]->SetReadyToPlay(!labels[i]->GetReadyToPlay());
 
@@ -1139,7 +1143,115 @@ void MenuScene::ControllerInput()
 					}
 				}
 			}
+
+			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
+			{
+				if (buttonAWaited)
+					SelectButton(lastSelected);
+				buttonAWaited = false;
+			}
+			else
+			{
+				buttonAWaited = true;
+			}
+			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B)
+			{
+				nextSubMenu = sm_Main;
+				lastSelected = "bStart";
+			}
 		}
+		if (lastSelected != "")
+			mSceneMgr->getEntity(lastSelected)->setMaterialName("button_highlighted");
+	}
+}
+
+void MenuScene::SelectButton(Ogre::String bName)
+{
+	if (currentSubMenu == sm_Main)
+	{
+		if (bName == "bStart")
+		{
+			nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
+			lastSelected = "bPlayers_1";
+		}
+		else if (bName == "bExit")
+		{
+			//exit the game
+			exit(1);
+		}
+	}
+	else if (currentSubMenu == sm_PlayerCount)
+	{
+		char buttonType[256];
+		sscanf_s(bName.c_str(), "%8s", &buttonType, 256);
+		if (!stricmp(buttonType, "bPlayers"))
+		{
+			sscanf_s(bName.c_str(), "%*[^_]_%i", &numLocalPlayers);
+
+			SetUpLabelsAndCars();
+
+			nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
+			lastSelected = "bPlay";
+		}
+	}
+	else if (currentSubMenu == sm_LevelSelect)
+	{
+		char buttonType[256], levelName[256];
+		sscanf_s(bName.c_str(), "%6s", &buttonType, 256);
+		if (!stricmp(buttonType, "bLevel"))
+		{
+			//Move the current Selection back
+			GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->setPosition(0.5, 20, 50);
+
+			sscanf_s(bName.c_str(), "%*[^_]_%s", &levelName, 256);
+			mCurrentSelectedLevel = levelName;
+			GetSceneManager()->getSceneNode(Ogre::String(levelName) + "MenuMini")->setPosition(0.5, 20, -5);
+		}
+
+		else if (bName == "bPlay")
+		{
+			if (mCurrentSelectedLevel != "")
+			{
+				nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
+				lastSelected = "bSelect";
+			}
+		}
+
+		else if (bName == "bHome")
+		{
+			nextSubMenu = sm_Main;
+		}
+	}
+	else if (currentSubMenu == sm_CarSelect)
+	{
+		if (!stricmp(bName.c_str(), "bNextCar"))
+		{
+			//Remove the current Child
+			mSceneMgr->getSceneNode("CarSelector")->removeAndDestroyAllChildren();
+			mSceneMgr->destroyEntity("CarSelector");
+
+			//attach the new child
+			Ogre::Entity* selectorEnt = GetNextCarModel(1);
+			mSceneMgr->getSceneNode("CarSelector")->attachObject(selectorEnt);
+		}
+		else if (!stricmp(bName.c_str(), "bPrevCar"))
+		{
+			//Remove the current Child
+			mSceneMgr->getSceneNode("CarSelector")->removeAndDestroyAllChildren();
+			mSceneMgr->destroyEntity("CarSelector");
+
+			//attach the new child
+			Ogre::Entity* selectorEnt = GetNextCarModel(-1);
+			mSceneMgr->getSceneNode("CarSelector")->attachObject(selectorEnt);
+		}
+		else if (!stricmp(bName.c_str(), "bSelect"))
+		{
+			ConfirmCarChoice();
+		}
+	}
+	else if (currentSubMenu == sm_Lobby)
+	{
+
 	}
 }
 

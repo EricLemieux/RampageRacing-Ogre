@@ -143,7 +143,7 @@ protected:
 	void SwapToMainMenu();
 	void SwapToGameplayLevel(Ogre::String levelName);
 
-	Ogre::String lastSelected = "";
+	Ogre::String lastSelected = "bStart";
 };
 
 class GameplayScene : public Scene
@@ -254,6 +254,10 @@ private:
 	Ogre::MovableText* carSelectionTitle;
 
 	Ogre::AnimationState* animationState;
+
+	void SelectButton(Ogre::String bName);
+	bool lThumbWaited = true;
+	bool buttonAWaited = true;
 };
 
 class IntroScene : public Scene
