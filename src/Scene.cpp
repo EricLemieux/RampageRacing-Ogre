@@ -461,7 +461,7 @@ bool GameplayScene::Update()
 									bool test1 = manifold->getBody1() == mItemBoxes[boxID]->GetRigidBody() ? true : false;
 									if ((test0 || test1) && mCars[i]->mCurrentItem == IBT_NONE)
 									{
-										mCars[i]->mCurrentItem = mItemBoxes[boxID]->GetType();
+										mCars[i]->SetItem(mItemBoxes[boxID]->GetType());
 										mCars[i]->lastItemBoxCheckpoint = mCars[i]->lastCheckpoint;
 										break;
 									}
@@ -719,7 +719,7 @@ void GameplayScene::UseItem(int carID)
 	else if (mCars[carID]->mCurrentItem == IBT_DEFENCE)
 		DropMine(carID);
 
-	mCars[carID]->mCurrentItem = IBT_NONE;
+	mCars[carID]->SetItem(IBT_NONE);
 }
 void GameplayScene::FireMissile(int carID)
 {
