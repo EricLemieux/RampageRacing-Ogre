@@ -18,8 +18,11 @@ void SoundSystem::initSound(){
 
 	result = system->init(32, FMOD_INIT_NORMAL, 0);
 
-	FMOD::Channel* ch;
-	channels.push_back(ch);
+	
+	for (int i = 0; i < 5; ++i){
+		FMOD::Channel* ch;
+		channels.push_back(ch);
+	}
 
 	//Read the sounds file
 	Ogre::String fileName = "game.sounds";	//TODO figure out if we are storing all the sounds in the files, for now they are all in this one file
@@ -49,7 +52,7 @@ void SoundSystem::initSound(){
 			if (loop == 0){
 				result = sounds[soundCount].sound->setMode(FMOD_LOOP_OFF);
 			} else {
-				result = sounds[soundCount].sound->setMode(FMOD_LOOP_NORMAL);
+				result = sounds[soundCount].sound->setMode(FMOD_LOOP_OFF);
 			}
 			soundCount++;
 		}
@@ -68,34 +71,37 @@ void SoundSystem::update(){
 	bool         paused = 0;
 	int          channelsplaying = 0;
 
-	if (channels[0])
-	{
-		FMOD::Sound *currentsound = 0;
-
-		result = channels[0]->isPlaying(&playing);
-
-
-		result = channels[0]->getPaused(&paused);
-	
-
-		result = channels[0]->getPosition(&ms, FMOD_TIMEUNIT_MS);
-
-
-		channels[0]->getCurrentSound(&currentsound);
-		if (currentsound)
+	for (int i = 0; i < channels.size(); ++i){
+		if (channels[i])
 		{
-			result = currentsound->getLength(&lenms, FMOD_TIMEUNIT_MS);
+			FMOD::Sound *currentsound = 0;
+
+			result = channels[i]->isPlaying(&playing);
+
+
+			result = channels[i]->getPaused(&paused);
+
+
+			result = channels[i]->getPosition(&ms, FMOD_TIMEUNIT_MS);
+
+
+			channels[i]->getCurrentSound(&currentsound);
+			if (currentsound)
+			{
+				result = currentsound->getLength(&lenms, FMOD_TIMEUNIT_MS);
+			}
 		}
 	}
-
 	system->getChannelsPlaying(&channelsplaying);
 	
 
 }
 
-void SoundSystem::playSound(){
-	result = system->playSound(FMOD_CHANNEL_FREE, sounds[0].sound, false, &channels[0]);
+void SoundSystem::playSound(SOUND_TYPE soundType, CHANNEL_TYPE chanType){
+	result = system->playSound(FMOD_CHANNEL_FREE, sounds[soundType].sound, false, &channels[chanType]);
 }
+
+
 void SoundSystem::pauseSound(){
 	result = channels[0]->setPaused(true);
 }

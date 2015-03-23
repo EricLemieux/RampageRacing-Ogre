@@ -1,5 +1,0 @@
-#This file stores all of the sounds for the game.
-#File format
-#filepath looping
-..\dist\media\sounds\meow.mp3 0
-filler
