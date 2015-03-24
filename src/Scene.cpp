@@ -724,7 +724,7 @@ void GameplayScene::ControllerInput()
 
 			//Right trigger for acceleration
 			float rt = mControllers[i]->GetState().Gamepad.bRightTrigger;
-			if (rt >  XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+			if (rt >  XINPUT_GAMEPAD_TRIGGER_THRESHOLD || mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)
 			{
 				mCars[i]->mCanMoveForward = 1.0f;
 				mSoundSys->playSound(CAR_ACCEL, (CHANNEL_TYPE)i);
