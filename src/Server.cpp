@@ -34,14 +34,20 @@ void Server::SendString(const std::string &data)
 
 void Server::SendPosUpdates()
 {
-	for (unsigned int i = 0; i < mConnectedPlayers.size(); ++i)
+	unsigned int count = mConnectedPlayers.size();
+	for (unsigned int i = 0; i < count; ++i)
 	{
 		if (i != currentlyConnectedID)
 		{
-			SendString(mConnectedPlayers[i].pos);
-			//SendString(mConnectedPlayers[i].rot);
-			int a = 0;
-			a++;
+			//Send the position
+			char pos[256];
+			sprintf_s(pos, "pos %d %f %f %f", i, mConnectedPlayers[i].pos.x, mConnectedPlayers[i].pos.y, mConnectedPlayers[i].pos.z);
+			SendString(pos);
+			
+			//Send the rotation quaternion
+			char rot[256];
+			sprintf_s(rot, "rot %d %f %f %f %f", i, mConnectedPlayers[i].rot.x, mConnectedPlayers[i].rot.y, mConnectedPlayers[i].rot.z, mConnectedPlayers[i].rot.w);
+			SendString(rot);
 		}
 	}
 }
@@ -56,13 +62,6 @@ void Server::RecieveString()
 
 			Object newPlayer;
 			mConnectedPlayers.push_back(newPlayer);
-
-			//TEMP secondary player
-			//this is just for testing right now
-			//Delete it later
-			//Seriously kill it with fire...
-			Object newPlayer2;
-			mConnectedPlayers.push_back(newPlayer2);
 		}
 		else if (mPacket->data[0] == ID_DISCONNECTION_NOTIFICATION)
 		{
@@ -82,18 +81,20 @@ void Server::RecieveString()
 			if (phrase == "pos")
 			{
 				int id = 0;
-				sscanf_s(str.c_str(), "%*[^0-9]%d", &id);
+				vec3 pos;
+				sscanf_s(str.c_str(), "%*[^0-9]%d %f %f %f", &id, &pos.x, &pos.y, &pos.z);
 
-				mConnectedPlayers[id].pos = str;
+				mConnectedPlayers[id].pos = pos;
 
 				currentlyConnectedID = id;
 			}
 			else if (phrase == "rot")
 			{
 				int id = 0;
-				sscanf_s(str.c_str(), "%*[^0-9]%d", &id);
+				quaternion rot;
+				sscanf_s(str.c_str(), "%*[^0-9]%d %f %f %f %f", &id, &rot.x, &rot.y, &rot.z, &rot.w);
 
-				mConnectedPlayers[id].rot = str;
+				mConnectedPlayers[id].rot = rot;
 
 				currentlyConnectedID = id;
 			}

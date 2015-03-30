@@ -6,11 +6,21 @@
 #include <iostream>
 #include <vector>
 
+struct vec3
+{
+	float x, y, z;
+};
+
+struct quaternion
+{
+	float x, y, z, w;
+};
+
 class Object
 {
 public:
-	std::string pos;
-	std::string rot;
+	vec3 pos;
+	quaternion rot;
 };
 
 class Server
