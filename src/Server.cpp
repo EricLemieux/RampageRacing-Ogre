@@ -29,7 +29,7 @@ void Server::Activate(const char* password, const unsigned int& port, const unsi
 
 void Server::SendString(const std::string &data)
 {
-	auto res = mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 }
 
 void Server::SendPosUpdates()

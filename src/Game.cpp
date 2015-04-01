@@ -4,7 +4,7 @@ Game::Game(void) : BaseApplication()
 {
 	mGameClient = std::shared_ptr<Client>(new Client());
 
-	mGameClient->Connect("localhost", 8080, 8081, "password");
+	mGameClient->Connect("192.168.1.175", 8080, 8081, "password");
 	mGameClient->SendString("connect");
 
 	for (unsigned int i = 0; i < 4; ++i)

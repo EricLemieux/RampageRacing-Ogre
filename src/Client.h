@@ -29,6 +29,7 @@ public:
 	inline int GetID(){ return id; }
 
 	inline Ogre::Vector3 GetPos(int id){ return mConnectedPlayers[id].pos; }
+	inline Ogre::Quaternion GetRot(int id){ return mConnectedPlayers[id].rot; }
 
 	int startingIndex;
 	int totalPlayers;

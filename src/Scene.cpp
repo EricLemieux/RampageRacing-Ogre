@@ -379,11 +379,27 @@ bool GameplayScene::Update()
 		if (mCars[i]->isLocal)
 		{
 			mCars[i]->Update();
+
+			//Send the position of the players car to the server
+			{
+				char str[256];
+				auto pos = mCars[i]->GetSceneNode()->getPosition();
+				sprintf_s(str, 256, "pos %d %f %f %f", i, pos.x, pos.y, pos.z);
+				mGameClient->SendString(std::string(str));
+			}
+
+			//Send the rotation of the car to the server
+			{
+				char str[256];
+				auto rot = mCars[i]->GetSceneNode()->getOrientation();
+				sprintf_s(str, 256, "rot %d %f %f %f %f", i, rot.x, rot.y, rot.z, rot.w);
+				mGameClient->SendString(std::string(str));
+			}
 		}
 		else
 		{
-			//TODO
-			//move the car based on the position data.
+			mCars[i]->SetPosition(mGameClient->GetPos(i));
+			mCars[i]->SetRotation(mGameClient->GetRot(i));
 		}
 		
 
@@ -403,22 +419,6 @@ bool GameplayScene::Update()
 
 	//update the active weapons
 	std::for_each(mActiveWeapons.begin(), mActiveWeapons.end(), [](std::shared_ptr<GameObject> obj){obj->Update(); });
-
-	//Send the position of the players car to the server
-	{
-		char str[256];
-		auto pos = mCar->GetSceneNode()->getPosition();
-		sprintf_s(str, 256, "%s %d %f %f %f", "pos", mGameClient->GetID(), pos.x, pos.y, pos.z);
-		mGameClient->SendString(std::string(str));
-	}
-
-	//Send the rotation of the car to the server
-	{
-		char str[256];
-		auto rot = mCar->GetSceneNode()->getOrientation();
-		sprintf_s(str, 256, "%s %d %f %f %f", "rot", mGameClient->GetID(), rot.x, rot.y, rot.z);
-		mGameClient->SendString(std::string(str));
-	}
 	
 	//Get the positions from the server for the other cars
 	mGameClient->Recieve();

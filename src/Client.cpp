@@ -55,11 +55,11 @@ void Client::Recieve()
 		else if (phrase == "rot")
 		{
 			int id = 0;
-			float rot[3];
+			float rot[4];
 
-			sscanf_s(str.c_str(), "%*[^0-9]%d %f %f %f", &id, &rot[0], &rot[1], &rot[2]);
+			sscanf_s(str.c_str(), "%*[^0-9]%d %f %f %f %f", &id, &rot[0], &rot[1], &rot[2], &rot[3]);
 
-			mConnectedPlayers[id].rot = Ogre::Quaternion(1.0f, rot[0], rot[1], rot[2]);
+			mConnectedPlayers[id].rot = Ogre::Quaternion(rot[3], rot[0], rot[1], rot[2]);
 		}
 		else if (phrase == "startIndex")
 		{

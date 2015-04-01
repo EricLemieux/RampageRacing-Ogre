@@ -35,6 +35,9 @@ public:
 	OBJECT_TYPE objectType;
 	bool isActive;
 
+	inline void SetPosition(Ogre::Vector3 pos){ mSceneNode->setPosition(pos); mRigidBody->getWorldTransform().setOrigin(OgreToBtVector3(pos)); }
+	inline void SetRotation(Ogre::Quaternion rot){ mSceneNode->setOrientation(rot); mRigidBody->getWorldTransform().setRotation(OgreToBtQuaternion(rot)); }
+
 private:
 	virtual void InitRigidBody();
 
