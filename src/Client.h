@@ -31,7 +31,7 @@ public:
 	inline Ogre::Vector3 GetPos(int id){ return mConnectedPlayers[id].pos; }
 	inline Ogre::Quaternion GetRot(int id){ return mConnectedPlayers[id].rot; }
 
-	int startingIndex;
+	int startingIndex=999;
 	int totalPlayers;
 
 	bool allReady = false;

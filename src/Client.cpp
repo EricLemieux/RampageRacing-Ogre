@@ -61,7 +61,7 @@ void Client::Recieve()
 
 			mConnectedPlayers[id].rot = Ogre::Quaternion(rot[3], rot[0], rot[1], rot[2]);
 		}
-		else if (phrase == "startIndex")
+		else if (phrase == "startIndex" && startingIndex == 999)
 		{
 			sscanf_s(str.c_str(), "%*[^0-9]%d", &startingIndex);
 		}

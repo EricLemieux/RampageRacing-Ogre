@@ -50,7 +50,6 @@
 //Bad practice but works
 static unsigned int numLocalPlayers = 1;
 static unsigned int numTotalPlayers = 1;
-static unsigned int localPlayersStarting = 0;
 
 static Ogre::String selectedCarTypes[4] = {"BoltCar.mesh","BoltCar.mesh","BoltCar.mesh","BoltCar.mesh"};
 

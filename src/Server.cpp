@@ -27,9 +27,10 @@ void Server::Activate(const char* password, const unsigned int& port, const unsi
 	mServer->SetIncomingPassword(password, strlen(password));
 }
 
-void Server::SendString(const std::string &data)
+void Server::SendString(const std::string &data, bool sendToEveryone)
 {
-	mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, sendToEveryone);
+	//mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void Server::SendPosUpdates()
@@ -73,7 +74,7 @@ void Server::RecieveString()
 			std::string str = std::string((char*)mPacket->data).substr(0, mPacket->length);
 
 			//Temp print the string sent to the server
-			std::cout << str.c_str()<<"\n";
+			//std::cout << str.c_str()<<"\n";
 
 			auto p = str.find(" ");
 			std::string phrase = str.substr(0, p);
@@ -113,6 +114,7 @@ void Server::RecieveString()
 
 				char buffer[32];
 				sprintf_s(buffer,"startIndex %d",startingIndex);
+				std::cout << buffer<<"\n";
 				SendString(buffer);
 
 				
@@ -121,14 +123,17 @@ void Server::RecieveString()
 			{
 				numReady++;
 
+				std::cout << numReady << " == " << mConnectedPlayers.size() << "\n";
 				if (numReady == mConnectedPlayers.size())
 				{
 					//Send the number of players
 					char buffer[32];
 					sprintf_s(buffer, "totalPlayers %d", mConnectedPlayers.size());
-					SendString(buffer);
+					SendString(buffer, true);
 
-					SendString("start");
+					std::cout << buffer << "\n";
+
+					SendString("start", true);
 				}
 			}
 			else if (phrase == "notready")

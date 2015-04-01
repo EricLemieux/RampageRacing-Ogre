@@ -330,7 +330,7 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 
 	for (unsigned int i = 0; i < numLocalPlayers; ++i)
 	{
-		mLocalCars[i] = mCars[localPlayersStarting + i];
+		mLocalCars[i] = mCars[mGameClient->startingIndex + i];
 		mLocalCars[i]->isLocal = true;
 	}
 

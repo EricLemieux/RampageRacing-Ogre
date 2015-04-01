@@ -36,7 +36,7 @@ public:
 	~Server();
 
 	void Activate(const char* password, const unsigned int& port, const unsigned int& maxConnections);
-	void SendString(const std::string &data);
+	void SendString(const std::string &data, bool sendToEveryone = true);
 	void SendPosUpdates();
 	void RecieveString();
 
