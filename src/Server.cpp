@@ -29,7 +29,7 @@ void Server::Activate(const char* password, const unsigned int& port, const unsi
 
 void Server::SendString(const std::string &data)
 {
-	mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	auto res = mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 }
 
 void Server::SendPosUpdates()
@@ -59,9 +59,6 @@ void Server::RecieveString()
 		if (mPacket->data[0] == ID_NEW_INCOMING_CONNECTION)
 		{
 			std::cout << "A remote system has connected.\n";
-
-			Object newPlayer;
-			mConnectedPlayers.push_back(newPlayer);
 		}
 		else if (mPacket->data[0] == ID_DISCONNECTION_NOTIFICATION)
 		{
@@ -74,6 +71,9 @@ void Server::RecieveString()
 		else
 		{
 			std::string str = std::string((char*)mPacket->data).substr(0, mPacket->length);
+
+			//Temp print the string sent to the server
+			std::cout << str.c_str()<<"\n";
 
 			auto p = str.find(" ");
 			std::string phrase = str.substr(0, p);
@@ -98,8 +98,36 @@ void Server::RecieveString()
 
 				currentlyConnectedID = id;
 			}
-			else if (phrase == "something")
+			else if (phrase == "addPlayers")
 			{
+				unsigned int local = 0;
+				sscanf_s(str.c_str(), "%*[^0-9]%d", &local);
+
+				unsigned int startingIndex = mConnectedPlayers.size();
+
+				for (unsigned int p = 0; p < local; ++p)
+				{
+					Object newPlayer;
+					mConnectedPlayers.push_back(newPlayer);
+				}
+
+				char buffer[32];
+				sprintf_s(buffer,"startIndex %d",startingIndex);
+				SendString(buffer);
+			}
+			else if (phrase == "ready")
+			{
+				numReady++;
+
+				if (numReady == mConnectedPlayers.size())
+				{
+					std::cout << "start the game!\n";
+					SendString("start");
+				}
+			}
+			else if (phrase == "notready")
+			{
+				numReady--;
 			}
 			else if (phrase == "reset")
 			{

@@ -30,6 +30,11 @@ public:
 
 	inline Ogre::Vector3 GetPos(int id){ return mConnectedPlayers[id].pos; }
 
+	int startingIndex;
+	int totalPlayers;
+
+	bool allReady = false;
+
 private:
 	RakNet::RakPeerInterface* mClient;
 	RakNet::SocketDescriptor* mSockDesc;
@@ -40,6 +45,6 @@ private:
 	
 	int id=0;
 
-	std::vector<Object> mConnectedPlayers;
+	Object* mConnectedPlayers;
 	const unsigned int MAX_CONNECTIONS = 10;
 };

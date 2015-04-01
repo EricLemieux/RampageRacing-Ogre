@@ -312,16 +312,26 @@ void GameplayScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID
 
 void GameplayScene::AddCarToScene(Ogre::String name)
 {
-	for (unsigned int i = 0; i < numLocalPlayers; ++i)
+	mCarRankings = new std::shared_ptr<Car>[numTotalPlayers];
+
+	for (unsigned int i = 0; i < numTotalPlayers; ++i)
 	{
 		char name[128];
 		sprintf_s(name, 128, "mCar%i",i);
 
 		//Create a game object thing
-		mCars[i] = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), selectedCarTypes[i], i, mCameras));
-		mCarRankings[i] = mCars[i];
+		auto car = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), selectedCarTypes[i], i, mCameras));
+		mCarRankings[i] = car;
 		
-		callback = new ContactSensorCallback(*(mCars[i]->GetRigidBody()), *(mCars[i]));
+		callback = new ContactSensorCallback(*(car->GetRigidBody()), *(car));
+
+		mCars.push_back(car);
+	}
+
+	for (unsigned int i = 0; i < numLocalPlayers; ++i)
+	{
+		mLocalCars[i] = mCars[localPlayersStarting + i];
+		mLocalCars[i]->isLocal = true;
 	}
 
 	mCar = mCars[0];	
@@ -358,7 +368,7 @@ bool GameplayScene::Update()
 
 	bool allDoneLooking = true;
 	
-	for (unsigned int i = 0; i < numLocalPlayers; ++i)
+	for (unsigned int i = 0; i < numTotalPlayers; ++i)
 	{
 		if (!mCars[i]->mFinishedRace)
 			mCars[i]->raceTime += int(timeForCars);
@@ -366,8 +376,16 @@ bool GameplayScene::Update()
 		if (!mCars[i]->doneLookingAtResults)
 			allDoneLooking = false;
 		
-
-		mCars[i]->Update();
+		if (mCars[i]->isLocal)
+		{
+			mCars[i]->Update();
+		}
+		else
+		{
+			//TODO
+			//move the car based on the position data.
+		}
+		
 
 		if (goingUp)
 			bounce += 0.01f;
@@ -557,7 +575,7 @@ bool GameplayScene::Update()
 						bool test0 = manifold->getBody0() == obj->ownerID ? true : false;
 						bool test2 = false;
 						bool test3 = false;
-						for (int j = 0; j < numLocalPlayers; ++j){
+						for (int j = 0; j < numTotalPlayers; ++j){
 							test2 = manifold->getBody0() == mCars[j]->GetRigidBody() ? true : false;
 							test3 = manifold->getBody1() == mCars[j]->GetRigidBody() ? true : false;
 						}
@@ -629,6 +647,10 @@ void GameplayScene::SetUpViewports()
 	{
 		Ogre::Viewport* vp = mWindow->addViewport(mCamera.get());
 		mCamera->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
+
+		Ogre::CompositorManager::getSingleton().addCompositor(vp, "Bloom");
+		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, "Bloom", true);
+
 		break;
 	}
 	case 2:
@@ -1012,6 +1034,17 @@ bool MenuScene::Update()
 {
 	timeBetweenControllerInput += 1;
 
+	mGameClient->Recieve();
+
+	//Set the total number of connected players
+	numTotalPlayers = mGameClient->totalPlayers;
+
+	if (mGameClient->allReady)
+	{
+		mSoundSys->playSound(B_RETURN, BG);
+		SwapToGameplayLevel(mCurrentSelectedLevel);
+	}
+
 	timeStep += clock.getTimeSeconds();
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
@@ -1200,21 +1233,14 @@ void MenuScene::ControllerInput()
 					timeBetweenControllerInput = 0;
 					labels[i]->SetReadyToPlay(!labels[i]->GetReadyToPlay());
 
-					bool allReady = true;
-
-					//loop through all of the other labels to see if they are ready to play
-					for (unsigned int j = 0; j < labels.size(); ++j)
+					if (labels[i]->GetReadyToPlay())
 					{
-						if (!labels[j]->GetReadyToPlay())
-							allReady = false;
+						mGameClient->SendString("ready");
 					}
-
-
-					if (allReady)
+					else
 					{
-						mSoundSys->playSound(B_RETURN, BG);
-						SwapToGameplayLevel(mCurrentSelectedLevel);
-					}			
+						mGameClient->SendString("notready");
+					}		
 				}
 			}
 
@@ -1261,6 +1287,10 @@ void MenuScene::SelectButton(Ogre::String bName)
 			sscanf_s(bName.c_str(), "%*[^_]_%i", &numLocalPlayers);
 
 			SetUpLabelsAndCars();
+
+			char buffer[32];
+			sprintf_s(buffer,"addPlayers %d", numLocalPlayers);
+			mGameClient->SendString(buffer);
 
 			nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
 			lastSelected = "bPlay";

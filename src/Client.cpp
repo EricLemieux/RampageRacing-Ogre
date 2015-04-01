@@ -2,13 +2,12 @@
 
 Client::Client()
 {
-	//For now have the id = 0, later will get the id from the server
-	id = 0;
-
-	for (unsigned int i = 0; i < MAX_CONNECTIONS; ++i)
-	{
-		mConnectedPlayers.push_back(Object());
-	}
+	//TODO REMOVE
+	//id = 0;
+	//for (unsigned int i = 0; i < MAX_CONNECTIONS; ++i)
+	//{
+	//	mConnectedPlayers.push_back(Object());
+	//}
 }
 Client::~Client()
 {
@@ -61,6 +60,20 @@ void Client::Recieve()
 			sscanf_s(str.c_str(), "%*[^0-9]%d %f %f %f", &id, &rot[0], &rot[1], &rot[2]);
 
 			mConnectedPlayers[id].rot = Ogre::Quaternion(1.0f, rot[0], rot[1], rot[2]);
+		}
+		else if (phrase == "startIndex")
+		{
+			sscanf_s(str.c_str(), "%*[^0-9]%d", &startingIndex);
+		}
+		else if (phrase == "totalPlayer")
+		{
+			sscanf_s(str.c_str(), "%*[^0-9]%d", &totalPlayers);
+
+			mConnectedPlayers = new Object[totalPlayers];
+		}
+		else if (phrase == "start")
+		{
+			allReady = true;
 		}
 
 		mClient->DeallocatePacket(mPacket);
