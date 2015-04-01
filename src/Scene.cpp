@@ -1049,9 +1049,10 @@ bool MenuScene::Update()
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
 
-	mSceneMgr->getSceneNode("CarSelector")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
+	if (mSceneMgr->hasSceneNode("CarSelector"))
+		mSceneMgr->getSceneNode("CarSelector")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 
-	if (mCurrentSelectedLevel != "")
+	if (currentSubMenu == subMenus::sm_LevelSelect && mCurrentSelectedLevel != "")
 	{
 		GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 	}

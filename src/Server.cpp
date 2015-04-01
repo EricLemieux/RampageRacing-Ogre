@@ -114,6 +114,8 @@ void Server::RecieveString()
 				char buffer[32];
 				sprintf_s(buffer,"startIndex %d",startingIndex);
 				SendString(buffer);
+
+				
 			}
 			else if (phrase == "ready")
 			{
@@ -121,7 +123,11 @@ void Server::RecieveString()
 
 				if (numReady == mConnectedPlayers.size())
 				{
-					std::cout << "start the game!\n";
+					//Send the number of players
+					char buffer[32];
+					sprintf_s(buffer, "totalPlayers %d", mConnectedPlayers.size());
+					SendString(buffer);
+
 					SendString("start");
 				}
 			}

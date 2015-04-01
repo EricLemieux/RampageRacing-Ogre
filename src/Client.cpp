@@ -65,7 +65,7 @@ void Client::Recieve()
 		{
 			sscanf_s(str.c_str(), "%*[^0-9]%d", &startingIndex);
 		}
-		else if (phrase == "totalPlayer")
+		else if (phrase == "totalPlayers")
 		{
 			sscanf_s(str.c_str(), "%*[^0-9]%d", &totalPlayers);
 
