@@ -339,7 +339,7 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 
 void GameplayScene::AddTriggerVolumesToScene()
 {
-	//Create each checkpoint
+	//Create each checkpoint 
 	unsigned int count = 99;
 	for (unsigned int i = 0; i < count; ++i)
 	{
@@ -724,57 +724,57 @@ void GameplayScene::ControllerInput()
 			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_BACK)
 			{
 				char name[32];
-				sprintf_s(name, 32, "checkpoint%i", mCars[i]->lastCheckpoint);
+				sprintf_s(name, 32, "checkpoint%i", mLocalCars[i]->lastCheckpoint);
 
 				//The physics doesnt really like this but it works, so its fine for now
 				btTransform trans(OgreToBtQuaternion(mSceneMgr->getSceneNode(name)->getOrientation()), OgreToBtVector3(mSceneMgr->getSceneNode(name)->getPosition()));
-				mCars[i]->GetRigidBody()->setWorldTransform(trans);
+				mLocalCars[i]->GetRigidBody()->setWorldTransform(trans);
 
-				mCars[i]->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
+				mLocalCars[i]->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
 			}
 			
 			//Left joystick for turning
 			float lsx = mControllers[i]->GetState().Gamepad.sThumbLX;
 			if (lsx < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || lsx > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 			{
-				mCars[i]->mTurning = lsx / 32767.0f;
+				mLocalCars[i]->mTurning = lsx / 32767.0f;
 			}
 			else
 			{
-				mCars[i]->mTurning = 0.0f;
+				mLocalCars[i]->mTurning = 0.0f;
 			}
 
 			//Right trigger for acceleration
 			float rt = mControllers[i]->GetState().Gamepad.bRightTrigger;
 			if (rt >  XINPUT_GAMEPAD_TRIGGER_THRESHOLD || mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)
 			{
-				mCars[i]->mCanMoveForward = 1.0f;
+				mLocalCars[i]->mCanMoveForward = 1.0f;
 				mSoundSys->playSound(CAR_ACCEL, (CHANNEL_TYPE)i);
-				mCars[i]->isAccelerating++;
+				mLocalCars[i]->isAccelerating++;
 			}
 			else
 			{
-				mCars[i]->mCanMoveForward = 0.0f;
+				mLocalCars[i]->mCanMoveForward = 0.0f;
 				mSoundSys->pauseSound((CHANNEL_TYPE)i);
-				mCars[i]->isAccelerating = 0;
+				mLocalCars[i]->isAccelerating = 0;
 			}
 
 			//Left trigger for reversing
 			float lt = mControllers[i]->GetState().Gamepad.bLeftTrigger;
 			if (lt > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
 			{
-				mCars[i]->mCanMoveBackward = 1.0f;
+				mLocalCars[i]->mCanMoveBackward = 1.0f;
 			}
 			else
 			{
-				mCars[i]->mCanMoveBackward = 0.0f;
+				mLocalCars[i]->mCanMoveBackward = 0.0f;
 			}
 
 			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START)
 			{
-				if (mCars[i]->mFinishedRace == true)
+				if (mLocalCars[i]->mFinishedRace == true)
 				{
-					mCars[i]->doneLookingAtResults = true;
+					mLocalCars[i]->doneLookingAtResults = true;
 				}
 			}
 		}
