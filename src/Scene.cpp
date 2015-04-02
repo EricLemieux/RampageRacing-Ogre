@@ -434,13 +434,13 @@ bool GameplayScene::Update()
 	btDiscreteDynamicsWorld* world = GetPhysicsWorld()->getWorld();
 
 	for (int i = 0; i < numLocalPlayers; ++i){
-		world->getDispatcher()->dispatchAllCollisionPairs(mCars[i]->ghost->getOverlappingPairCache(), world->getDispatchInfo(), world->getDispatcher());
+		world->getDispatcher()->dispatchAllCollisionPairs(mLocalCars[i]->ghost->getOverlappingPairCache(), world->getDispatchInfo(), world->getDispatcher());
 		//btTransform transform = mCar->ghost->getWorldTransform();
 		btManifoldArray manifoldArray;
 
-		for (int j = 0; j < mCars[i]->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++j){
+		for (int j = 0; j < mLocalCars[i]->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++j){
 			manifoldArray.resize(0);
-			btBroadphasePair* collisionPair = &(mCars[i]->ghost->getOverlappingPairCache()->getOverlappingPairArray()[j]);
+			btBroadphasePair* collisionPair = &(mLocalCars[i]->ghost->getOverlappingPairCache()->getOverlappingPairArray()[j]);
 			if (collisionPair->m_algorithm)
 				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
 
@@ -459,17 +459,17 @@ bool GameplayScene::Update()
 						
 							unsigned int count = mTriggerVolumes.size();
 							for (unsigned int tv = 0; tv < count; ++tv){
-								if (tv != mCars[i]->lastCheckpoint && ((manifold->getBody0() == mTriggerVolumes[tv]->GetRigidBody() || manifold->getBody1() == mTriggerVolumes[tv]->GetRigidBody()) && (manifold->getBody0() == mCars[i]->ghost || manifold->getBody1() == mCars[i]->ghost))){
-									mCars[i]->lastCheckpoint = tv;
+								if (tv != mLocalCars[i]->lastCheckpoint && ((manifold->getBody0() == mTriggerVolumes[tv]->GetRigidBody() || manifold->getBody1() == mTriggerVolumes[tv]->GetRigidBody()) && (manifold->getBody0() == mLocalCars[i]->ghost || manifold->getBody1() == mLocalCars[i]->ghost))){
+									mLocalCars[i]->lastCheckpoint = tv;
 									if (tv != 0)
 									{
-										mCars[i]->checkPointsHit++;
+										mLocalCars[i]->checkPointsHit++;
 									}
-									else if (mCars[i]->checkPointsHit > (count / 2) && tv == 0){
-										mCars[i]->checkPointsHit = 0;
-										mCars[i]->lapCounter++;
+									else if (mLocalCars[i]->checkPointsHit > (count / 2) && tv == 0){
+										mLocalCars[i]->checkPointsHit = 0;
+										mLocalCars[i]->lapCounter++;
 
-										if (mCars[i]->lapCounter > 2)
+										if (mLocalCars[i]->lapCounter > 2)
 										{
 											if (mNumPlayersCompletedRace == numLocalPlayers) //-1?
 											{
@@ -477,34 +477,34 @@ bool GameplayScene::Update()
 											}
 											else
 											{
-												mCars[i]->mFinishedRace = true;
-												mCars[i]->DisplayResults();
+												mLocalCars[i]->mFinishedRace = true;
+												mLocalCars[i]->DisplayResults();
 												mNumPlayersCompletedRace++;
 											}
 										}
 										else
 										{
 											char m[128];
-											sprintf_s(m, 128, "Lap %i/3", mCars[i]->lapCounter + 1);
-											mCars[i]->lapText->setCaption(m);
+											sprintf_s(m, 128, "Lap %i/3", mLocalCars[i]->lapCounter + 1);
+											mLocalCars[i]->lapText->setCaption(m);
 										}
 									}
 									break;
 								}
 							}
 
-							if (mCars[i]->lastCheckpoint != 0 && mCars[i]->lastCheckpoint != mCars[i]->lastItemBoxCheckpoint)
+							if (mLocalCars[i]->lastCheckpoint != 0 && mLocalCars[i]->lastCheckpoint != mLocalCars[i]->lastItemBoxCheckpoint)
 							{
 								for (unsigned int ib = 0; ib < 3; ++ib)
 								{
-									unsigned int boxID = (mCars[i]->lastCheckpoint * 3) - 3 + ib;
+									unsigned int boxID = (mLocalCars[i]->lastCheckpoint * 3) - 3 + ib;
 
 									bool test0 = manifold->getBody0() == mItemBoxes[boxID]->GetRigidBody() ? true : false;
 									bool test1 = manifold->getBody1() == mItemBoxes[boxID]->GetRigidBody() ? true : false;
-									if ((test0 || test1) && mCars[i]->mCurrentItem == IBT_NONE)
+									if ((test0 || test1) && mLocalCars[i]->mCurrentItem == IBT_NONE)
 									{
-										mCars[i]->SetItem(mItemBoxes[boxID]->GetType());
-										mCars[i]->lastItemBoxCheckpoint = mCars[i]->lastCheckpoint;
+										mLocalCars[i]->SetItem(mItemBoxes[boxID]->GetType());
+										mLocalCars[i]->lastItemBoxCheckpoint = mLocalCars[i]->lastCheckpoint;
 										mSoundSys->playSound(ITEM_PICKUP, BG);
 										break;
 									}
@@ -514,32 +514,32 @@ bool GameplayScene::Update()
 							std::list<std::shared_ptr<GameObject>>::iterator itr = mActiveWeapons.begin();
 							for (; itr != mActiveWeapons.end(); ++itr){
 								if (manifold->getBody0() == (*itr)->GetRigidBody() || manifold->getBody1() == (*itr)->GetRigidBody()){
-									btVector3 force = (*itr)->GetRigidBody()->getWorldTransform().getOrigin() - mCars[i]->GetRigidBody()->getWorldTransform().getOrigin();
+									btVector3 force = (*itr)->GetRigidBody()->getWorldTransform().getOrigin() - mLocalCars[i]->GetRigidBody()->getWorldTransform().getOrigin();
 									//HOTFIX FOR PRESENTATION
-									//mCars[i]->GetRigidBody()->applyCentralImpulse(force * 1000);
+									//mLocalCars[i]->GetRigidBody()->applyCentralImpulse(force * 1000);
 									//if (i != (*itr)->ownerID){
 
 									//}
-									if ((*itr)->objectType == MISSILE && (*itr)->ownerID != mCars[i]->GetRigidBody()){
+									if ((*itr)->objectType == MISSILE && (*itr)->ownerID != mLocalCars[i]->GetRigidBody()){
 										//disable car controls
-										mCars[i]->stunCounter = 100;
+										mLocalCars[i]->stunCounter = 100;
 										break;
 									}
-									if ((*itr)->objectType == MINE && (*itr)->ownerID != mCars[i]->GetRigidBody()){
+									if ((*itr)->objectType == MINE && (*itr)->ownerID != mLocalCars[i]->GetRigidBody()){
 										//apply knockback
-										mCars[i]->GetRigidBody()->setLinearVelocity(mCars[i]->GetRigidBody()->getLinearVelocity()*-0.5f);
+										mLocalCars[i]->GetRigidBody()->setLinearVelocity(mLocalCars[i]->GetRigidBody()->getLinearVelocity()*-0.5f);
 										break;
 									}
 								}
 							}
 
-							if (mCars[i]->stunCounter == 100){
+							if (mLocalCars[i]->stunCounter == 100){
 								if (mSceneMgr->hasParticleSystem("Sparks"))
 									mSceneMgr->destroyParticleSystem("Sparks");
 								Ogre::ParticleSystem* particleSys = mSceneMgr->createParticleSystem("Sparks", "Sparks");
 								if (mSceneMgr->hasSceneNode("Particle"))
 									mSceneMgr->destroySceneNode("Particle");
-								Ogre::SceneNode* particleNode = mCars[i]->GetSceneNode()->createChildSceneNode("Particle");
+								Ogre::SceneNode* particleNode = mLocalCars[i]->GetSceneNode()->createChildSceneNode("Particle");
 								particleNode->attachObject(particleSys);
 								mSoundSys->playSound(ITEM_EXPLODE, BG);
 							}
@@ -548,7 +548,7 @@ bool GameplayScene::Update()
 			}
 
 		}
-		if (mCars[i]->isAccelerating > 0){
+		if (mLocalCars[i]->isAccelerating > 0){
 			mSoundSys->playSound(CAR_STEADY, (CHANNEL_TYPE)i);
 		}
 	}
@@ -788,24 +788,24 @@ void GameplayScene::ControllerInput()
 
 void GameplayScene::UseItem(int carID)
 {
-	if (mCars[carID]->mCurrentItem == IBT_NONE)
+	if (mLocalCars[carID]->mCurrentItem == IBT_NONE)
 		return;
-	else if (mCars[carID]->mCurrentItem == IBT_ATTACK)
+	else if (mLocalCars[carID]->mCurrentItem == IBT_ATTACK)
 		FireMissile(carID);
-	else if (mCars[carID]->mCurrentItem == IBT_DEFENCE)
+	else if (mLocalCars[carID]->mCurrentItem == IBT_DEFENCE)
 		DropMine(carID);
 
-	mCars[carID]->SetItem(IBT_NONE);
+	mLocalCars[carID]->SetItem(IBT_NONE);
 }
 void GameplayScene::FireMissile(int carID)
 {
-	std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mCars[carID]->GetSceneNode(), mCars[carID]->GetRigidBody()));
+	std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mLocalCars[carID]->GetSceneNode(), mLocalCars[carID]->GetRigidBody()));
 
 	mPhysicsWorld->getWorld()->addRigidBody(missile->GetRigidBody());
 	mPhysicsWorld->getWorld()->addCollisionObject(missile->ghost);
 
 	btScalar mat[16];
-	mCars[carID]->GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
+	mLocalCars[carID]->GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
 	btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
 
 	missile->GetRigidBody()->translate(forward * -50);
@@ -819,7 +819,7 @@ void GameplayScene::FireMissile(int carID)
 }
 void GameplayScene::DropMine(int carID)
 {
-	std::shared_ptr<Mine> mine = std::shared_ptr<Mine>(new Mine("mine", mSceneMgr, mCars[carID]->GetSceneNode(), mCars[carID]->GetRigidBody()));
+	std::shared_ptr<Mine> mine = std::shared_ptr<Mine>(new Mine("mine", mSceneMgr, mLocalCars[carID]->GetSceneNode(), mLocalCars[carID]->GetRigidBody()));
 
 	mPhysicsWorld->getWorld()->addRigidBody(mine->GetRigidBody());
 	mPhysicsWorld->getWorld()->addCollisionObject(mine->ghost);
