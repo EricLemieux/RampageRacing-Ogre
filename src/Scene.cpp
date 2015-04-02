@@ -332,6 +332,7 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 	{
 		mLocalCars[i] = mCars[mGameClient->startingIndex + i];
 		mLocalCars[i]->isLocal = true;
+		mLocalCars[i]->SetUpLocal();
 	}
 
 	mCar = mCars[0];	
@@ -358,7 +359,7 @@ void GameplayScene::AddTriggerVolumesToScene()
 
 bool GameplayScene::Update()
 {
-	mSoundSys->playSound(BGM, BM);
+	//mSoundSys->playSound(BGM, BM);
 	timeStep = clock.getTimeSeconds();
 	int timeForCars = clock.getTimeMilliseconds();
 	clock.reset();

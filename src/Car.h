@@ -19,6 +19,8 @@ public:
 	void TurnRight(float value=0.3f);
 	void TurnLeft(float value=0.3f);
 
+	void SetUpLocal();
+
 	virtual void Update(void);
 
 	//The percentage of the engine force used to move
@@ -81,4 +83,7 @@ private:
 
 	Ogre::SceneNode* itemNode;
 	Ogre::Entity* itemEnt;
+
+	int mID;
+	std::shared_ptr<Ogre::Camera> mCamCam;
 };

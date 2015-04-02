@@ -74,7 +74,7 @@ void Server::RecieveString()
 			std::string str = std::string((char*)mPacket->data).substr(0, mPacket->length);
 
 			//Temp print the string sent to the server
-			//std::cout << str.c_str()<<"\n";
+			std::cout << str.c_str()<<"\n";
 
 			auto p = str.find(" ");
 			std::string phrase = str.substr(0, p);
@@ -134,6 +134,8 @@ void Server::RecieveString()
 					std::cout << buffer << "\n";
 
 					SendString("start", true);
+
+					mode = sm_gameplay;
 				}
 			}
 			else if (phrase == "notready")
