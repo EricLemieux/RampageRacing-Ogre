@@ -9,7 +9,7 @@
 class Car : public GameObject
 {
 public:
-	Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld, Ogre::String carEntName, int ID, std::shared_ptr<Ogre::Camera> mCameras[4]);
+	Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld, Ogre::String carEntName, int ID);
 	~Car();
 
 public:
@@ -19,7 +19,7 @@ public:
 	void TurnRight(float value=0.3f);
 	void TurnLeft(float value=0.3f);
 
-	void SetUpLocal();
+	void SetUpLocal(std::shared_ptr<Ogre::Camera> camera);
 
 	virtual void Update(void);
 

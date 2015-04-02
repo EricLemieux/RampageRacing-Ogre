@@ -11,8 +11,8 @@
 class Object
 {
 public:
-	Ogre::Vector3 pos;
-	Ogre::Quaternion rot;
+	Ogre::Vector3 pos = Ogre::Vector3(0,0,0);
+	Ogre::Quaternion rot = Ogre::Quaternion(1,0,0,0);
 };
 
 

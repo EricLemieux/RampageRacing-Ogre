@@ -44,8 +44,7 @@ void Server::SendPosUpdates()
 		{
 			//Send the position
 			char pos[256];
-			//sprintf_s(pos, "pos %d %f %f %f", i, mConnectedPlayers[i].pos.x, mConnectedPlayers[i].pos.y, mConnectedPlayers[i].pos.z);
-			sprintf_s(pos, "pos %d %f %f %f", i, 0, 0, 0);
+			sprintf_s(pos, "pos %d %f %f %f", i, mConnectedPlayers[i].pos.x, mConnectedPlayers[i].pos.y, mConnectedPlayers[i].pos.z);
 			SendString(pos, false);
 			
 			//Send the rotation quaternion

@@ -83,7 +83,7 @@ void Scene::ResetCamera()
 	for (unsigned int i = 0; i < numLocalPlayers; ++i)
 	{
 		mCameras[i]->setPosition(0.0f, 0.0f, 0.0f);
-		mCameras[i]->lookAt(0.0f, 0.0f, -1.0f);
+		mCameras[i]->lookAt(0.0f, 1.0f, 0.0f);
 		mCameras[i]->setNearClipDistance(0.1f);
 	}
 }
@@ -320,7 +320,7 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 		sprintf_s(name, 128, "mCar%i",i);
 
 		//Create a game object thing
-		auto car = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), selectedCarTypes[i], i, mCameras));
+		auto car = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), selectedCarTypes[i], i));
 		
 		callback = new ContactSensorCallback(*(car->GetRigidBody()), *(car));
 
@@ -331,7 +331,7 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 	{
 		mLocalCars[i] = mCars[mGameClient->startingIndex + i];
 		mLocalCars[i]->isLocal = true;
-		mLocalCars[i]->SetUpLocal();
+		mLocalCars[i]->SetUpLocal(mCameras[i]);
 		mCarRankings[i] = mLocalCars[i];
 	}
 
@@ -382,7 +382,7 @@ bool GameplayScene::Update()
 		{
 			mCars[i]->Update();
 
-			if (timeBetweenNetworkSend >= 2.0f)
+			if (timeBetweenNetworkSend >= 0.5f)
 			{
 				//Send the position of the players car to the server
 				{
