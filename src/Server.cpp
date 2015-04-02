@@ -44,13 +44,14 @@ void Server::SendPosUpdates()
 		{
 			//Send the position
 			char pos[256];
-			sprintf_s(pos, "pos %d %f %f %f", i, mConnectedPlayers[i].pos.x, mConnectedPlayers[i].pos.y, mConnectedPlayers[i].pos.z);
-			SendString(pos);
+			//sprintf_s(pos, "pos %d %f %f %f", i, mConnectedPlayers[i].pos.x, mConnectedPlayers[i].pos.y, mConnectedPlayers[i].pos.z);
+			sprintf_s(pos, "pos %d %f %f %f", i, 0, 0, 0);
+			SendString(pos, false);
 			
 			//Send the rotation quaternion
 			char rot[256];
 			sprintf_s(rot, "rot %d %f %f %f %f", i, mConnectedPlayers[i].rot.x, mConnectedPlayers[i].rot.y, mConnectedPlayers[i].rot.z, mConnectedPlayers[i].rot.w);
-			SendString(rot);
+			SendString(rot, false);
 		}
 	}
 }
@@ -91,6 +92,8 @@ void Server::RecieveString()
 				mConnectedPlayers[id].pos = pos;
 
 				currentlyConnectedID = id;
+
+				SendPosUpdates();
 			}
 			else if (phrase == "rot")
 			{
@@ -135,8 +138,6 @@ void Server::RecieveString()
 					std::cout << buffer << "\n";
 
 					SendString("start", true);
-
-					mode = sm_gameplay;
 				}
 			}
 			else if (phrase == "notready")

@@ -335,7 +335,7 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 		mCarRankings[i] = mLocalCars[i];
 	}
 
-	mCar = mCars[0];	
+	mCar = mLocalCars[0];	
 }
 
 void GameplayScene::AddTriggerVolumesToScene()
@@ -429,8 +429,6 @@ bool GameplayScene::Update()
 	
 	//Get the positions from the server for the other cars
 	mGameClient->Recieve();
-
-	//GetSceneManager()->getSceneNode("mCar2")->setPosition(mGameClient->GetPos(1));
 
 	//COLLISION DETECTION
 	btDiscreteDynamicsWorld* world = GetPhysicsWorld()->getWorld();

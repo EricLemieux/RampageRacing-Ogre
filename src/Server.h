@@ -6,12 +6,6 @@
 #include <iostream>
 #include <vector>
 
-enum server_mode
-{
-	sm_menu,
-	sm_gameplay
-};
-
 struct vec3
 {
 	float x, y, z;
@@ -39,8 +33,6 @@ public:
 	void SendString(const std::string &data, bool sendToEveryone = true);
 	void SendPosUpdates();
 	void RecieveString();
-
-	server_mode mode = sm_menu;
 
 	int numReady = 0;
 
