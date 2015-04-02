@@ -29,8 +29,10 @@ void Server::Activate(const char* password, const unsigned int& port, const unsi
 
 void Server::SendString(const std::string &data, bool sendToEveryone)
 {
-	mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, sendToEveryone);
-	//mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	if (sendToEveryone)
+		mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, sendToEveryone);
+	else
+		mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, lastSender, sendToEveryone);
 }
 
 void Server::SendPosUpdates()
@@ -57,6 +59,7 @@ void Server::RecieveString()
 {
 	while ((mPacket = mServer->Receive()) != NULL)
 	{
+		lastSender = mPacket->systemAddress;
 		if (mPacket->data[0] == ID_NEW_INCOMING_CONNECTION)
 		{
 			std::cout << "A remote system has connected.\n";
@@ -74,7 +77,7 @@ void Server::RecieveString()
 			std::string str = std::string((char*)mPacket->data).substr(0, mPacket->length);
 
 			//Temp print the string sent to the server
-			std::cout << str.c_str()<<"\n";
+			//std::cout << str.c_str()<<"\n";
 
 			auto p = str.find(" ");
 			std::string phrase = str.substr(0, p);
@@ -115,9 +118,7 @@ void Server::RecieveString()
 				char buffer[32];
 				sprintf_s(buffer,"startIndex %d",startingIndex);
 				std::cout << buffer<<"\n";
-				SendString(buffer);
-
-				
+				SendString(buffer, false);				
 			}
 			else if (phrase == "ready")
 			{

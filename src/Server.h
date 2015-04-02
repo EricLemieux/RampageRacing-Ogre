@@ -50,6 +50,9 @@ private:
 	DataStructures::List<RakNet::RakNetSmartPtr<RakNet::RakNetSocket2>> mSockets;
 	RakNet::Packet* mPacket;
 	char mPacketID;
+
+	RakNet::SystemAddress lastSender;
+
 public:
 	std::vector<Object> mConnectedPlayers;
 

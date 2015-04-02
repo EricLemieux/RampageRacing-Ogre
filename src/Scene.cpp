@@ -312,7 +312,7 @@ void GameplayScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID
 
 void GameplayScene::AddCarToScene(Ogre::String name)
 {
-	mCarRankings = new std::shared_ptr<Car>[numTotalPlayers];
+	mCarRankings = new std::shared_ptr<Car>[numLocalPlayers];
 
 	for (unsigned int i = 0; i < numTotalPlayers; ++i)
 	{
@@ -321,7 +321,6 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 
 		//Create a game object thing
 		auto car = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), selectedCarTypes[i], i, mCameras));
-		mCarRankings[i] = car;
 		
 		callback = new ContactSensorCallback(*(car->GetRigidBody()), *(car));
 
@@ -333,6 +332,7 @@ void GameplayScene::AddCarToScene(Ogre::String name)
 		mLocalCars[i] = mCars[mGameClient->startingIndex + i];
 		mLocalCars[i]->isLocal = true;
 		mLocalCars[i]->SetUpLocal();
+		mCarRankings[i] = mLocalCars[i];
 	}
 
 	mCar = mCars[0];	
