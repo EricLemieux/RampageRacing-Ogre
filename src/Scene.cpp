@@ -362,6 +362,7 @@ bool GameplayScene::Update()
 	//mSoundSys->playSound(BGM, BM);
 	timeStep = clock.getTimeSeconds();
 	int timeForCars = clock.getTimeMilliseconds();
+	timeBetweenNetworkSend += clock.getTimeSeconds();
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
 
@@ -381,20 +382,25 @@ bool GameplayScene::Update()
 		{
 			mCars[i]->Update();
 
-			//Send the position of the players car to the server
+			if (timeBetweenNetworkSend >= 2.0f)
 			{
-				char str[256];
-				auto pos = mCars[i]->GetSceneNode()->getPosition();
-				sprintf_s(str, 256, "pos %d %f %f %f", i, pos.x, pos.y, pos.z);
-				mGameClient->SendString(std::string(str));
-			}
+				//Send the position of the players car to the server
+				{
+					char str[256];
+					auto pos = mCars[i]->GetSceneNode()->getPosition();
+					sprintf_s(str, 256, "pos %d %f %f %f", i, pos.x, pos.y, pos.z);
+					mGameClient->SendString(std::string(str));
+				}
 
-			//Send the rotation of the car to the server
-			{
-				char str[256];
-				auto rot = mCars[i]->GetSceneNode()->getOrientation();
-				sprintf_s(str, 256, "rot %d %f %f %f %f", i, rot.x, rot.y, rot.z, rot.w);
-				mGameClient->SendString(std::string(str));
+				//Send the rotation of the car to the server
+				{
+					char str[256];
+					auto rot = mCars[i]->GetSceneNode()->getOrientation();
+					sprintf_s(str, 256, "rot %d %f %f %f %f", i, rot.x, rot.y, rot.z, rot.w);
+					mGameClient->SendString(std::string(str));
+				}
+				
+				timeBetweenNetworkSend = 0.0f;
 			}
 		}
 		else

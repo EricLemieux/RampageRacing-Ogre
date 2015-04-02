@@ -197,6 +197,8 @@ private:
 
 	bool goingUp = true;
 	float bounce = 0.0f;
+
+	float timeBetweenNetworkSend = 0.0f;
 };
 
 class MenuScene : public Scene
