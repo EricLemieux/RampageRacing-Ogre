@@ -83,7 +83,7 @@ void Scene::ResetCamera()
 	for (unsigned int i = 0; i < numLocalPlayers; ++i)
 	{
 		mCameras[i]->setPosition(0.0f, 0.0f, 0.0f);
-		mCameras[i]->lookAt(0.0f, 0.0f, -1.0f);
+		mCameras[i]->lookAt(0.0f, 1.0f, 0.0f);
 		mCameras[i]->setNearClipDistance(0.1f);
 	}
 }
@@ -312,24 +312,35 @@ void GameplayScene::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID
 
 void GameplayScene::AddCarToScene(Ogre::String name)
 {
-	for (unsigned int i = 0; i < numLocalPlayers; ++i)
+	mCarRankings = new std::shared_ptr<Car>[numLocalPlayers];
+
+	for (unsigned int i = 0; i < numTotalPlayers; ++i)
 	{
 		char name[128];
 		sprintf_s(name, 128, "mCar%i",i);
 
 		//Create a game object thing
-		mCars[i] = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), selectedCarTypes[i], i, mCameras));
-		mCarRankings[i] = mCars[i];
+		auto car = std::shared_ptr<Car>(new Car(name, GetSceneManager(), GetPhysicsWorld()->getWorld(), selectedCarTypes[i], i));
 		
-		callback = new ContactSensorCallback(*(mCars[i]->GetRigidBody()), *(mCars[i]));
+		callback = new ContactSensorCallback(*(car->GetRigidBody()), *(car));
+
+		mCars.push_back(car);
 	}
 
-	mCar = mCars[0];	
+	for (unsigned int i = 0; i < numLocalPlayers; ++i)
+	{
+		mLocalCars[i] = mCars[mGameClient->startingIndex + i];
+		mLocalCars[i]->isLocal = true;
+		mLocalCars[i]->SetUpLocal(mCameras[i]);
+		mCarRankings[i] = mLocalCars[i];
+	}
+
+	mCar = mLocalCars[0];	
 }
 
 void GameplayScene::AddTriggerVolumesToScene()
 {
-	//Create each checkpoint
+	//Create each checkpoint 
 	unsigned int count = 99;
 	for (unsigned int i = 0; i < count; ++i)
 	{
@@ -348,9 +359,28 @@ void GameplayScene::AddTriggerVolumesToScene()
 
 bool GameplayScene::Update()
 {
-	mSoundSys->playSound(BGM, BM);
+	//Get the positions from the server for the other cars
+	mGameClient->Recieve();
+
+	if (!mGameClient->allDoneLoading)
+	{
+		if (!toldServerReady)
+		{
+			//Tell the server that we got this far and now waiting for everyone else
+			char buffer[32];
+			sprintf_s(buffer, "doneLoading %d", numLocalPlayers);
+			mGameClient->SendString(buffer);
+
+			toldServerReady = true;
+		}
+
+		return true;
+	}
+
+	//mSoundSys->playSound(BGM, BM);
 	timeStep = clock.getTimeSeconds();
 	int timeForCars = clock.getTimeMilliseconds();
+	timeBetweenNetworkSend += clock.getTimeSeconds();
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
 
@@ -358,7 +388,7 @@ bool GameplayScene::Update()
 
 	bool allDoneLooking = true;
 	
-	for (unsigned int i = 0; i < numLocalPlayers; ++i)
+	for (unsigned int i = 0; i < numTotalPlayers; ++i)
 	{
 		if (!mCars[i]->mFinishedRace)
 			mCars[i]->raceTime += int(timeForCars);
@@ -366,8 +396,37 @@ bool GameplayScene::Update()
 		if (!mCars[i]->doneLookingAtResults)
 			allDoneLooking = false;
 		
+		if (mCars[i]->isLocal)
+		{
+			mCars[i]->Update();
 
-		mCars[i]->Update();
+			if (timeBetweenNetworkSend >= 0.5f)
+			{
+				//Send the position of the players car to the server
+				{
+					char str[256];
+					auto pos = mCars[i]->GetSceneNode()->getPosition();
+					sprintf_s(str, 256, "pos %d %f %f %f", i, pos.x, pos.y, pos.z);
+					mGameClient->SendString(std::string(str));
+				}
+
+				//Send the rotation of the car to the server
+				{
+					char str[256];
+					auto rot = mCars[i]->GetSceneNode()->getOrientation();
+					sprintf_s(str, 256, "rot %d %f %f %f %f", i, rot.x, rot.y, rot.z, rot.w);
+					mGameClient->SendString(std::string(str));
+				}
+				
+				timeBetweenNetworkSend = 0.0f;
+			}
+		}
+		else
+		{
+			mCars[i]->SetPosition(mGameClient->GetPos(i));
+			mCars[i]->SetRotation(mGameClient->GetRot(i));
+		}
+		
 
 		if (goingUp)
 			bounce += 0.01f;
@@ -386,38 +445,17 @@ bool GameplayScene::Update()
 	//update the active weapons
 	std::for_each(mActiveWeapons.begin(), mActiveWeapons.end(), [](std::shared_ptr<GameObject> obj){obj->Update(); });
 
-	//Send the position of the players car to the server
-	{
-		char str[256];
-		auto pos = mCar->GetSceneNode()->getPosition();
-		sprintf_s(str, 256, "%s %d %f %f %f", "pos", mGameClient->GetID(), pos.x, pos.y, pos.z);
-		mGameClient->SendString(std::string(str));
-	}
-
-	//Send the rotation of the car to the server
-	{
-		char str[256];
-		auto rot = mCar->GetSceneNode()->getOrientation();
-		sprintf_s(str, 256, "%s %d %f %f %f", "rot", mGameClient->GetID(), rot.x, rot.y, rot.z);
-		mGameClient->SendString(std::string(str));
-	}
-	
-	//Get the positions from the server for the other cars
-	mGameClient->Recieve();
-
-	//GetSceneManager()->getSceneNode("mCar2")->setPosition(mGameClient->GetPos(1));
-
 	//COLLISION DETECTION
 	btDiscreteDynamicsWorld* world = GetPhysicsWorld()->getWorld();
 
 	for (int i = 0; i < numLocalPlayers; ++i){
-		world->getDispatcher()->dispatchAllCollisionPairs(mCars[i]->ghost->getOverlappingPairCache(), world->getDispatchInfo(), world->getDispatcher());
+		world->getDispatcher()->dispatchAllCollisionPairs(mLocalCars[i]->ghost->getOverlappingPairCache(), world->getDispatchInfo(), world->getDispatcher());
 		//btTransform transform = mCar->ghost->getWorldTransform();
 		btManifoldArray manifoldArray;
 
-		for (int j = 0; j < mCars[i]->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++j){
+		for (int j = 0; j < mLocalCars[i]->ghost->getOverlappingPairCache()->getNumOverlappingPairs(); ++j){
 			manifoldArray.resize(0);
-			btBroadphasePair* collisionPair = &(mCars[i]->ghost->getOverlappingPairCache()->getOverlappingPairArray()[j]);
+			btBroadphasePair* collisionPair = &(mLocalCars[i]->ghost->getOverlappingPairCache()->getOverlappingPairArray()[j]);
 			if (collisionPair->m_algorithm)
 				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
 
@@ -436,17 +474,17 @@ bool GameplayScene::Update()
 						
 							unsigned int count = mTriggerVolumes.size();
 							for (unsigned int tv = 0; tv < count; ++tv){
-								if (tv != mCars[i]->lastCheckpoint && ((manifold->getBody0() == mTriggerVolumes[tv]->GetRigidBody() || manifold->getBody1() == mTriggerVolumes[tv]->GetRigidBody()) && (manifold->getBody0() == mCars[i]->ghost || manifold->getBody1() == mCars[i]->ghost))){
-									mCars[i]->lastCheckpoint = tv;
+								if (tv != mLocalCars[i]->lastCheckpoint && ((manifold->getBody0() == mTriggerVolumes[tv]->GetRigidBody() || manifold->getBody1() == mTriggerVolumes[tv]->GetRigidBody()) && (manifold->getBody0() == mLocalCars[i]->ghost || manifold->getBody1() == mLocalCars[i]->ghost))){
+									mLocalCars[i]->lastCheckpoint = tv;
 									if (tv != 0)
 									{
-										mCars[i]->checkPointsHit++;
+										mLocalCars[i]->checkPointsHit++;
 									}
-									else if (mCars[i]->checkPointsHit > (count / 2) && tv == 0){
-										mCars[i]->checkPointsHit = 0;
-										mCars[i]->lapCounter++;
+									else if (mLocalCars[i]->checkPointsHit > (count / 2) && tv == 0){
+										mLocalCars[i]->checkPointsHit = 0;
+										mLocalCars[i]->lapCounter++;
 
-										if (mCars[i]->lapCounter > 2)
+										if (mLocalCars[i]->lapCounter > 2)
 										{
 											if (mNumPlayersCompletedRace == numLocalPlayers) //-1?
 											{
@@ -454,34 +492,34 @@ bool GameplayScene::Update()
 											}
 											else
 											{
-												mCars[i]->mFinishedRace = true;
-												mCars[i]->DisplayResults();
+												mLocalCars[i]->mFinishedRace = true;
+												mLocalCars[i]->DisplayResults();
 												mNumPlayersCompletedRace++;
 											}
 										}
 										else
 										{
 											char m[128];
-											sprintf_s(m, 128, "Lap %i/3", mCars[i]->lapCounter + 1);
-											mCars[i]->lapText->setCaption(m);
+											sprintf_s(m, 128, "Lap %i/3", mLocalCars[i]->lapCounter + 1);
+											mLocalCars[i]->lapText->setCaption(m);
 										}
 									}
 									break;
 								}
 							}
 
-							if (mCars[i]->lastCheckpoint != 0 && mCars[i]->lastCheckpoint != mCars[i]->lastItemBoxCheckpoint)
+							if (mLocalCars[i]->lastCheckpoint != 0 && mLocalCars[i]->lastCheckpoint != mLocalCars[i]->lastItemBoxCheckpoint)
 							{
 								for (unsigned int ib = 0; ib < 3; ++ib)
 								{
-									unsigned int boxID = (mCars[i]->lastCheckpoint * 3) - 3 + ib;
+									unsigned int boxID = (mLocalCars[i]->lastCheckpoint * 3) - 3 + ib;
 
 									bool test0 = manifold->getBody0() == mItemBoxes[boxID]->GetRigidBody() ? true : false;
 									bool test1 = manifold->getBody1() == mItemBoxes[boxID]->GetRigidBody() ? true : false;
-									if ((test0 || test1) && mCars[i]->mCurrentItem == IBT_NONE)
+									if ((test0 || test1) && mLocalCars[i]->mCurrentItem == IBT_NONE)
 									{
-										mCars[i]->SetItem(mItemBoxes[boxID]->GetType());
-										mCars[i]->lastItemBoxCheckpoint = mCars[i]->lastCheckpoint;
+										mLocalCars[i]->SetItem(mItemBoxes[boxID]->GetType());
+										mLocalCars[i]->lastItemBoxCheckpoint = mLocalCars[i]->lastCheckpoint;
 										mSoundSys->playSound(ITEM_PICKUP, BG);
 										break;
 									}
@@ -491,32 +529,32 @@ bool GameplayScene::Update()
 							std::list<std::shared_ptr<GameObject>>::iterator itr = mActiveWeapons.begin();
 							for (; itr != mActiveWeapons.end(); ++itr){
 								if (manifold->getBody0() == (*itr)->GetRigidBody() || manifold->getBody1() == (*itr)->GetRigidBody()){
-									btVector3 force = (*itr)->GetRigidBody()->getWorldTransform().getOrigin() - mCars[i]->GetRigidBody()->getWorldTransform().getOrigin();
+									btVector3 force = (*itr)->GetRigidBody()->getWorldTransform().getOrigin() - mLocalCars[i]->GetRigidBody()->getWorldTransform().getOrigin();
 									//HOTFIX FOR PRESENTATION
-									//mCars[i]->GetRigidBody()->applyCentralImpulse(force * 1000);
+									//mLocalCars[i]->GetRigidBody()->applyCentralImpulse(force * 1000);
 									//if (i != (*itr)->ownerID){
 
 									//}
-									if ((*itr)->objectType == MISSILE && (*itr)->ownerID != mCars[i]->GetRigidBody()){
+									if ((*itr)->objectType == MISSILE && (*itr)->ownerID != mLocalCars[i]->GetRigidBody()){
 										//disable car controls
-										mCars[i]->stunCounter = 100;
+										mLocalCars[i]->stunCounter = 100;
 										break;
 									}
-									if ((*itr)->objectType == MINE && (*itr)->ownerID != mCars[i]->GetRigidBody()){
+									if ((*itr)->objectType == MINE && (*itr)->ownerID != mLocalCars[i]->GetRigidBody()){
 										//apply knockback
-										mCars[i]->GetRigidBody()->setLinearVelocity(mCars[i]->GetRigidBody()->getLinearVelocity()*-0.5f);
+										mLocalCars[i]->GetRigidBody()->setLinearVelocity(mLocalCars[i]->GetRigidBody()->getLinearVelocity()*-0.5f);
 										break;
 									}
 								}
 							}
 
-							if (mCars[i]->stunCounter == 100){
+							if (mLocalCars[i]->stunCounter == 100){
 								if (mSceneMgr->hasParticleSystem("Sparks"))
 									mSceneMgr->destroyParticleSystem("Sparks");
 								Ogre::ParticleSystem* particleSys = mSceneMgr->createParticleSystem("Sparks", "Sparks");
 								if (mSceneMgr->hasSceneNode("Particle"))
 									mSceneMgr->destroySceneNode("Particle");
-								Ogre::SceneNode* particleNode = mCars[i]->GetSceneNode()->createChildSceneNode("Particle");
+								Ogre::SceneNode* particleNode = mLocalCars[i]->GetSceneNode()->createChildSceneNode("Particle");
 								particleNode->attachObject(particleSys);
 								mSoundSys->playSound(ITEM_EXPLODE, BG);
 							}
@@ -525,7 +563,7 @@ bool GameplayScene::Update()
 			}
 
 		}
-		if (mCars[i]->isAccelerating > 0){
+		if (mLocalCars[i]->isAccelerating > 0){
 			mSoundSys->playSound(CAR_STEADY, (CHANNEL_TYPE)i);
 		}
 	}
@@ -557,7 +595,7 @@ bool GameplayScene::Update()
 						bool test0 = manifold->getBody0() == obj->ownerID ? true : false;
 						bool test2 = false;
 						bool test3 = false;
-						for (int j = 0; j < numLocalPlayers; ++j){
+						for (int j = 0; j < numTotalPlayers; ++j){
 							test2 = manifold->getBody0() == mCars[j]->GetRigidBody() ? true : false;
 							test3 = manifold->getBody1() == mCars[j]->GetRigidBody() ? true : false;
 						}
@@ -629,6 +667,10 @@ void GameplayScene::SetUpViewports()
 	{
 		Ogre::Viewport* vp = mWindow->addViewport(mCamera.get());
 		mCamera->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
+
+		Ogre::CompositorManager::getSingleton().addCompositor(vp, "Bloom");
+		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, "Bloom", true);
+
 		break;
 	}
 	case 2:
@@ -702,57 +744,57 @@ void GameplayScene::ControllerInput()
 			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_BACK)
 			{
 				char name[32];
-				sprintf_s(name, 32, "checkpoint%i", mCars[i]->lastCheckpoint);
+				sprintf_s(name, 32, "checkpoint%i", mLocalCars[i]->lastCheckpoint);
 
 				//The physics doesnt really like this but it works, so its fine for now
 				btTransform trans(OgreToBtQuaternion(mSceneMgr->getSceneNode(name)->getOrientation()), OgreToBtVector3(mSceneMgr->getSceneNode(name)->getPosition()));
-				mCars[i]->GetRigidBody()->setWorldTransform(trans);
+				mLocalCars[i]->GetRigidBody()->setWorldTransform(trans);
 
-				mCars[i]->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
+				mLocalCars[i]->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
 			}
 			
 			//Left joystick for turning
 			float lsx = mControllers[i]->GetState().Gamepad.sThumbLX;
 			if (lsx < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || lsx > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 			{
-				mCars[i]->mTurning = lsx / 32767.0f;
+				mLocalCars[i]->mTurning = lsx / 32767.0f;
 			}
 			else
 			{
-				mCars[i]->mTurning = 0.0f;
+				mLocalCars[i]->mTurning = 0.0f;
 			}
 
 			//Right trigger for acceleration
 			float rt = mControllers[i]->GetState().Gamepad.bRightTrigger;
 			if (rt >  XINPUT_GAMEPAD_TRIGGER_THRESHOLD || mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)
 			{
-				mCars[i]->mCanMoveForward = 1.0f;
+				mLocalCars[i]->mCanMoveForward = 1.0f;
 				mSoundSys->playSound(CAR_ACCEL, (CHANNEL_TYPE)i);
-				mCars[i]->isAccelerating++;
+				mLocalCars[i]->isAccelerating++;
 			}
 			else
 			{
-				mCars[i]->mCanMoveForward = 0.0f;
+				mLocalCars[i]->mCanMoveForward = 0.0f;
 				mSoundSys->pauseSound((CHANNEL_TYPE)i);
-				mCars[i]->isAccelerating = 0;
+				mLocalCars[i]->isAccelerating = 0;
 			}
 
 			//Left trigger for reversing
 			float lt = mControllers[i]->GetState().Gamepad.bLeftTrigger;
 			if (lt > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
 			{
-				mCars[i]->mCanMoveBackward = 1.0f;
+				mLocalCars[i]->mCanMoveBackward = 1.0f;
 			}
 			else
 			{
-				mCars[i]->mCanMoveBackward = 0.0f;
+				mLocalCars[i]->mCanMoveBackward = 0.0f;
 			}
 
 			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START)
 			{
-				if (mCars[i]->mFinishedRace == true)
+				if (mLocalCars[i]->mFinishedRace == true)
 				{
-					mCars[i]->doneLookingAtResults = true;
+					mLocalCars[i]->doneLookingAtResults = true;
 				}
 			}
 		}
@@ -761,24 +803,24 @@ void GameplayScene::ControllerInput()
 
 void GameplayScene::UseItem(int carID)
 {
-	if (mCars[carID]->mCurrentItem == IBT_NONE)
+	if (mLocalCars[carID]->mCurrentItem == IBT_NONE)
 		return;
-	else if (mCars[carID]->mCurrentItem == IBT_ATTACK)
+	else if (mLocalCars[carID]->mCurrentItem == IBT_ATTACK)
 		FireMissile(carID);
-	else if (mCars[carID]->mCurrentItem == IBT_DEFENCE)
+	else if (mLocalCars[carID]->mCurrentItem == IBT_DEFENCE)
 		DropMine(carID);
 
-	mCars[carID]->SetItem(IBT_NONE);
+	mLocalCars[carID]->SetItem(IBT_NONE);
 }
 void GameplayScene::FireMissile(int carID)
 {
-	std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mCars[carID]->GetSceneNode(), mCars[carID]->GetRigidBody()));
+	std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mLocalCars[carID]->GetSceneNode(), mLocalCars[carID]->GetRigidBody()));
 
 	mPhysicsWorld->getWorld()->addRigidBody(missile->GetRigidBody());
 	mPhysicsWorld->getWorld()->addCollisionObject(missile->ghost);
 
 	btScalar mat[16];
-	mCars[carID]->GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
+	mLocalCars[carID]->GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
 	btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
 
 	missile->GetRigidBody()->translate(forward * -50);
@@ -792,7 +834,7 @@ void GameplayScene::FireMissile(int carID)
 }
 void GameplayScene::DropMine(int carID)
 {
-	std::shared_ptr<Mine> mine = std::shared_ptr<Mine>(new Mine("mine", mSceneMgr, mCars[carID]->GetSceneNode(), mCars[carID]->GetRigidBody()));
+	std::shared_ptr<Mine> mine = std::shared_ptr<Mine>(new Mine("mine", mSceneMgr, mLocalCars[carID]->GetSceneNode(), mLocalCars[carID]->GetRigidBody()));
 
 	mPhysicsWorld->getWorld()->addRigidBody(mine->GetRigidBody());
 	mPhysicsWorld->getWorld()->addCollisionObject(mine->ghost);
@@ -832,7 +874,10 @@ MenuScene::MenuScene(SceneArguments args) : Scene(args)
 	carSelectionTitleNode->scale(1, 0.5, 1);
 	carSelectionTitleNode->attachObject(carSelectionTitle);
 }
-MenuScene::~MenuScene(){}
+MenuScene::~MenuScene()
+{
+	mGameClient->allDoneLoading = false;
+}
 
 void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 {
@@ -934,8 +979,15 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 				{
 					if (mCurrentSelectedLevel != "")
 					{
-						mSoundSys->playSound(B_SELECT, BG);
-						SwapToGameplayLevel(mCurrentSelectedLevel);
+						for (unsigned int players = 0; players < numLocalPlayers; ++players)
+						{
+							if (!labels[players]->GetReadyToPlay())
+							{
+								mGameClient->SendString("ready");
+							}
+
+							labels[players]->SetReadyToPlay(true);
+						}
 					}
 				}
 			}
@@ -1012,13 +1064,25 @@ bool MenuScene::Update()
 {
 	timeBetweenControllerInput += 1;
 
+	mGameClient->Recieve();
+
+	//Set the total number of connected players
+	numTotalPlayers = mGameClient->totalPlayers;
+
+	if (mGameClient->allReady)
+	{
+		mSoundSys->playSound(B_RETURN, BG);
+		SwapToGameplayLevel(mCurrentSelectedLevel);
+	}
+
 	timeStep += clock.getTimeSeconds();
 	clock.reset();
 	GetPhysicsWorld()->updateWorld(timeStep);
 
-	mSceneMgr->getSceneNode("CarSelector")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
+	if (mSceneMgr->hasSceneNode("CarSelector"))
+		mSceneMgr->getSceneNode("CarSelector")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 
-	if (mCurrentSelectedLevel != "")
+	if (currentSubMenu == subMenus::sm_LevelSelect && mCurrentSelectedLevel != "")
 	{
 		GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->rotate(Ogre::Vector3(0.0f, 1.0f, 0.0f), Ogre::Radian(0.001f));
 	}
@@ -1200,21 +1264,14 @@ void MenuScene::ControllerInput()
 					timeBetweenControllerInput = 0;
 					labels[i]->SetReadyToPlay(!labels[i]->GetReadyToPlay());
 
-					bool allReady = true;
-
-					//loop through all of the other labels to see if they are ready to play
-					for (unsigned int j = 0; j < labels.size(); ++j)
+					if (labels[i]->GetReadyToPlay())
 					{
-						if (!labels[j]->GetReadyToPlay())
-							allReady = false;
+						mGameClient->SendString("ready");
 					}
-
-
-					if (allReady)
+					else
 					{
-						mSoundSys->playSound(B_RETURN, BG);
-						SwapToGameplayLevel(mCurrentSelectedLevel);
-					}			
+						mGameClient->SendString("notready");
+					}		
 				}
 			}
 
@@ -1261,6 +1318,10 @@ void MenuScene::SelectButton(Ogre::String bName)
 			sscanf_s(bName.c_str(), "%*[^_]_%i", &numLocalPlayers);
 
 			SetUpLabelsAndCars();
+
+			char buffer[32];
+			sprintf_s(buffer,"addPlayers %d", numLocalPlayers);
+			mGameClient->SendString(buffer);
 
 			nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
 			lastSelected = "bPlay";

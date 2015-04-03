@@ -12,9 +12,6 @@ int main(int argc, char** argv)
 	{
 		//Take in the position data from the client 
 		gameServer.RecieveString();
-		
-		//Reply with information about all the other clients
-		gameServer.SendPosUpdates();
 	}
 
 	return 0;

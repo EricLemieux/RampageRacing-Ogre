@@ -1,9 +1,11 @@
 #include "Car.h"
 
-Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld, Ogre::String carEntName, int ID, std::shared_ptr<Ogre::Camera> mCameras[4])
+Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscreteDynamicsWorld* mWorld, Ogre::String carEntName, int ID)
 {
 	mName = name;
 	mSceneManager = manager;
+
+	mID = ID;
 	
 	mSceneNode = mSceneManager->getRootSceneNode()->createChildSceneNode(name);
 	Ogre::Entity* someEnt = mSceneManager->createEntity(carEntName);
@@ -44,57 +46,60 @@ Car::Car(Ogre::String name, std::shared_ptr<Ogre::SceneManager> manager, btDiscr
 	shadowNode->setPosition(0, -2, 0.5);
 	shadowNode->attachObject(shadowPlane);
 
-	//Set up the camera
-	Ogre::SceneNode* camNode = mSceneManager->getSceneNode(name)->createChildSceneNode();
-	camNode->attachObject(mCameras[ID].get());
-
-	mCameraMin = Ogre::Vector3(0.0f, 10.0f, 40.0f);
-	mCameraMax = Ogre::Vector3(0.0f, 9.5f, 42.0f);
-	camNode->translate(mCameraMin);
-
-	mCameras[ID]->lookAt(this->GetSceneNode()->getPosition());
-	this->mCamera = camNode;
-
-	//Set up the HUD elements attached to the camera
-	Ogre::SceneNode* positionNumNode = camNode->createChildSceneNode();
-	positionNumNode->translate(-5.5, -6, -10);
-	char pp[128];
-	sprintf_s(pp, 128, "playerPostionNum%i", ID);
-	positionText = new Ogre::MovableText(pp, "1");
-	positionText->setVisibilityFlags(RenderOnly[ID]);
-	positionNumNode->scale(Ogre::Vector3(2, 2, 1));
-	positionNumNode->attachObject(positionText);
-
-	Ogre::SceneNode* positionModNode = positionNumNode->createChildSceneNode();
-	positionModNode->translate(-0.1, -0.2, 0);
-	char ppm[128];
-	sprintf_s(ppm, 128, "playerPostionMod%i", ID);
-	positionModText = new Ogre::MovableText(ppm, "st");
-	positionModText->setVisibilityFlags(RenderOnly[ID]);
-	positionModNode->scale(0.3, 0.3, 1);
-	positionModNode->attachObject(positionModText);
-
-	Ogre::SceneNode* lapNode = camNode->createChildSceneNode();
-	lapNode->translate(5.5, -6, -10);
-	char lc[128];
-	sprintf_s(lc, 128, "lapCounter%i", ID);
-	lapText = new Ogre::MovableText(lc, "Lap 1/3");
-	lapText->setVisibilityFlags(RenderOnly[ID]);
-	lapNode->attachObject(lapText);
-
-	//Set up the countdown for the start of the race
-	mCountdownNode = mSceneNode->createChildSceneNode();
-	mCountdownNode->scale(10, 10, 1);
-	mCountdownText = new Ogre::MovableText("countdown", "3");
-	mCountdownText->setVisibilityFlags(RenderOnly[ID]);
-	mCountdownNode->attachObject(mCountdownText);
-
 	itemNode = mSceneNode->createChildSceneNode();
 	itemNode->setPosition(0, 0, 10);
 }
 
 Car::~Car()
 {
+}
+
+void Car::SetUpLocal(std::shared_ptr<Ogre::Camera> camera)
+{
+	mCamCam = camera;
+
+	mCamera = mSceneManager->getSceneNode(mName)->createChildSceneNode();
+	mCamera->attachObject(mCamCam.get());
+
+	mCameraMin = Ogre::Vector3(0.0f, 10.0f, 40.0f);
+	mCameraMax = Ogre::Vector3(0.0f, 9.5f, 42.0f);
+	mCamera->translate(mCameraMin);
+
+	mCamCam->lookAt(this->GetSceneNode()->getPosition());
+
+	//Set up the HUD elements attached to the camera
+	Ogre::SceneNode* positionNumNode = mCamera->createChildSceneNode();
+	positionNumNode->translate(-5.5, -6, -10);
+	char pp[128];
+	sprintf_s(pp, 128, "playerPostionNum%i", mID);
+	positionText = new Ogre::MovableText(pp, "1");
+	positionText->setVisibilityFlags(RenderOnly[mID]);
+	positionNumNode->scale(Ogre::Vector3(2, 2, 1));
+	positionNumNode->attachObject(positionText);
+
+	Ogre::SceneNode* positionModNode = positionNumNode->createChildSceneNode();
+	positionModNode->translate(-0.1, -0.2, 0);
+	char ppm[128];
+	sprintf_s(ppm, 128, "playerPostionMod%i", mID);
+	positionModText = new Ogre::MovableText(ppm, "st");
+	positionModText->setVisibilityFlags(RenderOnly[mID]);
+	positionModNode->scale(0.3, 0.3, 1);
+	positionModNode->attachObject(positionModText);
+
+	Ogre::SceneNode* lapNode = mCamera->createChildSceneNode();
+	lapNode->translate(5.5, -6, -10);
+	char lc[128];
+	sprintf_s(lc, 128, "lapCounter%i", mID);
+	lapText = new Ogre::MovableText(lc, "Lap 1/3");
+	lapText->setVisibilityFlags(RenderOnly[mID]);
+	lapNode->attachObject(lapText);
+
+	//Set up the countdown for the start of the race
+	mCountdownNode = mSceneNode->createChildSceneNode();
+	mCountdownNode->scale(10, 10, 1);
+	mCountdownText = new Ogre::MovableText("countdown", "3");
+	mCountdownText->setVisibilityFlags(RenderOnly[mID]);
+	mCountdownNode->attachObject(mCountdownText);
 }
 
 void Car::MoveForward(float distance)
@@ -128,7 +133,7 @@ void Car::TurnLeft(float value)
 
 void Car::Update(void)
 {
-	if (countdownTime < 4.0f)
+	if (isLocal && countdownTime < 4.0f)
 	{
 		countdownTime += 1.0f / 120.0f;
 

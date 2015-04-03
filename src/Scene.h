@@ -49,6 +49,7 @@
 
 //Bad practice but works
 static unsigned int numLocalPlayers = 1;
+static unsigned int numTotalPlayers = 1;
 
 static Ogre::String selectedCarTypes[4] = {"BoltCar.mesh","BoltCar.mesh","BoltCar.mesh","BoltCar.mesh"};
 
@@ -179,13 +180,12 @@ public:
 	void DropMine(int carID);
 
 private:
-	std::shared_ptr<Car> mCars[4];
+	std::vector<std::shared_ptr<Car>> mCars;
+	std::shared_ptr<Car> mLocalCars[4];
 	std::shared_ptr<Car> mCar;
-	std::shared_ptr<Car> mCarRankings[4];
+	std::shared_ptr<Car>* mCarRankings;
 	btRigidBody* body;
-
-
-
+	
 	ContactSensorCallback* callback;
 	//currently 3 because 2 checkpoints and 1 finish line
 	std::vector<std::shared_ptr<TriggerVolume>> mTriggerVolumes;
@@ -197,6 +197,10 @@ private:
 
 	bool goingUp = true;
 	float bounce = 0.0f;
+
+	float timeBetweenNetworkSend = 0.0f;
+	
+	bool toldServerReady = false;
 };
 
 class MenuScene : public Scene

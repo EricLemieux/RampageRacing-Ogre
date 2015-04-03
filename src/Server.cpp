@@ -27,9 +27,12 @@ void Server::Activate(const char* password, const unsigned int& port, const unsi
 	mServer->SetIncomingPassword(password, strlen(password));
 }
 
-void Server::SendString(const std::string &data)
+void Server::SendString(const std::string &data, bool sendToEveryone)
 {
-	mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	if (sendToEveryone)
+		mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, sendToEveryone);
+	else
+		mServer->Send(data.c_str(), data.length(), HIGH_PRIORITY, RELIABLE_ORDERED, 0, lastSender, sendToEveryone);
 }
 
 void Server::SendPosUpdates()
@@ -42,12 +45,12 @@ void Server::SendPosUpdates()
 			//Send the position
 			char pos[256];
 			sprintf_s(pos, "pos %d %f %f %f", i, mConnectedPlayers[i].pos.x, mConnectedPlayers[i].pos.y, mConnectedPlayers[i].pos.z);
-			SendString(pos);
+			SendString(pos, false);
 			
 			//Send the rotation quaternion
 			char rot[256];
 			sprintf_s(rot, "rot %d %f %f %f %f", i, mConnectedPlayers[i].rot.x, mConnectedPlayers[i].rot.y, mConnectedPlayers[i].rot.z, mConnectedPlayers[i].rot.w);
-			SendString(rot);
+			SendString(rot, false);
 		}
 	}
 }
@@ -56,12 +59,10 @@ void Server::RecieveString()
 {
 	while ((mPacket = mServer->Receive()) != NULL)
 	{
+		lastSender = mPacket->systemAddress;
 		if (mPacket->data[0] == ID_NEW_INCOMING_CONNECTION)
 		{
 			std::cout << "A remote system has connected.\n";
-
-			Object newPlayer;
-			mConnectedPlayers.push_back(newPlayer);
 		}
 		else if (mPacket->data[0] == ID_DISCONNECTION_NOTIFICATION)
 		{
@@ -87,6 +88,8 @@ void Server::RecieveString()
 				mConnectedPlayers[id].pos = pos;
 
 				currentlyConnectedID = id;
+
+				SendPosUpdates();
 			}
 			else if (phrase == "rot")
 			{
@@ -98,8 +101,58 @@ void Server::RecieveString()
 
 				currentlyConnectedID = id;
 			}
-			else if (phrase == "something")
+			else if (phrase == "addPlayers")
 			{
+				unsigned int local = 0;
+				sscanf_s(str.c_str(), "%*[^0-9]%d", &local);
+
+				unsigned int startingIndex = mConnectedPlayers.size();
+
+				for (unsigned int p = 0; p < local; ++p)
+				{
+					Object newPlayer;
+					mConnectedPlayers.push_back(newPlayer);
+				}
+
+				char buffer[32];
+				sprintf_s(buffer,"startIndex %d",startingIndex);
+				std::cout << buffer<<"\n";
+				SendString(buffer, false);				
+			}
+			else if (phrase == "ready")
+			{
+				numReady++;
+
+				std::cout << numReady << " == " << mConnectedPlayers.size() << "\n";
+				if (numReady == mConnectedPlayers.size())
+				{
+					//Send the number of players
+					char buffer[32];
+					sprintf_s(buffer, "totalPlayers %d", mConnectedPlayers.size());
+					SendString(buffer, true);
+
+					std::cout << buffer << "\n";
+
+					SendString("start", true);
+				}
+			}
+			else if (phrase == "notready")
+			{
+				numReady--;
+			}
+			else if ("doneLoading")
+			{
+				unsigned int players = 0;
+				sscanf_s(str.c_str(), "%*[^0-9]%d", &players);
+
+				playersDoneLoading += players;
+
+				std::cout << playersDoneLoading << " >= " << mConnectedPlayers.size() - 1 << "\n";
+				if (playersDoneLoading >= mConnectedPlayers.size()-1)
+				{
+					std::cout << "everyone done loading.\n";
+					SendString("everyoneDoneLoading", true);
+				}
 			}
 			else if (phrase == "reset")
 			{

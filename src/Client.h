@@ -11,8 +11,8 @@
 class Object
 {
 public:
-	Ogre::Vector3 pos;
-	Ogre::Quaternion rot;
+	Ogre::Vector3 pos = Ogre::Vector3(0,0,0);
+	Ogre::Quaternion rot = Ogre::Quaternion(1,0,0,0);
 };
 
 
@@ -29,6 +29,14 @@ public:
 	inline int GetID(){ return id; }
 
 	inline Ogre::Vector3 GetPos(int id){ return mConnectedPlayers[id].pos; }
+	inline Ogre::Quaternion GetRot(int id){ return mConnectedPlayers[id].rot; }
+
+	int startingIndex=999;
+	int totalPlayers;
+
+	bool allReady = false;
+
+	bool allDoneLoading = false;
 
 private:
 	RakNet::RakPeerInterface* mClient;
@@ -40,6 +48,6 @@ private:
 	
 	int id=0;
 
-	std::vector<Object> mConnectedPlayers;
+	Object* mConnectedPlayers;
 	const unsigned int MAX_CONNECTIONS = 10;
 };
