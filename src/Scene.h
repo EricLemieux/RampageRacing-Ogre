@@ -199,6 +199,8 @@ private:
 	float bounce = 0.0f;
 
 	float timeBetweenNetworkSend = 0.0f;
+	
+	bool toldServerReady = false;
 };
 
 class MenuScene : public Scene

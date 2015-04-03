@@ -76,9 +76,6 @@ void Server::RecieveString()
 		{
 			std::string str = std::string((char*)mPacket->data).substr(0, mPacket->length);
 
-			//Temp print the string sent to the server
-			std::cout << str.c_str()<<"\n";
-
 			auto p = str.find(" ");
 			std::string phrase = str.substr(0, p);
 
@@ -142,6 +139,20 @@ void Server::RecieveString()
 			else if (phrase == "notready")
 			{
 				numReady--;
+			}
+			else if ("doneLoading")
+			{
+				unsigned int players = 0;
+				sscanf_s(str.c_str(), "%*[^0-9]%d", &players);
+
+				playersDoneLoading += players;
+
+				std::cout << playersDoneLoading << " >= " << mConnectedPlayers.size() - 1 << "\n";
+				if (playersDoneLoading >= mConnectedPlayers.size()-1)
+				{
+					std::cout << "everyone done loading.\n";
+					SendString("everyoneDoneLoading", true);
+				}
 			}
 			else if (phrase == "reset")
 			{

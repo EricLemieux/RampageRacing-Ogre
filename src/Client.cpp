@@ -75,6 +75,10 @@ void Client::Recieve()
 		{
 			allReady = true;
 		}
+		else if (phrase == "everyoneDoneLoading")
+		{
+			allDoneLoading = true;
+		}
 
 		mClient->DeallocatePacket(mPacket);
 	}

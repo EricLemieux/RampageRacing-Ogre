@@ -45,6 +45,8 @@ private:
 
 	RakNet::SystemAddress lastSender;
 
+	int playersDoneLoading=0;
+
 public:
 	std::vector<Object> mConnectedPlayers;
 

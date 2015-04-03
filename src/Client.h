@@ -36,6 +36,8 @@ public:
 
 	bool allReady = false;
 
+	bool allDoneLoading = false;
+
 private:
 	RakNet::RakPeerInterface* mClient;
 	RakNet::SocketDescriptor* mSockDesc;
