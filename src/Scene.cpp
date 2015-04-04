@@ -1134,11 +1134,17 @@ void MenuScene::LoadLevel(Ogre::String levelName)
 	mCurrentSelectedLevel = "Roadway";
 	GetSceneManager()->getSceneNode(mCurrentSelectedLevel + "MenuMini")->setPosition(0.5, 20, -5);
 
+	//Add the robot to the scene
+	robotNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Robot");
+	robotEnt = mSceneMgr->createEntity("Robot", "AnimatedNPC.mesh");
+	robotNode->setScale(0.7, 0.7, 0.7);
+	robotNode->setPosition(5, 0, -20);
+	robotNode->attachObject(robotEnt);
+
 	Ogre::Animation::setDefaultInterpolationMode(Ogre::Animation::IM_LINEAR);
 	Ogre::Animation::setDefaultRotationInterpolationMode(Ogre::Animation::RIM_LINEAR);
-
-	mSceneMgr->getEntity("Robot")->getAllAnimationStates()->createAnimationState("Idle", 0, 1000);
-	animationState = mSceneMgr->getEntity("Robot")->getAnimationState("Idle");
+	
+	animationState = robotEnt->getAnimationState("idle");
 	animationState->setLoop(true);
 	animationState->setEnabled(true);
 }

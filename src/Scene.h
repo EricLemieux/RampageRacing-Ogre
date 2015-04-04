@@ -262,6 +262,9 @@ private:
 	void SelectButton(Ogre::String bName);
 
 	int timeBetweenControllerInput = 0;
+
+	Ogre::SceneNode* robotNode;
+	Ogre::Entity* robotEnt;
 };
 
 class IntroScene : public Scene
