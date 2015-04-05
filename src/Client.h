@@ -17,7 +17,8 @@ public:
 	Ogre::Quaternion rot = Ogre::Quaternion(1,0,0,0);
 
 	float time = 0.0f;
-	Ogre::Vector3 currentPos, futurePos;
+	Ogre::Vector3 currentPos = Ogre::Vector3(0, 0, 0);
+	Ogre::Vector3 futurePos = Ogre::Vector3(0, 0, 0);
 };
 
 
