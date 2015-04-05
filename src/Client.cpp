@@ -66,12 +66,16 @@ void Client::Recieve()
 
 			sscanf_s(str.c_str(), "%*[^0-9]%d %f %f %f", &id, &pos[0], &pos[1], &pos[2]);
 
-			mConnectedPlayers[id].pos = Ogre::Vector3(pos);
+			//guard against uninitialized values
+			if (pos[0] > -99999 && pos[0] < 99999)
+			{
+				mConnectedPlayers[id].pos = Ogre::Vector3(pos);
 
-			mConnectedPlayers[id].time = 0.0f;
+				mConnectedPlayers[id].time = 0.0f;
 
-			mConnectedPlayers[id].futurePos = (mConnectedPlayers[id].currentPos - mConnectedPlayers[id].pos) + mConnectedPlayers[id].currentPos;
-			mConnectedPlayers[id].currentPos = mConnectedPlayers[id].pos;
+				mConnectedPlayers[id].futurePos = (mConnectedPlayers[id].currentPos - mConnectedPlayers[id].pos) + mConnectedPlayers[id].currentPos;
+				mConnectedPlayers[id].currentPos = mConnectedPlayers[id].pos;
+			}			
 		}
 		else if (phrase == "rot")
 		{
