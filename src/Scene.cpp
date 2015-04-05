@@ -400,7 +400,7 @@ bool GameplayScene::Update()
 		{
 			mCars[i]->Update();
 
-			if (timeBetweenNetworkSend >= 0.5f)
+			if (timeBetweenNetworkSend >= EXPECTED_TIME_BETWEEN_NETWORK_UPDATES)
 			{
 				//Send the position of the players car to the server
 				{
@@ -423,6 +423,7 @@ bool GameplayScene::Update()
 		}
 		else
 		{
+			mGameClient->Update( timeStep, i);
 			mCars[i]->SetPosition(mGameClient->GetPos(i));
 			mCars[i]->SetRotation(mGameClient->GetRot(i));
 		}

@@ -2,16 +2,6 @@
  
 Game::Game(void) : BaseApplication()
 {
-	mGameClient = std::shared_ptr<Client>(new Client());
-
-	mGameClient->Connect("192.168.1.175", 8080, 8081, "password");
-	mGameClient->SendString("connect");
-
-	for (unsigned int i = 0; i < 4; ++i)
-	{
-		mControllers[i] = std::shared_ptr<Controller>(new Controller(i));
-	}
-
 	mSoundSys = std::shared_ptr<SoundSystem>(new SoundSystem());
 }
  
@@ -22,6 +12,16 @@ Game::~Game(void)
 //-------------------------------------------------------------------------------------
 void Game::createScene(void)
 {
+	mGameClient = std::shared_ptr<Client>(new Client());
+
+	mGameClient->Connect(mGameClient->ip.c_str(), 8080, 8081, "password");
+	mGameClient->SendString("connect");
+
+	for (unsigned int i = 0; i < 4; ++i)
+	{
+		mControllers[i] = std::shared_ptr<Controller>(new Controller(i));
+	}
+
 	//Set up the current scene
 	mCurrentScene = std::unique_ptr<IntroScene>(new IntroScene(SceneArguments(mSceneMgr, mGameClient, mCameras, mWindow, mControllers,mSoundSys)));
 

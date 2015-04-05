@@ -8,11 +8,16 @@
 
 #include <Ogre.h>
 
+#define EXPECTED_TIME_BETWEEN_NETWORK_UPDATES 0.5f
+
 class Object
 {
 public:
 	Ogre::Vector3 pos = Ogre::Vector3(0,0,0);
 	Ogre::Quaternion rot = Ogre::Quaternion(1,0,0,0);
+
+	float time = 0.0f;
+	Ogre::Vector3 currentPos, futurePos;
 };
 
 
@@ -26,6 +31,8 @@ public:
 	void SendString(const std::string &data);
 	void Recieve();
 
+	void Update(const float deltaTime, const unsigned int id);
+
 	inline int GetID(){ return id; }
 
 	inline Ogre::Vector3 GetPos(int id){ return mConnectedPlayers[id].pos; }
@@ -37,6 +44,8 @@ public:
 	bool allReady = false;
 
 	bool allDoneLoading = false;
+
+	Ogre::String ip;
 
 private:
 	RakNet::RakPeerInterface* mClient;

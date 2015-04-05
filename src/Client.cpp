@@ -2,12 +2,28 @@
 
 Client::Client()
 {
-	//TODO REMOVE
-	//id = 0;
-	//for (unsigned int i = 0; i < MAX_CONNECTIONS; ++i)
-	//{
-	//	mConnectedPlayers.push_back(Object());
-	//}
+	Ogre::String basename, path;
+	Ogre::StringUtil::splitFilename("network.settings", basename, path);
+
+	Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource(basename, "General");
+
+	
+
+	while (!pStream->eof())
+	{
+		Ogre::String data = pStream->getLine();
+
+		auto p = data.find(" ");
+		std::string phrase = data.substr(0, p);
+
+		if (phrase == "serverIP")
+		{
+			char buffer[32];
+			sscanf_s(data.c_str(), "%*[^ ] %s", &buffer, 32);
+
+			this->ip = Ogre::String(buffer);
+		}
+	}
 }
 Client::~Client()
 {
@@ -51,6 +67,11 @@ void Client::Recieve()
 			sscanf_s(str.c_str(), "%*[^0-9]%d %f %f %f", &id, &pos[0], &pos[1], &pos[2]);
 
 			mConnectedPlayers[id].pos = Ogre::Vector3(pos);
+
+			mConnectedPlayers[id].time = 0.0f;
+
+			mConnectedPlayers[id].futurePos = (mConnectedPlayers[id].currentPos - mConnectedPlayers[id].pos) + mConnectedPlayers[id].currentPos;
+			mConnectedPlayers[id].currentPos = mConnectedPlayers[id].pos;
 		}
 		else if (phrase == "rot")
 		{
@@ -82,4 +103,10 @@ void Client::Recieve()
 
 		mClient->DeallocatePacket(mPacket);
 	}
+}
+
+void Client::Update(const float deltaTime, const unsigned int id)
+{
+	mConnectedPlayers[id].time += deltaTime;
+	mConnectedPlayers[id].pos = Ogre::Math::lerp(mConnectedPlayers[id].currentPos, mConnectedPlayers[id].futurePos, mConnectedPlayers[id].time/EXPECTED_TIME_BETWEEN_NETWORK_UPDATES);
 }

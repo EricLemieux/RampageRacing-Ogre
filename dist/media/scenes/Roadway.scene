@@ -115,7 +115,7 @@
             <entity name="pipe" castShadows="false" receiveShadows="true" meshFile="Pipe.mesh" static="true"></entity>
         </node>
         <node name="Coliseum">
-            <entity name="Coliseum" castShadows="false" receiveShadows="true" meshFile="ColeseunBuilding.mesh" static="true"></entity>
+            <entity name="Coliseum" castShadows="false" receiveShadows="true" meshFile="ColeseumBuilding.mesh" static="true"></entity>
         </node>
         <node name="Coliseum2">
             <entity name="Coliseum2" castShadows="false" receiveShadows="true" meshFile="Coliseum2.mesh" static="true"></entity>
