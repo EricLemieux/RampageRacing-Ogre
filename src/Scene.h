@@ -265,6 +265,8 @@ private:
 
 	Ogre::SceneNode* robotNode;
 	Ogre::Entity* robotEnt;
+
+	bool wantsToSetUpLabels = false;
 };
 
 class IntroScene : public Scene

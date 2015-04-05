@@ -346,7 +346,7 @@ void Car::SetItem(ITEM_BOX_TYPE type)
 		
 }
 
-void Car::DisplayResults()
+char* Car::DisplayResults()
 {
 	Ogre::SceneNode* resultsNode = mSceneNode->createChildSceneNode();
 	resultsNode->setPosition(-1,10,35);
@@ -361,4 +361,9 @@ void Car::DisplayResults()
 
 	Ogre::MovableText* resultsText = new Ogre::MovableText("results", results);
 	resultsNode->attachObject(resultsText);
+
+	char res[32];
+	sprintf_s(res, 32, "result %d %d %d %d", id, minutes, seconds, ms);
+
+	return res;
 }

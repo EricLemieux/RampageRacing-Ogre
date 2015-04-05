@@ -494,7 +494,8 @@ bool GameplayScene::Update()
 											else
 											{
 												mLocalCars[i]->mFinishedRace = true;
-												mLocalCars[i]->DisplayResults();
+												char* res = mLocalCars[i]->DisplayResults();
+												mGameClient->SendString(res);
 												mNumPlayersCompletedRace++;
 											}
 										}
@@ -1020,7 +1021,7 @@ void MenuScene::SetUpLabelsAndCars()
 
 		//Make the text
 		char words[128];
-		sprintf_s(words, 128, "Player %i", i + 1);
+		sprintf_s(words, 128, "Player %i", i + 1 + mGameClient->startingIndex);
 
 		Ogre::MovableText* text = new Ogre::MovableText(name, words);
 		text->setTextAlignment(Ogre::MovableText::H_LEFT, Ogre::MovableText::V_CENTER);
@@ -1066,6 +1067,12 @@ bool MenuScene::Update()
 	timeBetweenControllerInput += 1;
 
 	mGameClient->Recieve();
+
+	if (wantsToSetUpLabels && mGameClient->startingIndex != 999)
+	{
+		SetUpLabelsAndCars();
+		wantsToSetUpLabels = false;
+	}
 
 	//Set the total number of connected players
 	numTotalPlayers = mGameClient->totalPlayers;
@@ -1324,7 +1331,7 @@ void MenuScene::SelectButton(Ogre::String bName)
 		{
 			sscanf_s(bName.c_str(), "%*[^_]_%i", &numLocalPlayers);
 
-			SetUpLabelsAndCars();
+			wantsToSetUpLabels = true;
 
 			char buffer[32];
 			sprintf_s(buffer,"addPlayers %d", numLocalPlayers);

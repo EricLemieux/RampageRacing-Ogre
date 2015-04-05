@@ -61,7 +61,7 @@ public:
 	unsigned int raceTime=0;
 	bool doneLookingAtResults = false;
 
-	void DisplayResults();
+	char* DisplayResults();
 
 	bool isLocal = false;
 

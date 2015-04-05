@@ -127,6 +127,7 @@ set(HDRS
 	./src/MovableText.h
 	./src/PlayerLabel.h
 	./src/Sound.h
+	./src/ScoreScreen.h
 )
  
 set(SRCS
@@ -148,6 +149,7 @@ set(SRCS
 	./src/MovableText.cpp
 	./src/PlayerLabel.cpp
 	./src/Sound.cpp
+	./src/ScoreScreen.cpp
 )
  
 include_directories( ${OIS_INCLUDE_DIRS}

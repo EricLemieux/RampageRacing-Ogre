@@ -115,7 +115,7 @@ void Server::RecieveString()
 				}
 
 				char buffer[32];
-				sprintf_s(buffer,"startIndex %d",startingIndex);
+				sprintf_s(buffer, "startIndex %d", startingIndex);
 				std::cout << buffer<<"\n";
 				SendString(buffer, false);				
 			}
@@ -129,6 +129,7 @@ void Server::RecieveString()
 					//Send the number of players
 					char buffer[32];
 					sprintf_s(buffer, "totalPlayers %d", mConnectedPlayers.size());
+					finishTimes = new TimeObject[mConnectedPlayers.size()];
 					SendString(buffer, true);
 
 					std::cout << buffer << "\n";
@@ -157,6 +158,30 @@ void Server::RecieveString()
 			else if (phrase == "reset")
 			{
 				mConnectedPlayers.clear();
+			}
+			else if (phrase == "result")
+			{
+				TimeObject temp;
+				char value[32];
+
+				sscanf_s(str.c_str(), "%*[^0-9]%d %d %d %d", &temp.id, &temp.minutes, &temp.seconds, &temp.ms);
+				
+				//Sort the values based on what already exits
+				for (unsigned int i = 0; i < mConnectedPlayers.size(); ++i)
+				{
+					if (temp.minutes < finishTimes[i].minutes && temp.seconds < finishTimes[i].seconds && temp.ms < finishTimes[i].ms)
+					{
+						TimeObject t = finishTimes[i];
+						finishTimes[i] = temp;
+						temp = t;
+					}
+				}
+
+				//if everyone done reply with the results
+				//if ()
+				{
+
+				}
 			}
 			else
 			{

@@ -6,6 +6,11 @@
 #include <iostream>
 #include <vector>
 
+struct TimeObject
+{
+	int id, minutes = 99, seconds = 99, ms = 99;
+};
+
 struct vec3
 {
 	float x, y, z;
@@ -46,6 +51,8 @@ private:
 	RakNet::SystemAddress lastSender;
 
 	int playersDoneLoading=0;
+
+	TimeObject* finishTimes;
 
 public:
 	std::vector<Object> mConnectedPlayers;
