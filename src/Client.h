@@ -8,7 +8,7 @@
 
 #include <Ogre.h>
 
-#define EXPECTED_TIME_BETWEEN_NETWORK_UPDATES 0.5f
+#define EXPECTED_TIME_BETWEEN_NETWORK_UPDATES 0.1f
 
 class Object
 {
@@ -19,6 +19,9 @@ public:
 	float time = 0.0f;
 	Ogre::Vector3 currentPos = Ogre::Vector3(0, 0, 0);
 	Ogre::Vector3 futurePos = Ogre::Vector3(0, 0, 0);
+
+	Ogre::Quaternion currentRot = Ogre::Quaternion(1, 0, 0, 0);
+	Ogre::Quaternion futureRot = Ogre::Quaternion(1, 0, 0, 0);
 };
 
 

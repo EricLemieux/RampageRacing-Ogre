@@ -69,12 +69,9 @@ void Client::Recieve()
 			//guard against uninitialized values
 			if (pos[0] > -99999 && pos[0] < 99999)
 			{
-				mConnectedPlayers[id].pos = Ogre::Vector3(pos);
-
-				mConnectedPlayers[id].time = 0.0f;
-
-				mConnectedPlayers[id].futurePos = (mConnectedPlayers[id].currentPos - mConnectedPlayers[id].pos) + mConnectedPlayers[id].currentPos;
-				mConnectedPlayers[id].currentPos = mConnectedPlayers[id].pos;
+				Ogre::Vector3 p = Ogre::Vector3(pos[0], pos[1], pos[2]);
+				mConnectedPlayers[id].futurePos = (p - mConnectedPlayers[id].currentPos) + p;
+				mConnectedPlayers[id].currentPos = p;
 			}			
 		}
 		else if (phrase == "rot")
@@ -84,7 +81,14 @@ void Client::Recieve()
 
 			sscanf_s(str.c_str(), "%*[^0-9]%d %f %f %f %f", &id, &rot[0], &rot[1], &rot[2], &rot[3]);
 
-			mConnectedPlayers[id].rot = Ogre::Quaternion(rot[3], rot[0], rot[1], rot[2]);
+			if (rot[0] > -99999 && rot[0] < 99999)
+			{
+				mConnectedPlayers[id].time = 0.0f;
+
+				Ogre::Quaternion r = Ogre::Quaternion(rot[0], rot[1], rot[2], rot[3]);
+				mConnectedPlayers[id].futureRot = (r - mConnectedPlayers[id].currentRot) + r;
+				mConnectedPlayers[id].currentRot = r;
+			}
 		}
 		else if (phrase == "startIndex" && startingIndex == 999)
 		{
@@ -113,4 +117,5 @@ void Client::Update(const float deltaTime, const unsigned int id)
 {
 	mConnectedPlayers[id].time += deltaTime;
 	mConnectedPlayers[id].pos = Ogre::Math::lerp(mConnectedPlayers[id].currentPos, mConnectedPlayers[id].futurePos, mConnectedPlayers[id].time/EXPECTED_TIME_BETWEEN_NETWORK_UPDATES);
+	mConnectedPlayers[id].rot = Ogre::Math::lerp(mConnectedPlayers[id].currentRot, mConnectedPlayers[id].futureRot, mConnectedPlayers[id].time / EXPECTED_TIME_BETWEEN_NETWORK_UPDATES);
 }
