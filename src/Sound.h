@@ -28,14 +28,6 @@ enum SOUND_TYPE{
 	BGM,
 };
 
-enum CHANNEL_TYPE{
-	P1 = 0,
-	P2,
-	P3,
-	P4,
-	BG,
-	BM,
-};
 
 class SoundSystem
 {
@@ -47,8 +39,8 @@ public:
 
 	void update();
 
-	void playSound(SOUND_TYPE soundType, CHANNEL_TYPE chanType);
-	void pauseSound(CHANNEL_TYPE chanType);
+	void playSound(SOUND_TYPE soundType, int chanType);
+	void pauseSound(int chanType);
 
 	struct Sound
 	{

@@ -132,7 +132,7 @@ GameplayScene::~GameplayScene(){}
 
 void GameplayScene::LoadLevel(Ogre::String levelName)
 {
-	mSoundSys->playSound(BGM, BM);
+	mSoundSys->playSound(BGM, 31);
 	Scene::LoadLevel(levelName);
 
 	Ogre::String basename, path;
@@ -225,12 +225,12 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 	if (arg.key == OIS::KC_W)
 	{
 		mCar->mCanMoveForward = 1.0f;
-		mSoundSys->playSound(CAR_ACCEL, P1);
+		mSoundSys->playSound(CAR_ACCEL, 0);
 	}
 	else if (arg.key == OIS::KC_S)
 	{
 		mCar->mCanMoveBackward = 1.0f;
-		mSoundSys->playSound(CAR_ACCEL, P1);
+		mSoundSys->playSound(CAR_ACCEL, 0);
 	}
 
 	if (arg.key == OIS::KC_L)
@@ -276,12 +276,12 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 
 	if (arg.key == OIS::KC_ESCAPE)
 	{
-		mSoundSys->pauseSound(BM);
+		mSoundSys->pauseSound(31);
 		SwapToMainMenu();
 	}
 
 	if (arg.key == OIS::KC_M){
-		mSoundSys->playSound(MEOW, BG);
+		mSoundSys->playSound(MEOW, 30);
 	}
 }
 void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
@@ -289,7 +289,7 @@ void GameplayScene::KeyReleased(const OIS::KeyEvent &arg)
 	if (arg.key == OIS::KC_W)
 	{
 		mCar->mCanMoveForward = 0.0f;
-		mSoundSys->pauseSound(P1);
+		mSoundSys->pauseSound(0);
 	}
 	if (arg.key == OIS::KC_S)
 	{
@@ -522,12 +522,13 @@ bool GameplayScene::Update()
 									{
 										mLocalCars[i]->SetItem(mItemBoxes[boxID]->GetType());
 										mLocalCars[i]->lastItemBoxCheckpoint = mLocalCars[i]->lastCheckpoint;
-										mSoundSys->playSound(ITEM_PICKUP, BG);
+										mSoundSys->playSound(ITEM_PICKUP, (mLocalCars[i]->mID * 2));
 										break;
 									}
 								}
 							}
 
+							bool carImpacted = false;
 							std::list<std::shared_ptr<GameObject>>::iterator itr = mActiveWeapons.begin();
 							for (; itr != mActiveWeapons.end(); ++itr){
 								if (manifold->getBody0() == (*itr)->GetRigidBody() || manifold->getBody1() == (*itr)->GetRigidBody()){
@@ -540,17 +541,19 @@ bool GameplayScene::Update()
 									if ((*itr)->objectType == MISSILE && (*itr)->ownerID != mLocalCars[i]->GetRigidBody()){
 										//disable car controls
 										mLocalCars[i]->stunCounter = 100;
+										carImpacted = true;
 										break;
 									}
 									if ((*itr)->objectType == MINE && (*itr)->ownerID != mLocalCars[i]->GetRigidBody()){
 										//apply knockback
 										mLocalCars[i]->GetRigidBody()->setLinearVelocity(mLocalCars[i]->GetRigidBody()->getLinearVelocity()*-0.5f);
+										carImpacted = true;
 										break;
 									}
 								}
 							}
 
-							if (mLocalCars[i]->stunCounter == 100){
+							if (carImpacted){
 								if (mSceneMgr->hasParticleSystem("Sparks"))
 									mSceneMgr->destroyParticleSystem("Sparks");
 								Ogre::ParticleSystem* particleSys = mSceneMgr->createParticleSystem("Sparks", "Sparks");
@@ -558,7 +561,7 @@ bool GameplayScene::Update()
 									mSceneMgr->destroySceneNode("Particle");
 								Ogre::SceneNode* particleNode = mLocalCars[i]->GetSceneNode()->createChildSceneNode("Particle");
 								particleNode->attachObject(particleSys);
-								mSoundSys->playSound(ITEM_EXPLODE, BG);
+								mSoundSys->playSound(ITEM_EXPLODE, (mLocalCars[i]->mID * 2));
 							}
 						}
 					}
@@ -566,7 +569,7 @@ bool GameplayScene::Update()
 
 		}
 		if (mLocalCars[i]->isAccelerating > 0){
-			mSoundSys->playSound(CAR_STEADY, (CHANNEL_TYPE)i);
+			mSoundSys->playSound(CAR_STEADY, (mLocalCars[i]->mID*2) + 1);
 		}
 	}
 
@@ -771,13 +774,14 @@ void GameplayScene::ControllerInput()
 			if (rt >  XINPUT_GAMEPAD_TRIGGER_THRESHOLD || mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)
 			{
 				mLocalCars[i]->mCanMoveForward = 1.0f;
-				mSoundSys->playSound(CAR_ACCEL, (CHANNEL_TYPE)i);
+				if (mLocalCars[i]->isAccelerating == 0)
+					mSoundSys->playSound(CAR_ACCEL, (mLocalCars[i]->mID * 2) + 1);
 				mLocalCars[i]->isAccelerating++;
 			}
 			else
 			{
 				mLocalCars[i]->mCanMoveForward = 0.0f;
-				mSoundSys->pauseSound((CHANNEL_TYPE)i);
+				mSoundSys->pauseSound((mLocalCars[i]->mID * 2) + 1);
 				mLocalCars[i]->isAccelerating = 0;
 			}
 
@@ -898,7 +902,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 		{
 			nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
 		}
-		mSoundSys->playSound(B_SELECT, BG);
+		mSoundSys->playSound(B_SELECT, 30);
 	}
 
 	if (arg.key == OIS::KC_ESCAPE)
@@ -912,7 +916,7 @@ void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 			playerSelectingCar = 0;
 			nextSubMenu = sm_Main;
 		}
-		mSoundSys->playSound(B_RETURN, BG);
+		mSoundSys->playSound(B_RETURN, 30);
 	}
 
 	if (arg.key == OIS::KC_1)
@@ -1079,7 +1083,7 @@ bool MenuScene::Update()
 
 	if (mGameClient->allReady)
 	{
-		mSoundSys->playSound(B_RETURN, BG);
+		mSoundSys->playSound(B_RETURN, 30);
 		SwapToGameplayLevel(mCurrentSelectedLevel);
 	}
 
@@ -1193,13 +1197,13 @@ void MenuScene::ControllerInput()
 				if (lsy < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 				{
 					lastSelected = "bExit";
-					mSoundSys->playSound(B_SELECT, BG);
+					mSoundSys->playSound(B_SELECT, 30);
 					timeBetweenControllerInput = 0;
 				}
 				else if (lsy > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
 				{
 					lastSelected = "bStart";
-					mSoundSys->playSound(B_SELECT, BG);
+					mSoundSys->playSound(B_SELECT, 30);
 					timeBetweenControllerInput = 0;
 				}
 			}
@@ -1212,7 +1216,7 @@ void MenuScene::ControllerInput()
 						lastSelected = "bPlayers_3";
 					else if (lastSelected == "bPlayers_2")
 						lastSelected = "bPlayers_4";
-					mSoundSys->playSound(B_SELECT, BG);
+					mSoundSys->playSound(B_SELECT, 30);
 					timeBetweenControllerInput = 0;
 				}
 				else if (lsy > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
@@ -1221,7 +1225,7 @@ void MenuScene::ControllerInput()
 						lastSelected = "bPlayers_1";
 					else if (lastSelected == "bPlayers_4")
 						lastSelected = "bPlayers_2";
-					mSoundSys->playSound(B_SELECT, BG);
+					mSoundSys->playSound(B_SELECT, 30);
 					timeBetweenControllerInput = 0;
 				}
 
@@ -1232,7 +1236,7 @@ void MenuScene::ControllerInput()
 						lastSelected = "bPlayers_1";
 					else if (lastSelected == "bPlayers_4")
 						lastSelected = "bPlayers_3";
-					mSoundSys->playSound(B_SELECT, BG);
+					mSoundSys->playSound(B_SELECT, 30);
 					timeBetweenControllerInput = 0;
 				}
 				else if (lsx > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
@@ -1241,7 +1245,7 @@ void MenuScene::ControllerInput()
 						lastSelected = "bPlayers_2";
 					else if (lastSelected == "bPlayers_3")
 						lastSelected = "bPlayers_4";
-					mSoundSys->playSound(B_SELECT, BG);
+					mSoundSys->playSound(B_SELECT, 30);
 					timeBetweenControllerInput = 0;
 				}
 			}
@@ -1258,7 +1262,7 @@ void MenuScene::ControllerInput()
 						lastSelected = "bSelect";
 					else if (lastSelected == "bSelect")
 						lastSelected = "bPrevCar";
-					mSoundSys->playSound(B_SELECT, BG);
+					mSoundSys->playSound(B_SELECT, 30);
 					timeBetweenControllerInput = 0;
 				}
 				else if (lsx > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
@@ -1267,7 +1271,7 @@ void MenuScene::ControllerInput()
 						lastSelected = "bSelect";
 					else if (lastSelected == "bSelect")
 						lastSelected = "bNextCar";
-					mSoundSys->playSound(B_SELECT, BG);
+					mSoundSys->playSound(B_SELECT, 30);
 					timeBetweenControllerInput = 0;
 				}
 			}
@@ -1293,14 +1297,14 @@ void MenuScene::ControllerInput()
 			{
 				timeBetweenControllerInput = 0;
 				SelectButton(lastSelected);
-				mSoundSys->playSound(B_RETURN, BG);
+				mSoundSys->playSound(B_RETURN, 30);
 			}
 			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B)
 			{
 				timeBetweenControllerInput = 0;
 				nextSubMenu = sm_Main;
 				lastSelected = "bStart";
-				mSoundSys->playSound(B_RETURN, BG);
+				mSoundSys->playSound(B_RETURN, 30);
 			}
 		}
 		if (lastSelected != "")
