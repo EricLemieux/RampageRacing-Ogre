@@ -48,6 +48,8 @@
 
 #include "Sound.h"
 
+#include "ScoreScreen.h"
+
 //Bad practice but works
 static unsigned int numLocalPlayers = 1;
 static unsigned int numTotalPlayers = 1;
@@ -144,6 +146,7 @@ protected:
 
 	void SwapToMainMenu();
 	void SwapToGameplayLevel(Ogre::String levelName);
+	void SwapToScoreScreen();
 
 	Ogre::String lastSelected = "bStart";
 };
@@ -194,8 +197,6 @@ private:
 
 	std::list<std::shared_ptr<GameObject>> mActiveWeapons;
 	std::vector<std::shared_ptr<ItemBox>> mItemBoxes;
-
-	int mNumPlayersCompletedRace = 0;
 
 	bool goingUp = true;
 	float bounce = 0.0f;
@@ -292,4 +293,26 @@ public:
 
 private:
 	float mTime = 0.0f;
+};
+
+class ScoreScreen : public Scene
+{
+public:
+	ScoreScreen(SceneArguments args);
+	~ScoreScreen();
+
+	virtual bool Update();
+
+	inline virtual void KeyPressed(const OIS::KeyEvent &arg){}
+	inline virtual void KeyReleased(const OIS::KeyEvent &arg){}
+
+	inline virtual void mouseMoved(const OIS::MouseEvent &arg){}
+	inline virtual void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
+	inline virtual void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){}
+
+	virtual void ControllerInput();
+
+	virtual void LoadLevel(Ogre::String levelName);
+
+	std::vector<std::shared_ptr<PlayerLabel>> labels;
 };

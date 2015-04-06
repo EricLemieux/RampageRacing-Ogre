@@ -61,9 +61,8 @@ public:
 	void SetItem(ITEM_BOX_TYPE type);
 
 	unsigned int raceTime=0;
-	bool doneLookingAtResults = false;
 
-	char* DisplayResults();
+	std::string DisplayResults();
 
 	bool isLocal = false;
 
