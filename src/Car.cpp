@@ -227,8 +227,15 @@ void Car::Update(void)
 
 		btScalar mat[16];
 		mRigidBody->getWorldTransform().getOpenGLMatrix(mat);
+		btVector3 up = btVector3(mat[4], mat[5], mat[6]);
 		btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
+		up.setY(up.getY() + 0.1f);
+		up = up.normalize();
+		btMatrix3x3 mat3(mat[0], up.getX(), mat[8],
+			mat[1], up.getY(), mat[9],
+			mat[2], up.getZ(), mat[10]);
 		mRigidBody->applyCentralForce(forward * engineForce);
+		mRigidBody->getWorldTransform().setBasis(mat3);
 
 		wheelIndex = 3;
 		wheelIndex = 2;
