@@ -28,13 +28,10 @@ enum SOUND_TYPE{
 	BGM,
 };
 
-enum CHANNEL_TYPE{
-	P1 = 0,
-	P2,
-	P3,
-	P4,
-	BG,
-	BM,
+struct Sound
+{
+	FMOD::Sound* sound;
+	int channel;
 };
 
 class SoundSystem
@@ -47,14 +44,10 @@ public:
 
 	void update();
 
-	void playSound(SOUND_TYPE soundType, CHANNEL_TYPE chanType);
-	void pauseSound(CHANNEL_TYPE chanType);
+	void playSound(SOUND_TYPE soundType, int chanIndex);
+	void pauseSound(int chanIndex);
 
-	struct Sound
-	{
-		FMOD::Sound* sound;
-		int channel;
-	};
+	
 
 private:
 	FMOD::System     *system;

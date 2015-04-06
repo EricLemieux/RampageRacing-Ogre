@@ -65,6 +65,8 @@ public:
 
 	bool isLocal = false;
 
+	int mID;
+
 private:
 	float speed = 0.0f;
 	float turnSpeed = 0.3f;
@@ -84,6 +86,6 @@ private:
 	Ogre::SceneNode* itemNode;
 	Ogre::Entity* itemEnt;
 
-	int mID;
+
 	std::shared_ptr<Ogre::Camera> mCamCam;
 };

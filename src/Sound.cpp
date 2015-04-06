@@ -19,7 +19,7 @@ void SoundSystem::initSound(){
 	result = system->init(32, FMOD_INIT_NORMAL, 0);
 
 	
-	for (int i = 0; i < 6; ++i){
+	for (int i = 0; i < 32; ++i){
 		FMOD::Channel* ch;
 		channels.push_back(ch);
 	}
@@ -97,23 +97,18 @@ void SoundSystem::update(){
 
 }
 
-void SoundSystem::playSound(SOUND_TYPE soundType, CHANNEL_TYPE chanType){
+void SoundSystem::playSound(SOUND_TYPE soundType, int chanIndex){
 	bool playing = true;
-	result = channels[(int) chanType]->isPlaying(&playing);
+	result = channels[chanIndex]->isPlaying(&playing);
 	if (soundType != CAR_STEADY && soundType != BGM){
-		result = system->playSound(FMOD_CHANNEL_FREE, sounds[soundType].sound, false, &channels[chanType]);
+		result = system->playSound(FMOD_CHANNEL_FREE, sounds[soundType].sound, false, &channels[chanIndex]);
 	}
 	else if (!playing){
-		if (chanType == BGM){
-			channels[chanType]->setPaused(true);
-			channels[chanType]->setVolume(0.3f);
-			channels[chanType]->setPaused(false);
-		}
-		result = system->playSound(FMOD_CHANNEL_FREE, sounds[soundType].sound, false, &channels[chanType]);
+		result = system->playSound(FMOD_CHANNEL_FREE, sounds[soundType].sound, false, &channels[chanIndex]);
 	}
 }
 
 
-void SoundSystem::pauseSound(CHANNEL_TYPE chanType){
-	result = channels[chanType]->setPaused(true);
+void SoundSystem::pauseSound(int chanIndex){
+	result = channels[chanIndex]->setPaused(true);
 }
