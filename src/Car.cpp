@@ -222,10 +222,14 @@ void Car::Update(void)
 		
 		if (isBoosting){
 			brakeForce = 50;
-			engineForce = -20000;
-			boostTimer--;
+			engineForce = -40000;
+			boostTimer--; 
+			maxSpeed = 200;
 			if (boostTimer <= 0)
 				isBoosting = false;
+		}
+		else {
+			maxSpeed = 100;
 		}
 		int wheelIndex = 0;
 		m_vehicle->setBrake(brakeForce, wheelIndex);
@@ -250,6 +254,11 @@ void Car::Update(void)
 		btTransform trans = mRigidBody->getWorldTransform();
 		trans.setBasis(mat3);
 		mRigidBody->setWorldTransform(trans);
+
+		btVector3 tempVec = mRigidBody->getLinearVelocity();
+		if (tempVec.length() > maxSpeed){
+			tempVec = tempVec.normalize() * maxSpeed;
+		}
 
 		wheelIndex = 3;
 		wheelIndex = 2;

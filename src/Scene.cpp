@@ -406,7 +406,6 @@ bool GameplayScene::Update()
 	
 	for (unsigned int i = 0; i < numTotalPlayers; ++i)
 	{
-		mCars[i]->mCurrentItem = IBT_SPEED;
 		if (!mCars[i]->mFinishedRace)
 			mCars[i]->raceTime += int(timeForCars);
 		
@@ -1133,7 +1132,7 @@ bool MenuScene::Update()
 			GetCamera()->setPosition(Ogre::Math::lerp(GetCamPosFromSubMenu(currentSubMenu), GetCamTargetFromSubMenu(nextSubMenu), deltaT));
 			GetCamera()->lookAt(Ogre::Math::lerp(GetCamTargetFromSubMenu(currentSubMenu), GetCamTargetFromSubMenu(nextSubMenu), deltaT));
 
-			deltaT += 0.007f;
+			deltaT += 0.015f;
 		}
 		else
 		{
