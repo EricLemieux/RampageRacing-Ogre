@@ -108,6 +108,17 @@ void Client::Recieve()
 		{
 			allDoneLoading = true;
 		}
+		else if (phrase == "res")
+		{
+			TimeObject temp;
+			sscanf_s(str.c_str(), "res %d %d %d %d %d", &temp.rank, &temp.id, &temp.minutes, &temp.seconds, &temp.ms);
+
+			raceResults.push_back(temp);
+		}
+		else if (phrase == "raceComplete")
+		{
+			raceComplete = true;
+		}
 
 		mClient->DeallocatePacket(mPacket);
 	}

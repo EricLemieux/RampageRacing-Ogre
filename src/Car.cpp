@@ -346,7 +346,7 @@ void Car::SetItem(ITEM_BOX_TYPE type)
 		
 }
 
-char* Car::DisplayResults()
+std::string Car::DisplayResults()
 {
 	Ogre::SceneNode* resultsNode = mSceneNode->createChildSceneNode();
 	resultsNode->setPosition(-1,10,35);
@@ -363,7 +363,7 @@ char* Car::DisplayResults()
 	resultsNode->attachObject(resultsText);
 
 	char res[32];
-	sprintf_s(res, 32, "result %d %d %d %d", id, minutes, seconds, ms);
+	sprintf_s(res, 32, "result %d %d %d %d", mID, minutes, seconds, ms);
 
-	return res;
+	return std::string(res);
 }

@@ -24,6 +24,10 @@ public:
 	Ogre::Quaternion futureRot = Ogre::Quaternion(1, 0, 0, 0);
 };
 
+struct TimeObject
+{
+	int rank, id, minutes = 99, seconds = 99, ms = 99;
+};
 
 class Client
 {
@@ -50,6 +54,10 @@ public:
 	bool allDoneLoading = false;
 
 	Ogre::String ip;
+
+	std::vector<TimeObject> raceResults;
+
+	bool raceComplete = false;
 
 private:
 	RakNet::RakPeerInterface* mClient;

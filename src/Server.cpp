@@ -129,7 +129,6 @@ void Server::RecieveString()
 					//Send the number of players
 					char buffer[32];
 					sprintf_s(buffer, "totalPlayers %d", mConnectedPlayers.size());
-					finishTimes = new TimeObject[mConnectedPlayers.size()];
 					SendString(buffer, true);
 
 					std::cout << buffer << "\n";
@@ -141,15 +140,15 @@ void Server::RecieveString()
 			{
 				numReady--;
 			}
-			else if ("doneLoading")
+			else if (phrase == "doneLoading")
 			{
 				unsigned int players = 0;
 				sscanf_s(str.c_str(), "%*[^0-9]%d", &players);
 
 				playersDoneLoading += players;
 
-				std::cout << playersDoneLoading << " >= " << mConnectedPlayers.size() - 1 << "\n";
-				if (playersDoneLoading >= mConnectedPlayers.size()-1)
+				std::cout << playersDoneLoading << " >= " << mConnectedPlayers.size() << "\n";
+				if (playersDoneLoading >= mConnectedPlayers.size())
 				{
 					std::cout << "everyone done loading.\n";
 					SendString("everyoneDoneLoading", true);
@@ -164,23 +163,23 @@ void Server::RecieveString()
 				TimeObject temp;
 				char value[32];
 
+				std::cout << str.c_str() << "\n";
+
 				sscanf_s(str.c_str(), "%*[^0-9]%d %d %d %d", &temp.id, &temp.minutes, &temp.seconds, &temp.ms);
-				
-				//Sort the values based on what already exits
-				for (unsigned int i = 0; i < mConnectedPlayers.size(); ++i)
-				{
-					if (temp.minutes < finishTimes[i].minutes && temp.seconds < finishTimes[i].seconds && temp.ms < finishTimes[i].ms)
-					{
-						TimeObject t = finishTimes[i];
-						finishTimes[i] = temp;
-						temp = t;
-					}
-				}
 
-				//if everyone done reply with the results
-				//if ()
-				{
+				//Send back the rank, id, and time for the car to the other clients
+				char buffer[64];
+				sprintf_s(buffer, 64, "res %d %d %d %d %d", currentRank, temp.id, temp.minutes, temp.seconds, temp.ms);
+				SendString(buffer);
 
+				finishTimes.push_back(temp);
+
+				currentRank++;
+
+				std::cout << "race complete?\n" << finishTimes.size() << " == " << mConnectedPlayers.size() << "\n";
+				if (finishTimes.size() == mConnectedPlayers.size())
+				{
+					SendString("raceComplete");
 				}
 			}
 			else

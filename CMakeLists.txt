@@ -127,7 +127,6 @@ set(HDRS
 	./src/MovableText.h
 	./src/PlayerLabel.h
 	./src/Sound.h
-	./src/ScoreScreen.h
 )
  
 set(SRCS
@@ -279,8 +278,8 @@ if(WIN32)
 		${OGRE_PLUGIN_DIR_DBG}/OgreMain_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/RenderSystem_GL_d.dll
 		${OGRE_PLUGIN_DIR_DBG}/Plugin_ParticleFX_d.dll
-		${OGRE_PLUGIN_DIR_REL}/Plugin_CgProgramManager_d.dll
-		${OGRE_PLUGIN_DIR_REL}/cg_d.dll
+		${OGRE_PLUGIN_DIR_DBG}/Plugin_CgProgramManager_d.dll
+		${OGRE_PLUGIN_DIR_DBG}/cg.dll
 		${OGRE_PLUGIN_DIR_DBG}/OIS_d.dll
 		${RakNet_DLL_DEBUG_PATH}/RakNetDLL.dll
 		${FMOD_API_DIR}/fmodexL.dll

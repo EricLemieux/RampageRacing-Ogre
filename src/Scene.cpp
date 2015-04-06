@@ -83,7 +83,7 @@ void Scene::ResetCamera()
 	for (unsigned int i = 0; i < numLocalPlayers; ++i)
 	{
 		mCameras[i]->setPosition(0.0f, 0.0f, 0.0f);
-		mCameras[i]->lookAt(0.0f, 1.0f, 0.0f);
+		mCameras[i]->lookAt(0.0f, 0.0f, -1.0f);
 		mCameras[i]->setNearClipDistance(0.1f);
 	}
 }
@@ -103,6 +103,14 @@ void Scene::SwapToGameplayLevel(Ogre::String levelName)
 	newScene = std::shared_ptr<GameplayScene>(new GameplayScene(SceneArguments(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers, mSoundSys)));
 	newScene->LoadLevel(levelName);
 	newScene->AddCarToScene("myCar");
+	swapToTheNewScene = true;
+}
+
+void Scene::SwapToScoreScreen()
+{
+	GetSceneManager()->clearScene();
+	newScene = std::shared_ptr<ScoreScreen>(new ScoreScreen(SceneArguments(mSceneMgr, this->mGameClient, mCameras, mWindow, mControllers, mSoundSys)));
+	newScene->LoadLevel("ScoreScreen");
 	swapToTheNewScene = true;
 }
 
@@ -380,6 +388,13 @@ bool GameplayScene::Update()
 		return true;
 	}
 
+	if (mGameClient->raceComplete)
+	{
+		SwapToScoreScreen();
+		mGameClient->raceComplete = false;
+		return true;
+	}
+
 	//mSoundSys->playSound(BGM, BM);
 	timeStep = clock.getTimeSeconds();
 	int timeForCars = clock.getTimeMilliseconds();
@@ -388,16 +403,11 @@ bool GameplayScene::Update()
 	GetPhysicsWorld()->updateWorld(timeStep);
 
 	ControllerInput();
-
-	bool allDoneLooking = true;
 	
 	for (unsigned int i = 0; i < numTotalPlayers; ++i)
 	{
 		if (!mCars[i]->mFinishedRace)
 			mCars[i]->raceTime += int(timeForCars);
-		
-		if (!mCars[i]->doneLookingAtResults)
-			allDoneLooking = false;
 		
 		if (mCars[i]->isLocal)
 		{
@@ -410,7 +420,7 @@ bool GameplayScene::Update()
 					char str[256];
 					auto pos = mCars[i]->GetSceneNode()->getPosition();
 					sprintf_s(str, 256, "pos %d %f %f %f", i, pos.x, pos.y, pos.z);
-					mGameClient->SendString(std::string(str));
+					mGameClient->SendString(str);
 				}
 
 				//Send the rotation of the car to the server
@@ -490,17 +500,9 @@ bool GameplayScene::Update()
 
 										if (mLocalCars[i]->lapCounter > 2)
 										{
-											if (mNumPlayersCompletedRace == numLocalPlayers) //-1?
-											{
-												//TODO FIX
-											}
-											else
-											{
-												mLocalCars[i]->mFinishedRace = true;
-												char* res = mLocalCars[i]->DisplayResults();
-												mGameClient->SendString(res);
-												mNumPlayersCompletedRace++;
-											}
+											mLocalCars[i]->mFinishedRace = true;
+											std::string res = mLocalCars[i]->DisplayResults();
+											mGameClient->SendString(res);
 										}
 										else
 										{
@@ -649,9 +651,6 @@ bool GameplayScene::Update()
 	}
 
 	mSoundSys->update();
-
-	if (allDoneLooking)
-		SwapToMainMenu();
 
 	return true;
 }
@@ -824,14 +823,6 @@ void GameplayScene::ControllerInput()
 			else
 			{
 				mLocalCars[i]->mCanMoveBackward = 0.0f;
-			}
-
-			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START)
-			{
-				if (mLocalCars[i]->mFinishedRace == true)
-				{
-					mLocalCars[i]->doneLookingAtResults = true;
-				}
 			}
 		}
 	}

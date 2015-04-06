@@ -52,7 +52,9 @@ private:
 
 	int playersDoneLoading=0;
 
-	TimeObject* finishTimes;
+	std::vector<TimeObject> finishTimes;
+
+	unsigned int currentRank = 1;
 
 public:
 	std::vector<Object> mConnectedPlayers;
