@@ -359,7 +359,29 @@ void GameplayScene::AddTriggerVolumesToScene()
 
 bool GameplayScene::Update()
 {
+
 	mSoundSys->playSound(BGM, 31);
+
+	//Get the positions from the server for the other cars
+	mGameClient->Recieve();
+
+	if (!mGameClient->allDoneLoading)
+	{
+		if (!toldServerReady)
+		{
+			//Tell the server that we got this far and now waiting for everyone else
+			char buffer[32];
+			sprintf_s(buffer, "doneLoading %d", numLocalPlayers);
+			mGameClient->SendString(buffer);
+
+			toldServerReady = true;
+		}
+
+		return true;
+	}
+
+	//mSoundSys->playSound(BGM, BM);
+
 	timeStep = clock.getTimeSeconds();
 	int timeForCars = clock.getTimeMilliseconds();
 	timeBetweenNetworkSend += clock.getTimeSeconds();
@@ -426,9 +448,6 @@ bool GameplayScene::Update()
 
 	//update the active weapons
 	std::for_each(mActiveWeapons.begin(), mActiveWeapons.end(), [](std::shared_ptr<GameObject> obj){obj->Update(); });
-	
-	//Get the positions from the server for the other cars
-	mGameClient->Recieve();
 
 	//COLLISION DETECTION
 	btDiscreteDynamicsWorld* world = GetPhysicsWorld()->getWorld();
@@ -863,7 +882,10 @@ MenuScene::MenuScene(SceneArguments args) : Scene(args)
 	carSelectionTitleNode->scale(1, 0.5, 1);
 	carSelectionTitleNode->attachObject(carSelectionTitle);
 }
-MenuScene::~MenuScene(){}
+MenuScene::~MenuScene()
+{
+	mGameClient->allDoneLoading = false;
+}
 
 void MenuScene::KeyPressed(const OIS::KeyEvent &arg)
 {
@@ -967,6 +989,16 @@ void MenuScene::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 					{
 						mSoundSys->playSound(B_SELECT, 30);
 						SwapToGameplayLevel(mCurrentSelectedLevel);
+						for (unsigned int players = 0; players < numLocalPlayers; ++players)
+						{
+							if (!labels[players]->GetReadyToPlay())
+							{
+								mGameClient->SendString("ready");
+							}
+
+							labels[players]->SetReadyToPlay(true);
+						}
+
 					}
 				}
 			}
