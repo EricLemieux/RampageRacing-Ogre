@@ -117,7 +117,7 @@ void Server::RecieveString()
 				char buffer[32];
 				sprintf_s(buffer, "startIndex %d", startingIndex);
 				std::cout << buffer<<"\n";
-				SendString(buffer, false);				
+				SendString(buffer, false);
 			}
 			else if (phrase == "ready")
 			{
@@ -134,6 +134,12 @@ void Server::RecieveString()
 					std::cout << buffer << "\n";
 
 					SendString("start", true);
+
+					//Send the seed for the item boxes
+					char buff[32];
+					seed = time(NULL);
+					sprintf_s(buff, 32, "seed %d", seed);
+					SendString(buff, true);
 				}
 			}
 			else if (phrase == "notready")
@@ -186,6 +192,8 @@ void Server::RecieveString()
 			{
 				unsigned int i, item;
 				sscanf_s(str.c_str(), "%*[^0-9]%d %d", &i, &item);
+
+				std::cout << str.c_str() << "\n";
 
 				SendString(str.c_str());
 			}

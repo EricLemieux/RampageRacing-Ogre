@@ -127,6 +127,13 @@ void Client::Recieve()
 		{
 			raceComplete = true;
 		}
+		else if (phrase == "seed")
+		{
+			int seed;
+			sscanf_s(str.c_str(), "%*[^0-9]%d", &seed);
+
+			srand(seed);
+		}
 
 		mClient->DeallocatePacket(mPacket);
 	}

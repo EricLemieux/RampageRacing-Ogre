@@ -186,8 +186,6 @@ void GameplayScene::LoadLevel(Ogre::String levelName)
 
 void GameplayScene::SetUpItemBoxes()
 {
-	srand(time(NULL));
-
 	unsigned int count = mTriggerVolumes.size();
 	for (unsigned int i = 1; i < count; ++i)
 	{
@@ -411,21 +409,21 @@ bool GameplayScene::Update()
 		if (!mCars[i]->mFinishedRace)
 			mCars[i]->raceTime += int(timeForCars);
 		
+		if (mGameClient->mConnectedPlayers[i].item != IBT_NONE)
+		{
+			//Copy
+			mCars[i]->SetItem(mGameClient->mConnectedPlayers[i].item);
+
+			//Fire
+			UseItem(i);
+
+			//Reset
+			mGameClient->mConnectedPlayers[i].item = IBT_NONE;
+		}
+
 		if (mCars[i]->isLocal)
 		{
 			mCars[i]->Update();
-
-			if (mGameClient->mConnectedPlayers[i].item != IBT_NONE)
-			{
-				//Copy
-				mCars[i]->SetItem(mGameClient->mConnectedPlayers[i].item);
-
-				//Fire
-				UseItem(i);
-
-				//Reset
-				mGameClient->mConnectedPlayers[i].item = IBT_NONE;
-			}
 
 			if (timeBetweenNetworkSend >= EXPECTED_TIME_BETWEEN_NETWORK_UPDATES)
 			{
@@ -846,16 +844,16 @@ void GameplayScene::ControllerInput()
 
 void GameplayScene::UseItem(int carID)
 {
-	if (mLocalCars[carID]->mCurrentItem == IBT_NONE)
+	if (mCars[carID]->mCurrentItem == IBT_NONE)
 		return;
-	else if (mLocalCars[carID]->mCurrentItem == IBT_ATTACK)
+	else if (mCars[carID]->mCurrentItem == IBT_ATTACK)
 		FireMissile(carID);
-	else if (mLocalCars[carID]->mCurrentItem == IBT_DEFENCE)
+	else if (mCars[carID]->mCurrentItem == IBT_DEFENCE)
 		DropMine(carID);
-	else if (mLocalCars[carID]->mCurrentItem == IBT_SPEED)
+	else if (mCars[carID]->mCurrentItem == IBT_SPEED)
 		SpeedBoost(carID);
 
-	mLocalCars[carID]->SetItem(IBT_NONE);
+	mCars[carID]->SetItem(IBT_NONE);
 }
 void GameplayScene::FireMissile(int carID)
 {

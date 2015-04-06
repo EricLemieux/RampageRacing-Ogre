@@ -6,6 +6,8 @@
 #include <iostream>
 #include <vector>
 
+#include <time.h>
+
 struct TimeObject
 {
 	int id, minutes = 99, seconds = 99, ms = 99;
@@ -55,6 +57,8 @@ private:
 	std::vector<TimeObject> finishTimes;
 
 	unsigned int currentRank = 1;
+
+	int seed;
 
 public:
 	std::vector<Object> mConnectedPlayers;
