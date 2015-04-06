@@ -8,6 +8,8 @@
 
 #include <Ogre.h>
 
+#include "ItemBox.h"
+
 #define EXPECTED_TIME_BETWEEN_NETWORK_UPDATES 0.1f
 
 class Object
@@ -22,6 +24,8 @@ public:
 
 	Ogre::Quaternion currentRot = Ogre::Quaternion(1, 0, 0, 0);
 	Ogre::Quaternion futureRot = Ogre::Quaternion(1, 0, 0, 0);
+
+	ITEM_BOX_TYPE item = IBT_NONE;
 };
 
 struct TimeObject
@@ -59,6 +63,8 @@ public:
 
 	bool raceComplete = false;
 
+	Object* mConnectedPlayers;
+
 private:
 	RakNet::RakPeerInterface* mClient;
 	RakNet::SocketDescriptor* mSockDesc;
@@ -69,6 +75,5 @@ private:
 	
 	int id=0;
 
-	Object* mConnectedPlayers;
 	const unsigned int MAX_CONNECTIONS = 10;
 };

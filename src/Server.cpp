@@ -182,6 +182,13 @@ void Server::RecieveString()
 					SendString("raceComplete");
 				}
 			}
+			else if (phrase == "item")
+			{
+				unsigned int i, item;
+				sscanf_s(str.c_str(), "%*[^0-9]%d %d", &i, &item);
+
+				SendString(str.c_str());
+			}
 			else
 			{
 				std::cout << str.c_str();

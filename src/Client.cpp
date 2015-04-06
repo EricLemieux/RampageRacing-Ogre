@@ -108,6 +108,14 @@ void Client::Recieve()
 		{
 			allDoneLoading = true;
 		}
+		else if (phrase == "item")
+		{
+			unsigned int i, item;
+
+			sscanf_s(str.c_str(), "%*[^0-9]%d %d", &i, &item);
+
+			mConnectedPlayers[i].item = ITEM_BOX_TYPE(item);
+		}
 		else if (phrase == "res")
 		{
 			TimeObject temp;

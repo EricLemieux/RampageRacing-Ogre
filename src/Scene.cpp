@@ -277,7 +277,9 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 
 	if (arg.key == OIS::KC_SPACE)
 	{
-		UseItem(0);
+		char buffer[32];
+		sprintf_s(buffer, "item %d %d", mLocalCars[0]->mID, mLocalCars[0]->GetItem());
+		mGameClient->SendString(buffer);
 	}
 
 	if (arg.key == OIS::KC_P)
@@ -412,6 +414,18 @@ bool GameplayScene::Update()
 		if (mCars[i]->isLocal)
 		{
 			mCars[i]->Update();
+
+			if (mGameClient->mConnectedPlayers[i].item != IBT_NONE)
+			{
+				//Copy
+				mCars[i]->SetItem(mGameClient->mConnectedPlayers[i].item);
+
+				//Fire
+				UseItem(i);
+
+				//Reset
+				mGameClient->mConnectedPlayers[i].item = IBT_NONE;
+			}
 
 			if (timeBetweenNetworkSend >= EXPECTED_TIME_BETWEEN_NETWORK_UPDATES)
 			{
@@ -772,7 +786,9 @@ void GameplayScene::ControllerInput()
 		{
 			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_X)
 			{
-				UseItem(i);
+				char buffer[32];
+				sprintf_s(buffer, "item %d %d", mLocalCars[i]->mID, mLocalCars[i]->GetItem());
+				mGameClient->SendString(buffer);
 			}
 
 			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_BACK)
@@ -843,13 +859,13 @@ void GameplayScene::UseItem(int carID)
 }
 void GameplayScene::FireMissile(int carID)
 {
-	std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mLocalCars[carID]->GetSceneNode(), mLocalCars[carID]->GetRigidBody()));
+	std::shared_ptr<Missile> missile = std::shared_ptr<Missile>(new Missile("missile", mSceneMgr, mCars[carID]->GetSceneNode(), mCars[carID]->GetRigidBody()));
 
 	mPhysicsWorld->getWorld()->addRigidBody(missile->GetRigidBody());
 	mPhysicsWorld->getWorld()->addCollisionObject(missile->ghost);
 
 	btScalar mat[16];
-	mLocalCars[carID]->GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
+	mCars[carID]->GetRigidBody()->getWorldTransform().getOpenGLMatrix(mat);
 	btVector3 forward = btVector3(mat[8], mat[9], mat[10]);
 
 	missile->GetRigidBody()->translate(forward * -50);
@@ -863,7 +879,7 @@ void GameplayScene::FireMissile(int carID)
 }
 void GameplayScene::DropMine(int carID)
 {
-	std::shared_ptr<Mine> mine = std::shared_ptr<Mine>(new Mine("mine", mSceneMgr, mLocalCars[carID]->GetSceneNode(), mLocalCars[carID]->GetRigidBody()));
+	std::shared_ptr<Mine> mine = std::shared_ptr<Mine>(new Mine("mine", mSceneMgr, mCars[carID]->GetSceneNode(), mCars[carID]->GetRigidBody()));
 
 	mPhysicsWorld->getWorld()->addRigidBody(mine->GetRigidBody());
 	mPhysicsWorld->getWorld()->addCollisionObject(mine->ghost);
@@ -871,8 +887,8 @@ void GameplayScene::DropMine(int carID)
 	mActiveWeapons.push_back(mine);
 }
 void GameplayScene::SpeedBoost(int carID){
-	mLocalCars[carID]->isBoosting = true;
-	mLocalCars[carID]->boostTimer = 300;
+	mCars[carID]->isBoosting = true;
+	mCars[carID]->boostTimer = 300;
 }
 
 //Menu Scene

@@ -59,6 +59,7 @@ public:
 	unsigned int lastItemBoxCheckpoint = 0;
 
 	void SetItem(ITEM_BOX_TYPE type);
+	inline ITEM_BOX_TYPE GetItem(){ return mCurrentItem; }
 
 	unsigned int raceTime=0;
 
