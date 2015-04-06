@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <list>
+#include <Ogre/OgreString.h>
 
 #include <OgreCamera.h>
 #include <OgreEntity.h>

@@ -1,5 +1,5 @@
 #include "Scene.h"
-
+Ogre::String Compositor = "Motion Blur";
 Scene::Scene(SceneArguments args)
 {
 	mSceneMgr = args.sceneMgr;
@@ -115,6 +115,9 @@ void Scene::SetUpViewports()
 	Ogre::Viewport* vp = mWindow->addViewport(mCamera.get());
 	vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 	mCamera->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
+
+	Ogre::CompositorManager::getSingleton().addCompositor(vp, Compositor);
+	Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, Compositor, true);
 }
 
 void Scene::ControllerInput()
@@ -673,8 +676,8 @@ void GameplayScene::SetUpViewports()
 		Ogre::Viewport* vp = mWindow->addViewport(mCamera.get());
 		mCamera->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 
-		Ogre::CompositorManager::getSingleton().addCompositor(vp, "Bloom");
-		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, "Bloom", true);
+		Ogre::CompositorManager::getSingleton().addCompositor(vp, Compositor);
+		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, Compositor, true);
 
 		break;
 	}
@@ -684,11 +687,17 @@ void GameplayScene::SetUpViewports()
 		vp1->setDimensions(0, 0, 1, 0.5);
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
 		vp1->setVisibilityMask(masks[0]);
+
+		Ogre::CompositorManager::getSingleton().addCompositor(vp1, Compositor);
+		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp1, Compositor, true);
 	
 		Ogre::Viewport* vp2 = mWindow->addViewport(mCameras[1].get(), 1);
 		vp2->setDimensions(0, 0.5, 1, 0.5);
 		mCameras[1]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
 		vp2->setVisibilityMask(masks[1]);
+
+		Ogre::CompositorManager::getSingleton().addCompositor(vp2, Compositor);
+		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp2, Compositor, false);
 		break;
 	}
 	case 3:
@@ -697,16 +706,25 @@ void GameplayScene::SetUpViewports()
 		vp1->setDimensions(0, 0, 0.5, 0.5);
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
 		vp1->setVisibilityMask(masks[0]);
+
+		Ogre::CompositorManager::getSingleton().addCompositor(vp1, Compositor);
+		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp1, Compositor, true);
 	
 		Ogre::Viewport* vp2 = mWindow->addViewport(mCameras[1].get(), 1);
 		vp2->setDimensions(0.5, 0, 0.5, 0.5);
 		mCameras[1]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
 		vp2->setVisibilityMask(masks[1]);
+
+		Ogre::CompositorManager::getSingleton().addCompositor(vp2, Compositor);
+		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp2, Compositor, true);
 	
 		Ogre::Viewport* vp3 = mWindow->addViewport(mCameras[2].get(), 2);
 		vp3->setDimensions(0, 0.5, 1, 0.5);
 		mCameras[2]->setAspectRatio(Ogre::Real(vp3->getActualWidth()) / Ogre::Real(vp3->getActualHeight()));
 		vp3->setVisibilityMask(masks[2]);
+
+		Ogre::CompositorManager::getSingleton().addCompositor(vp3, Compositor);
+		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp3, Compositor, true);
 		break;
 	}
 	case 4:
@@ -716,20 +734,32 @@ void GameplayScene::SetUpViewports()
 		mCamera->setAspectRatio(Ogre::Real(vp1->getActualWidth()) / Ogre::Real(vp1->getActualHeight()));
 		vp1->setVisibilityMask(masks[0]);
 	
+		Ogre::CompositorManager::getSingleton().addCompositor(vp1, Compositor);
+		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp1, Compositor, true);
+
 		Ogre::Viewport* vp2 = mWindow->addViewport(mCameras[1].get(), 1);
 		vp2->setDimensions(0.5, 0, 0.5, 0.5);
 		mCameras[1]->setAspectRatio(Ogre::Real(vp2->getActualWidth()) / Ogre::Real(vp2->getActualHeight()));
 		vp2->setVisibilityMask(masks[1]);
-	
+
+		Ogre::CompositorManager::getSingleton().addCompositor(vp2, Compositor);
+		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp2, Compositor, true);
+
 		Ogre::Viewport* vp3 = mWindow->addViewport(mCameras[2].get(), 2);
 		vp3->setDimensions(0, 0.5, 0.5, 0.5);
 		mCameras[2]->setAspectRatio(Ogre::Real(vp3->getActualWidth()) / Ogre::Real(vp3->getActualHeight()));
 		vp3->setVisibilityMask(masks[2]);
+
+		Ogre::CompositorManager::getSingleton().addCompositor(vp3, Compositor);
+		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp3, Compositor, true);
 	
 		Ogre::Viewport* vp4 = mWindow->addViewport(mCameras[3].get(), 3);
 		vp4->setDimensions(0.5, 0.5, 0.5, 0.5);
 		mCameras[3]->setAspectRatio(Ogre::Real(vp4->getActualWidth()) / Ogre::Real(vp4->getActualHeight()));
 		vp4->setVisibilityMask(masks[3]);
+
+		Ogre::CompositorManager::getSingleton().addCompositor(vp4, Compositor);
+		Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp4, Compositor, true);
 		break;
 	}
 	}
