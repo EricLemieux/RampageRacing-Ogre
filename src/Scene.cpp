@@ -393,6 +393,7 @@ bool GameplayScene::Update()
 	
 	for (unsigned int i = 0; i < numTotalPlayers; ++i)
 	{
+		mCars[i]->mCurrentItem = IBT_SPEED;
 		if (!mCars[i]->mFinishedRace)
 			mCars[i]->raceTime += int(timeForCars);
 		
@@ -845,6 +846,8 @@ void GameplayScene::UseItem(int carID)
 		FireMissile(carID);
 	else if (mLocalCars[carID]->mCurrentItem == IBT_DEFENCE)
 		DropMine(carID);
+	else if (mLocalCars[carID]->mCurrentItem == IBT_SPEED)
+		SpeedBoost(carID);
 
 	mLocalCars[carID]->SetItem(IBT_NONE);
 }
@@ -877,7 +880,10 @@ void GameplayScene::DropMine(int carID)
 
 	mActiveWeapons.push_back(mine);
 }
-
+void GameplayScene::SpeedBoost(int carID){
+	mLocalCars[carID]->isBoosting = true;
+	mLocalCars[carID]->boostTimer = 300;
+}
 
 //Menu Scene
 MenuScene::MenuScene(SceneArguments args) : Scene(args)

@@ -219,7 +219,14 @@ void Car::Update(void)
 				steerValue = 0;
 			}
 		}
-
+		
+		if (isBoosting){
+			brakeForce = 50;
+			engineForce = -20000;
+			boostTimer--;
+			if (boostTimer <= 0)
+				isBoosting = false;
+		}
 		int wheelIndex = 0;
 		m_vehicle->setBrake(brakeForce, wheelIndex);
 		wheelIndex = 1;
@@ -234,8 +241,15 @@ void Car::Update(void)
 		btMatrix3x3 mat3(mat[0], up.getX(), mat[8],
 			mat[1], up.getY(), mat[9],
 			mat[2], up.getZ(), mat[10]);
-		mRigidBody->applyCentralForce(forward * engineForce);
-		mRigidBody->getWorldTransform().setBasis(mat3);
+		//if (isBoosting){
+		//	mRigidBody->applyCentralForce(forward * 10000);
+		//}
+		//else {
+			mRigidBody->applyCentralForce(forward * engineForce);
+		//}
+		btTransform trans = mRigidBody->getWorldTransform();
+		trans.setBasis(mat3);
+		mRigidBody->setWorldTransform(trans);
 
 		wheelIndex = 3;
 		wheelIndex = 2;

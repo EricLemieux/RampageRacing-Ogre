@@ -179,6 +179,7 @@ public:
 	void UseItem(int carID);
 	void FireMissile(int carID);
 	void DropMine(int carID);
+	void SpeedBoost(int carID);
 
 private:
 	std::vector<std::shared_ptr<Car>> mCars;

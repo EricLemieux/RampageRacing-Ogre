@@ -27,6 +27,8 @@ public:
 	float mCanMoveForward	= 0.0f;
 	float mCanMoveBackward	= 0.0f;
 	bool isColliding		= false;
+	bool isBoosting			= false;
+	int boostTimer = 0;
 
 	float mTurning = 0.0f;
 
