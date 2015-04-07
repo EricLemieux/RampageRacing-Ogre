@@ -53,7 +53,7 @@ void ItemBox::InitRigidBody()
 	ghost = new btPairCachingGhostObject();
 	ghost->setWorldTransform(transform);
 
-	btCollisionShape* boxShape = new btBoxShape(btVector3(0.1, 0.1, 0.1));
+	btCollisionShape* boxShape = new btBoxShape(btVector3(3, 10, 3));
 	btDefaultMotionState* boxMotionState = new btDefaultMotionState(transform);
 	btVector3 boxInertia(0, 0, 0);
 	boxShape->calculateLocalInertia(mass, boxInertia);
