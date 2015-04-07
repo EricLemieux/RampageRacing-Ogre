@@ -102,7 +102,10 @@ void Client::Recieve()
 		}
 		else if (phrase == "start")
 		{
-			allReady = true;
+			if (startingIndex != 999)
+			{
+				allReady = true;
+			}
 		}
 		else if (phrase == "everyoneDoneLoading")
 		{
