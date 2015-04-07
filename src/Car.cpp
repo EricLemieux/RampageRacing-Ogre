@@ -224,13 +224,11 @@ void Car::Update(float dt)
 			brakeForce = 50;
 			engineForce = -40000;
 			boostTimer--; 
-			maxSpeed = 200;
+			maxSpeed = 125;
 			if (boostTimer <= 0)
 				isBoosting = false;
 		}
-		else {
-			maxSpeed = 100;
-		}
+
 		int wheelIndex = 0;
 		m_vehicle->setBrake(brakeForce, wheelIndex);
 		wheelIndex = 1;
@@ -245,12 +243,9 @@ void Car::Update(float dt)
 		btMatrix3x3 mat3(mat[0], up.getX(), mat[8],
 			mat[1], up.getY(), mat[9],
 			mat[2], up.getZ(), mat[10]);
-		//if (isBoosting){
-		//	mRigidBody->applyCentralForce(forward * 10000);
-		//}
-		//else {
-			mRigidBody->applyCentralForce(forward * engineForce);
-		//}
+
+		mRigidBody->applyCentralForce(forward * engineForce);
+
 		btTransform trans = mRigidBody->getWorldTransform();
 		trans.setBasis(mat3);
 		mRigidBody->setWorldTransform(trans);
@@ -262,6 +257,14 @@ void Car::Update(float dt)
 
 		wheelIndex = 3;
 		wheelIndex = 2;
+
+		if (isBoosting){
+
+			boostTimer--;
+			mRigidBody->setLinearVelocity(forward * -400);
+			if (boostTimer <= 0)
+				isBoosting = false;
+		}
 
 		ghost->setWorldTransform(mRigidBody->getWorldTransform());
 	}
