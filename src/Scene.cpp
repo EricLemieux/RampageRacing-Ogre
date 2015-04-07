@@ -1388,7 +1388,7 @@ void MenuScene::SelectButton(Ogre::String bName)
 			sprintf_s(buffer,"addPlayers %d", numLocalPlayers);
 			mGameClient->SendString(buffer);
 
-			nextSubMenu = static_cast<subMenus>(currentSubMenu + 1);
+			nextSubMenu = sm_Lobby;//static_cast<subMenus>(currentSubMenu + 1);
 			lastSelected = "bPlay";
 		}
 	}

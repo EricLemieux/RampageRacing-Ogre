@@ -85,7 +85,9 @@ void Client::Recieve()
 			{
 				mConnectedPlayers[id].time = 0.0f;
 
-				mConnectedPlayers[id].rot = Ogre::Quaternion(rot[0], rot[1], rot[2], rot[3]);
+				Ogre::Quaternion r = Ogre::Quaternion(rot[3], rot[0], rot[1], rot[2]);
+				mConnectedPlayers[id].futureRot = (r - mConnectedPlayers[id].currentRot) + r;
+				mConnectedPlayers[id].currentRot = r;
 			}
 		}
 		else if (phrase == "startIndex" && startingIndex == 999)
@@ -141,4 +143,5 @@ void Client::Update(const float deltaTime, const unsigned int id)
 {
 	mConnectedPlayers[id].time += deltaTime;
 	mConnectedPlayers[id].pos = Ogre::Math::lerp(mConnectedPlayers[id].currentPos, mConnectedPlayers[id].futurePos, mConnectedPlayers[id].time/EXPECTED_TIME_BETWEEN_NETWORK_UPDATES);
+	mConnectedPlayers[id].rot = Ogre::Math::lerp(mConnectedPlayers[id].currentRot, mConnectedPlayers[id].currentRot, mConnectedPlayers[id].time/EXPECTED_TIME_BETWEEN_NETWORK_UPDATES);
 }

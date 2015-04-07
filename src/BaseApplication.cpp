@@ -117,7 +117,7 @@ void BaseApplication::createFrameListener(void)
 	inputContext.mMouse = mMouse; 
 	inputContext.mKeyboard = mKeyboard;
     mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow.get(), inputContext, this);
-   // mTrayMgr->hideCursor();
+    mTrayMgr->hideCursor();
 
     mRoot->addFrameListener(this);
 }
