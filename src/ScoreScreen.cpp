@@ -2,7 +2,6 @@
 
 ScoreScreen::ScoreScreen(SceneArguments args) : Scene(args)
 {
-
 }
 
 ScoreScreen::~ScoreScreen()
@@ -12,11 +11,22 @@ ScoreScreen::~ScoreScreen()
 
 void ScoreScreen::ControllerInput()
 {
-
+	for (unsigned int i = 0; i < numLocalPlayers; ++i)
+	{
+		if (mControllers[i]->IsConnected())
+		{
+			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A || mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START)
+			{
+				SwapToMainMenu();
+			}
+		}
+	}
 }
 
 bool ScoreScreen::Update()
 {
+	ControllerInput();
+
 	return true;
 }
 
@@ -55,4 +65,16 @@ void ScoreScreen::LoadLevel(Ogre::String levelName)
 
 		labels.push_back(p);
 	}
+
+	//Reset the server
+	mGameClient->SendString("reset");
+
+	//Reset the local client stuff
+	mGameClient->raceComplete = false;
+	mGameClient->raceResults.clear();
+	mGameClient->allReady = false;
+	mGameClient->allDoneLoading = false;
+	mGameClient->startingIndex = 999;
+	mGameClient->totalPlayers = 0;
+	mGameClient->mConnectedPlayers = NULL;
 }

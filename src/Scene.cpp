@@ -287,8 +287,8 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 
 	if (arg.key == OIS::KC_ESCAPE)
 	{
-		mSoundSys->pauseSound(31);
-		SwapToMainMenu();
+		//Game over
+		mGameClient->SendString("quit");
 	}
 
 	if (arg.key == OIS::KC_M){

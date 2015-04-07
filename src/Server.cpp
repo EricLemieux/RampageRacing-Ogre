@@ -137,7 +137,7 @@ void Server::RecieveString()
 
 					//Send the seed for the item boxes
 					char buff[32];
-					seed = time(NULL);
+					int seed = time(NULL);
 					sprintf_s(buff, 32, "seed %d", seed);
 					SendString(buff, true);
 				}
@@ -163,6 +163,11 @@ void Server::RecieveString()
 			else if (phrase == "reset")
 			{
 				mConnectedPlayers.clear();
+				finishTimes.clear();
+
+				playersDoneLoading = 0;
+
+				numReady = 0;
 			}
 			else if (phrase == "result")
 			{
@@ -196,6 +201,16 @@ void Server::RecieveString()
 				std::cout << str.c_str() << "\n";
 
 				SendString(str.c_str());
+			}
+			else if (phrase == "quit")
+			{
+				for (unsigned int i = 0; i < mConnectedPlayers.size(); ++i)
+				{
+					char buffer[64];
+					sprintf_s(buffer, 64, "res %d %d %d %d %d", currentRank, i, 0, 0, 0);
+					SendString(buffer);
+				}
+				SendString("raceComplete");
 			}
 			else
 			{

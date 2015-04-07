@@ -58,8 +58,6 @@ private:
 
 	unsigned int currentRank = 1;
 
-	int seed;
-
 public:
 	std::vector<Object> mConnectedPlayers;
 
