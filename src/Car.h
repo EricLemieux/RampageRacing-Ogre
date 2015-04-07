@@ -21,7 +21,7 @@ public:
 
 	void SetUpLocal(std::shared_ptr<Ogre::Camera> camera);
 
-	virtual void Update(void);
+	virtual void Update(float dt);
 
 	//The percentage of the engine force used to move
 	float mCanMoveForward	= 0.0f;

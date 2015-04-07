@@ -131,11 +131,11 @@ void Car::TurnLeft(float value)
 	TurnRight(-value);
 }
 
-void Car::Update(void)
+void Car::Update(float dt)
 {
 	if (isLocal && countdownTime < 4.0f)
 	{
-		countdownTime += 1.0f / 120.0f;
+		countdownTime += dt;
 
 		float rem = float((int)countdownTime) - countdownTime;
 

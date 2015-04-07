@@ -384,7 +384,7 @@ bool GameplayScene::Update()
 
 			toldServerReady = true;
 		}
-
+		clock.reset();
 		return true;
 	}
 
@@ -423,7 +423,7 @@ bool GameplayScene::Update()
 
 		if (mCars[i]->isLocal)
 		{
-			mCars[i]->Update();
+			mCars[i]->Update(timeStep);
 
 			if (timeBetweenNetworkSend >= EXPECTED_TIME_BETWEEN_NETWORK_UPDATES)
 			{
