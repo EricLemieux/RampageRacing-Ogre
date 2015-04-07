@@ -65,6 +65,8 @@ public:
 
 	Object* mConnectedPlayers;
 
+	int id = 0;
+
 private:
 	RakNet::RakPeerInterface* mClient;
 	RakNet::SocketDescriptor* mSockDesc;
@@ -73,7 +75,7 @@ private:
 	RakNet::Packet* mPacket;
 	unsigned char mPacketID;
 	
-	int id=0;
+	
 
 	const unsigned int MAX_CONNECTIONS = 10;
 };

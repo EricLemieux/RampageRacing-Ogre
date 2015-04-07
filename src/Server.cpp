@@ -168,6 +168,8 @@ void Server::RecieveString()
 				playersDoneLoading = 0;
 
 				numReady = 0;
+
+				std::cout << "reset\n";
 			}
 			else if (phrase == "result")
 			{
@@ -191,6 +193,8 @@ void Server::RecieveString()
 				if (finishTimes.size() == mConnectedPlayers.size())
 				{
 					SendString("raceComplete");
+
+					std::cout << "game over man.\n";
 				}
 			}
 			else if (phrase == "item")

@@ -77,4 +77,5 @@ void ScoreScreen::LoadLevel(Ogre::String levelName)
 	mGameClient->startingIndex = 999;
 	mGameClient->totalPlayers = 0;
 	mGameClient->mConnectedPlayers = NULL;
+	mGameClient->id = 0;
 }

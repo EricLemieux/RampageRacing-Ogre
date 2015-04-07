@@ -67,7 +67,7 @@ void Client::Recieve()
 			sscanf_s(str.c_str(), "%*[^0-9]%d %f %f %f", &id, &pos[0], &pos[1], &pos[2]);
 
 			//guard against uninitialized values
-			if (pos[0] > -99999 && pos[0] < 99999)
+			if (pos[0] > -99999 && pos[0] < 99999 && totalPlayers > 0)
 			{
 				Ogre::Vector3 p = Ogre::Vector3(pos[0], pos[1], pos[2]);
 				mConnectedPlayers[id].futurePos = (p - mConnectedPlayers[id].currentPos) + p;
@@ -81,7 +81,7 @@ void Client::Recieve()
 
 			sscanf_s(str.c_str(), "%*[^0-9]%d %f %f %f %f", &id, &rot[0], &rot[1], &rot[2], &rot[3]);
 
-			if (rot[0] > -99999 && rot[0] < 99999)
+			if (rot[0] > -99999 && rot[0] < 99999 && totalPlayers > 0)
 			{
 				mConnectedPlayers[id].time = 0.0f;
 

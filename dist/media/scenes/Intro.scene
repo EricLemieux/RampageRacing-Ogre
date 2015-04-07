@@ -8,7 +8,7 @@
     <nodes>
         <node name="UOIT_logo">
             <position x="0" y="0" z="50"/>
-            <entity name="UOIT_logo" meshFile="logos/sleep.mesh" materialFile="uoit_logo"/>
+            <entity name="UOIT_logo" meshFile="logos/uoit.mesh" materialFile="uoit_logo"/>
         </node>
         <node name="sleep_logo">
             <position x="0" y="0" z="50"/>
