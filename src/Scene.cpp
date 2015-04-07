@@ -278,6 +278,7 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 		char buffer[32];
 		sprintf_s(buffer, "item %d %d", mLocalCars[0]->mID, mLocalCars[0]->GetItem());
 		mGameClient->SendString(buffer);
+		mLocalCars[0]->SetItem(IBT_NONE);
 	}
 
 	if (arg.key == OIS::KC_P)
@@ -787,6 +788,7 @@ void GameplayScene::ControllerInput()
 				char buffer[32];
 				sprintf_s(buffer, "item %d %d", mLocalCars[i]->mID, mLocalCars[i]->GetItem());
 				mGameClient->SendString(buffer);
+				mLocalCars[i]->SetItem(IBT_NONE);
 			}
 
 			if (mControllers[i]->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_BACK)
