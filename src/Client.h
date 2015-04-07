@@ -10,7 +10,7 @@
 
 #include "ItemBox.h"
 
-#define EXPECTED_TIME_BETWEEN_NETWORK_UPDATES 0.1f
+#define EXPECTED_TIME_BETWEEN_NETWORK_UPDATES 0.05f
 
 class Object
 {

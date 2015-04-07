@@ -214,7 +214,7 @@ void GameplayScene::SetUpItemBoxes()
 			else if (val == 1)
 				boxType = IBT_DEFENCE;
 			else if (val == 2)
-				boxType = IBT_SPEED;
+				boxType = IBT_ATTACK;
 			else
 				boxType = IBT_NONE;
 
