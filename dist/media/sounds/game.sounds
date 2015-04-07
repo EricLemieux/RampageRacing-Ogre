@@ -10,4 +10,7 @@
 ..\dist\media\sounds\item_explode.mp3 0
 ..\dist\media\sounds\item_pickup.mp3 0
 ..\dist\media\sounds\bgm.mp3 1
+..\dist\media\sounds\car_to_car_crash.mp3 0
+..\dist\media\sounds\fire_missile.mp3 0
+..\dist\media\sounds\drop_mine.mp3 0
 filler

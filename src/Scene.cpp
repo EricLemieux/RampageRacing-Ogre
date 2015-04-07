@@ -234,12 +234,12 @@ void GameplayScene::KeyPressed(const OIS::KeyEvent &arg)
 	if (arg.key == OIS::KC_W)
 	{
 		mCar->mCanMoveForward = 1.0f;
-		mSoundSys->playSound(CAR_ACCEL, 0);
+		mSoundSys->playSound(CAR_ACCEL, 1);
 	}
 	else if (arg.key == OIS::KC_S)
 	{
 		mCar->mCanMoveBackward = 1.0f;
-		mSoundSys->playSound(CAR_ACCEL, 0);
+		mSoundSys->playSound(CAR_ACCEL, 1);
 	}
 
 	if (arg.key == OIS::KC_L)
@@ -846,13 +846,18 @@ void GameplayScene::UseItem(int carID)
 {
 	if (mCars[carID]->mCurrentItem == IBT_NONE)
 		return;
-	else if (mCars[carID]->mCurrentItem == IBT_ATTACK)
+	else if (mCars[carID]->mCurrentItem == IBT_ATTACK){
 		FireMissile(carID);
-	else if (mCars[carID]->mCurrentItem == IBT_DEFENCE)
+		mSoundSys->playSound(FIRE_MISSILE, carID);
+	}
+	else if (mCars[carID]->mCurrentItem == IBT_DEFENCE){
 		DropMine(carID);
-	else if (mCars[carID]->mCurrentItem == IBT_SPEED)
+		mSoundSys->playSound(DROP_MINE, carID);
+	}
+	else if (mCars[carID]->mCurrentItem == IBT_SPEED){
 		SpeedBoost(carID);
-
+		mSoundSys->playSound(CAR_ACCEL, carID);
+	}
 	mCars[carID]->SetItem(IBT_NONE);
 }
 void GameplayScene::FireMissile(int carID)

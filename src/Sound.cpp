@@ -99,16 +99,11 @@ void SoundSystem::update(){
 
 void SoundSystem::playSound(SOUND_TYPE soundType, int chanType){
 	bool playing = true;
-	result = channels[(int) chanType]->isPlaying(&playing);
+	result = channels[chanType]->isPlaying(&playing);
 	if (soundType != CAR_STEADY && soundType != BGM){
 		result = system->playSound(FMOD_CHANNEL_FREE, sounds[soundType].sound, false, &channels[chanType]);
 	}
 	else if (!playing){
-		if (chanType == BGM){
-			channels[chanType]->setPaused(true);
-			channels[chanType]->setVolume(0.3f);
-			channels[chanType]->setPaused(false);
-		}
 		result = system->playSound(FMOD_CHANNEL_FREE, sounds[soundType].sound, false, &channels[chanType]);
 	}
 }
