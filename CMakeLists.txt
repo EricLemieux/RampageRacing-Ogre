@@ -249,12 +249,14 @@ if(WIN32)
  
 	install(FILES ${CMAKE_SOURCE_DIR}/dist/bin/plugins.cfg
 		${CMAKE_SOURCE_DIR}/dist/bin/resources.cfg
+		${CMAKE_SOURCE_DIR}/dist/bin/ogre.cfg
 		DESTINATION bin
 		CONFIGURATIONS Release RelWithDebInfo
 	)
  
 	install(FILES ${CMAKE_SOURCE_DIR}/dist/bin/plugins_d.cfg
 		${CMAKE_SOURCE_DIR}/dist/bin/resources_d.cfg
+		${CMAKE_SOURCE_DIR}/dist/bin/ogre.cfg
 		DESTINATION bin
 		CONFIGURATIONS Debug
 	)

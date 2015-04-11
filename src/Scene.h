@@ -303,7 +303,7 @@ public:
 
 	virtual bool Update();
 
-	inline virtual void KeyPressed(const OIS::KeyEvent &arg){}
+	inline virtual void KeyPressed(const OIS::KeyEvent &arg){ if (arg.key == OIS::KC_SPACE){ SwapToMainMenu(); } }
 	inline virtual void KeyReleased(const OIS::KeyEvent &arg){}
 
 	inline virtual void mouseMoved(const OIS::MouseEvent &arg){}

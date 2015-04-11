@@ -54,7 +54,7 @@ void ScoreScreen::LoadLevel(Ogre::String levelName)
 
 		//Make the text
 		char words[128];
-		sprintf_s(words, 128, "Player %i = %d:%d.%d", i + 1 + mGameClient->startingIndex, mGameClient->raceResults[i].minutes, mGameClient->raceResults[i].seconds, mGameClient->raceResults[i].ms);
+		sprintf_s(words, 128, "Player %i = %d:%d.%d", i + 1, mGameClient->raceResults[i].minutes, mGameClient->raceResults[i].seconds, mGameClient->raceResults[i].ms);
 
 		Ogre::MovableText* text = new Ogre::MovableText(name, words);
 		text->setTextAlignment(Ogre::MovableText::H_LEFT, Ogre::MovableText::V_CENTER);
